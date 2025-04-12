@@ -1,8 +1,6 @@
 package com.nhnacademy.memberservice.role.dto;
 
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 /**
  * 권한(Role) 정보 응답을 위한 DTO 클래스입니다.
@@ -15,6 +13,8 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode
+@Getter
+@Setter
 public class RoleResponse {
 
     /**
@@ -34,11 +34,5 @@ public class RoleResponse {
     private String roleDescription;
 
 
-    public String getRoleName() {
-        return roleName;
-    }
 
-    public String getRoleDescription() {
-        return roleDescription;
-    }
 }

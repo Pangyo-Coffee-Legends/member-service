@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
@@ -17,8 +18,9 @@ import lombok.NoArgsConstructor;
  * </p>
  */
 @NoArgsConstructor
-@AllArgsConstructor
+//@AllArgsConstructor //
 @EqualsAndHashCode
+@Getter
 public class MemberUpdateRequest {
 
     /**
@@ -28,6 +30,7 @@ public class MemberUpdateRequest {
      * 수정 대상 회원을 식별하기 위한 용도로 사용됩니다.
      * </p>
      */
+    @Getter
     private Long mbNo;
 
     /**
@@ -91,6 +94,16 @@ public class MemberUpdateRequest {
     @Size(max = 15)
     private String phoneNumber;
 
+    public MemberUpdateRequest(Long mbNo, Role role, String name, String email, String password, String confirmPassword, String phoneNumber) {
+        this.mbNo = mbNo;
+        this.role = role;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.confirmPassword = confirmPassword;
+        this.phoneNumber = phoneNumber;
+    }
+
     /**
      * 비밀번호와 비밀번호 재확인 필드가 일치하는지를 검증합니다.
      *
@@ -98,10 +111,6 @@ public class MemberUpdateRequest {
      */
     public boolean isPasswordValid() {
         return password.equals(confirmPassword);
-    }
-
-    public Long getMbNo() {
-        return mbNo;
     }
 
     public Role getRole() {

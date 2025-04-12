@@ -1,10 +1,7 @@
 package com.nhnacademy.memberservice.member.dto;
 
 import com.nhnacademy.memberservice.role.domain.Role;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 /**
  * 회원 정보를 조회하는 DTO 클래스입니다.
@@ -13,7 +10,9 @@ import lombok.ToString;
  * 회원의 역할, 이름, 이메일, 전화번호 등의 정보를 포함합니다.
  * </p>
  */
+@Getter
 @NoArgsConstructor
+//@AllArgsConstructor //
 @ToString
 @EqualsAndHashCode
 public class MemberResponse {
@@ -33,7 +32,7 @@ public class MemberResponse {
      * 일반적으로 회원가입 시 입력된 이름이며, 사용자 식별 시 사용됩니다.
      * </p>
      */
-    private String name;
+    private String mbName;
 
     /**
      * 회원의 이메일 주소입니다.
@@ -42,7 +41,7 @@ public class MemberResponse {
      * 로그인, 알림 발송 등 다양한 기능에 활용됩니다.
      * </p>
      */
-    private String email;
+    private String mbEmail;
 
     /**
      * 회원의 전화번호입니다.
@@ -52,19 +51,12 @@ public class MemberResponse {
      */
     private String phoneNumber;
 
-    public Role getRole() {
-        return role;
+
+    public MemberResponse(Role role, String mbName, String mbEmail, String phoneNumber) {
+        this.role = role;
+        this.mbName = mbName;
+        this.mbEmail = mbEmail;
+        this.phoneNumber = phoneNumber;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
 }

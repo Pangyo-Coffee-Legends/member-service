@@ -91,6 +91,42 @@ public class Member {
     private LocalDateTime withdrawnAt;
 
     /**
+     * 회원 객체를 생성하는 인자 생성자입니다.
+     * <p>
+     * 이 생성자는 {@link Member#ofNewMember(String, String, String, String)}와 같은
+     * 정적 팩토리 메서드에서만 호출 가능합니다.
+     * 외부에서 직접 호출할 수 없습니다.
+     * </p>
+     *
+     * @param mbName      회원명
+     * @param mbEmail     회원 이메일
+     * @param mbPassword  회원 비밀번호
+     * @param phoneNumber 회원 전화번호
+     */
+    private Member(String mbName, String mbEmail, String mbPassword, String phoneNumber) {
+        this.mbName = mbName;
+        this.mbEmail = mbEmail;
+        this.mbPassword = mbPassword;
+        this.phoneNumber = phoneNumber;
+    }
+
+    /**
+     * 회원 생성에 사용되는 정적 팩토리 메서드입니다.
+     * <p>
+     * 이 메서드는 새로운 회원을 생성하기 위한 간편한 방법을 제공합니다.
+     * </p>
+     *
+     * @param mbName      회원 이름
+     * @param mbEmail     회원 이메일
+     * @param mbPassword  회원 비밀번호
+     * @param phoneNumber 회원 전화번호
+     * @return 새로운 회원 객체
+     */
+    public static Member ofNewMember(String mbName, String mbEmail, String mbPassword, String phoneNumber) {
+        return new Member(mbName, mbEmail, mbPassword, phoneNumber);
+    }
+
+    /**
      * 회원 정보가 데이터베이스에 저장되기 전에 호출되는 메서드입니다.
      * 이 메서드는 생성일자를 자동으로 설정합니다.
      */
@@ -117,47 +153,6 @@ public class Member {
      */
     public void assignRole(Role role) {
         this.role = role;
-    }
-
-    /**
-     * 회원 객체를 생성하는 인자 생성자입니다.
-     * <p>
-     * 이 생성자는 {@link Member#ofNewMember(String, String, String, String)}와 같은
-     * 정적 팩토리 메서드에서만 호출 가능합니다.
-     * 외부에서 직접 호출할 수 없습니다.
-     * </p>
-     *
-     * @param mbName 회원명
-     * @param mbEmail 회원 이메일
-     * @param mbPassword 회원 비밀번호
-     * @param phoneNumber 회원 전화번호
-     */
-    private Member(String mbName, String mbEmail, String mbPassword, String phoneNumber) {
-        this.mbName = mbName;
-        this.mbEmail = mbEmail;
-        this.mbPassword = mbPassword;
-        this.phoneNumber = phoneNumber;
-    }
-
-    /**
-     * 회원 생성에 사용되는 정적 팩토리 메서드입니다.
-     * <p>
-     * 이 메서드는 새로운 회원을 생성하기 위한 간편한 방법을 제공합니다.
-     * </p>
-     *
-     * @param mbName 회원 이름
-     * @param mbEmail 회원 이메일
-     * @param mbPassword 회원 비밀번호
-     * @param phoneNumber 회원 전화번호
-     * @return 새로운 회원 객체
-     */
-    public static Member ofNewMember(String mbName, String mbEmail, String mbPassword, String phoneNumber) {
-        return new Member(
-                mbName,
-                mbEmail,
-                mbPassword,
-                phoneNumber
-        );
     }
 
     public Long getMbNo() {
@@ -191,5 +186,15 @@ public class Member {
     public LocalDateTime getWithdrawnAt() {
         return withdrawnAt;
     }
+
+    /**
+     * 해당 회원이 탈퇴 상태인지 확인합니다.
+     *
+     * @return 탈퇴일자(withdrawnAt)가 null이 아니면 true, 그렇지 않으면 false
+     */
+    public boolean isWithdrawn() {
+        return this.withdrawnAt != null;
+    }
+
 }
 
