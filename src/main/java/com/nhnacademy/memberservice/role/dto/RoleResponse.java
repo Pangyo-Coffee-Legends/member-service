@@ -15,6 +15,7 @@ import lombok.*;
 @EqualsAndHashCode
 @Getter
 @Setter
+@AllArgsConstructor
 public class RoleResponse {
 
     /**

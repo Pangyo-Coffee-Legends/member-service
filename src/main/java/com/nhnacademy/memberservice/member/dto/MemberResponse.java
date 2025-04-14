@@ -12,7 +12,6 @@ import lombok.*;
  */
 @Getter
 @NoArgsConstructor
-//@AllArgsConstructor //
 @ToString
 @EqualsAndHashCode
 public class MemberResponse {

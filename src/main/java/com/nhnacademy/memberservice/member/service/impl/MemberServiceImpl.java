@@ -8,6 +8,7 @@ import com.nhnacademy.memberservice.member.exception.MemberNotFoundException;
 import com.nhnacademy.memberservice.member.repository.MemberRepository;
 import com.nhnacademy.memberservice.member.service.MemberService;
 import com.nhnacademy.memberservice.role.domain.Role;
+import com.nhnacademy.memberservice.role.exception.RoleNotFoundException;
 import com.nhnacademy.memberservice.role.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ import java.util.Optional;
  */
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
@@ -39,10 +41,9 @@ public class MemberServiceImpl implements MemberService {
      * @return 등록된 회원 정보
      */
     @Override
-    @Transactional
     public MemberResponse registerMember(MemberRegisterRequest request) {
         Role role = Optional.ofNullable(request.getRole()).orElseGet(() -> roleRepository.findByRoleName("USER")
-                .orElseThrow(() -> new IllegalArgumentException("기본 역할(USER)을 찾을 수 없습니다.")));
+                .orElseThrow(() -> new RoleNotFoundException("기본 역할(USER)을 찾을 수 없습니다.")));
 
         Member member = Member.ofNewMember(request.getName(), request.getEmail(), request.getPassword(), request.getPhoneNumber());
 
@@ -63,7 +64,8 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional(readOnly = true)
     public MemberResponse getMember(Long mbNo) {
-        Member member = memberRepository.findById(mbNo).orElseThrow(() -> new MemberNotFoundException(mbNo + "는 존재하지 않는 회원입니다."));
+        Member member = memberRepository.findById(mbNo)
+                .orElseThrow(() -> new MemberNotFoundException(mbNo + "는 존재하지 않는 회원입니다."));
 
         return new MemberResponse(member.getRole(), member.getMbName(), member.getMbEmail(), member.getPhoneNumber());
     }
@@ -77,12 +79,13 @@ public class MemberServiceImpl implements MemberService {
      * @throws IllegalArgumentException 역할이 존재하지 않을 경우
      */
     @Override
-    @Transactional
     public MemberResponse updateMember(MemberUpdateRequest request) {
         Member member = memberRepository.findById(request.getMbNo())
                 .orElseThrow(() -> new MemberNotFoundException("회원이 존재하지 않습니다."));
 
-        Role role = Optional.ofNullable(request.getRole()).orElseGet(() -> roleRepository.findByRoleName("USER").orElseThrow(() -> new IllegalArgumentException("기본 역할(USER)을 찾을 수 없습니다.")));
+        Role role = Optional.ofNullable(request.getRole())
+                .orElseGet(() -> roleRepository.findByRoleName("USER")
+                        .orElseThrow(() -> new MemberNotFoundException("기본 역할(USER)을 찾을 수 없습니다.")));
 
         member.assignRole(role);
 
@@ -105,7 +108,6 @@ public class MemberServiceImpl implements MemberService {
      * @throws MemberNotFoundException 회원이 존재하지 않는 경우 예외 발생
      */
     @Override
-    @Transactional
     public void deleteMember(Long mbNo) {
         Member member = memberRepository.findById(mbNo)
                 .orElseThrow(() -> new MemberNotFoundException("회원이 존재하지 않습니다."));

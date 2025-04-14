@@ -103,7 +103,7 @@ public class Member {
      * @param mbPassword  회원 비밀번호
      * @param phoneNumber 회원 전화번호
      */
-    private Member(String mbName, String mbEmail, String mbPassword, String phoneNumber) {
+    private Member(String mbName, String mbEmail, String mbPassword, String  phoneNumber) {
         this.mbName = mbName;
         this.mbEmail = mbEmail;
         this.mbPassword = mbPassword;

@@ -3,7 +3,6 @@ package com.nhnacademy.memberservice.member.repository;
 import com.nhnacademy.memberservice.member.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
 
 /**
  * 회원 관련 데이터베이스 작업을 수행하는 JPA 리포지토리 인터페이스입니다.
