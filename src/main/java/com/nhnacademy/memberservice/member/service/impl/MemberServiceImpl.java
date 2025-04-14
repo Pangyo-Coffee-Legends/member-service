@@ -53,7 +53,8 @@ public class MemberServiceImpl implements MemberService {
             throw new IllegalArgumentException("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
         }
 
-        return new MemberResponse(saved.getRole(), saved.getMbName(), saved.getMbEmail(), saved.getPhoneNumber());
+        return new MemberResponse(saved.getRole(), saved.getMbName(), saved.getMbEmail(), saved.getMbPassword(), saved.getPhoneNumber());
+
     }
 
     /**
@@ -63,11 +64,12 @@ public class MemberServiceImpl implements MemberService {
      */
     @Override
     @Transactional(readOnly = true)
-    public MemberResponse getMember(Long mbNo) {
-        Member member = memberRepository.findById(mbNo)
-                .orElseThrow(() -> new MemberNotFoundException(mbNo + "는 존재하지 않는 회원입니다."));
+    public MemberResponse getMemberByEmail(String mbEmail) {
+        Member member = memberRepository.findByMbEmail(mbEmail)
+                .orElseThrow(() -> new MemberNotFoundException(mbEmail + "는 존재하지 않는 회원입니다."));
 
-        return new MemberResponse(member.getRole(), member.getMbName(), member.getMbEmail(), member.getPhoneNumber());
+        return new MemberResponse(member.getRole(), member.getMbName(), member.getMbEmail(), member.getMbPassword(), member.getPhoneNumber());
+
     }
 
     /**
@@ -93,7 +95,7 @@ public class MemberServiceImpl implements MemberService {
 
         Member updated = memberRepository.save(member);
 
-        return new MemberResponse(updated.getRole(), updated.getMbName(), updated.getMbEmail(), updated.getPhoneNumber());
+        return new MemberResponse(updated.getRole(), updated.getMbName(), updated.getMbEmail(), updated.getMbPassword(), updated.getPhoneNumber());
     }
 
     /**
@@ -110,8 +112,8 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void updatePassword(Long mbNo, MemberUpdatePasswordRequest request) {
-        Member member = memberRepository.findById(mbNo)
+    public void updatePassword(String mbEmail, MemberUpdatePasswordRequest request) {
+        Member member = memberRepository.findByMbEmail(mbEmail)
                 .orElseThrow(() -> new MemberNotFoundException("회원이 존재하지 않습니다."));
 
         if (!Objects.equals(member.getMbPassword(), request.getOldPassword())) {

@@ -39,12 +39,12 @@ public class MemberController {
     /**
      * 회원 고유 번호로 특정 회원의 정보를 조회합니다.
      *
-     * @param mbNo 조회할 회원의 고유 번호 (PathVariable)
+     * @param mbEmail 조회할 회원의 고유 번호 (PathVariable)
      * @return 해당 회원의 정보가 담긴 ResponseEntity (HTTP 200 OK)
      */
-    @GetMapping("/{mbNo}")
-    public ResponseEntity<MemberResponse> getMember(@PathVariable Long mbNo) {
-        MemberResponse response = memberService.getMember(mbNo);
+    @GetMapping("/{mbEmail}")
+    public ResponseEntity<MemberResponse> getMemberByEmail(@PathVariable String mbEmail) {
+        MemberResponse response = memberService.getMemberByEmail(mbEmail);
         return ResponseEntity.ok(response);
     }
 
