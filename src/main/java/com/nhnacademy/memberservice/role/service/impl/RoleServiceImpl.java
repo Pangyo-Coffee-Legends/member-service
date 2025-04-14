@@ -18,56 +18,35 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class RoleServiceImpl implements RoleService {
 
     private final RoleRepository roleRepository;
 
-    /**
-     * 역할을 등록합니다.
-     *
-     * @param request 등록할 역할 정보 (이름, 설명 포함)
-     * @return 등록된 역할의 응답 DTO
-     */
     @Override
-    @Transactional
     public RoleResponse registerRole(RoleRegisterRequest request) {
-        Role role = new Role(null, request.getRoleName(), request.getRoleDescription());
+        Role role = Role.ofNewRole(request.getRoleName(), request.getRoleDescription());
         Role saved = roleRepository.save(role);
 
-        RoleResponse response = new RoleResponse();
-        response.setRoleName(saved.getRoleName());
-        response.setRoleDescription(saved.getRoleDescription());
-        return response;
+        return new RoleResponse(
+                saved.getRoleName(),
+                saved.getRoleDescription()
+        );
     }
 
-    /**
-     * 주어진 역할 번호에 해당하는 역할 정보를 조회합니다.
-     *
-     * @param roleNo 조회할 역할의 고유 번호
-     * @return 조회된 역할의 응답 DTO
-     * @throws IllegalArgumentException 역할이 존재하지 않을 경우 예외 발생
-     */
     @Override
     @Transactional(readOnly = true)
     public RoleResponse getRole(Long roleNo) {
         Role role = roleRepository.findById(roleNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 역할을 찾을 수 없습니다: roleNo=" + roleNo));
 
-        RoleResponse response = new RoleResponse();
-        response.setRoleName(role.getRoleName());
-        response.setRoleDescription(role.getRoleDescription());
-        return response;
+        return new RoleResponse(
+                role.getRoleName(),
+                role.getRoleDescription()
+        );
     }
 
-    /**
-     * 주어진 정보로 역할을 수정합니다.
-     *
-     * @param request 수정할 역할 정보 (roleNo, roleDescription)
-     * @return 수정된 역할의 응답 DTO
-     * @throws IllegalArgumentException 역할이 존재하지 않을 경우 예외 발생
-     */
     @Override
-    @Transactional
     public RoleResponse updateRole(RoleUpdateRequest request) {
         Role role = roleRepository.findById(request.getRoleNo())
                 .orElseThrow(() -> new IllegalArgumentException("해당 역할을 찾을 수 없습니다: roleNo=" + request.getRoleNo()));
@@ -75,9 +54,9 @@ public class RoleServiceImpl implements RoleService {
         role.update(role.getRoleName(), request.getRoleDescription());
         Role updated = roleRepository.save(role);
 
-        RoleResponse response = new RoleResponse();
-        response.setRoleName(updated.getRoleName());
-        response.setRoleDescription(updated.getRoleDescription());
-        return response;
+        return new RoleResponse(
+                updated.getRoleName(),
+                updated.getRoleDescription()
+        );
     }
 }

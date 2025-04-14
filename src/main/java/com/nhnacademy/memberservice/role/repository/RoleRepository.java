@@ -17,8 +17,6 @@ import java.util.Optional;
  * </p>
  */
 public interface RoleRepository extends JpaRepository<Role, Long> {
-    // 기본 CRUD 메서드는 JpaRepository에서 제공되므로 추가적인 메서드는 필요하지 않습니다.
-
     /**
      * 주어진 역할 이름에 해당하는 Role을 조회합니다.
      *

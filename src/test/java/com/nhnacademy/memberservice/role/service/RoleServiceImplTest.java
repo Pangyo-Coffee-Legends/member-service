@@ -11,7 +11,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Optional;
 
@@ -24,6 +24,7 @@ import static org.mockito.Mockito.when;
  * {@link RoleServiceImpl} 클래스에 대한 단위 테스트입니다.
  * 역할 등록, 조회, 수정 로직의 정상 작동 여부를 검증합니다.
  */
+@SpringBootTest
 class RoleServiceImplTest {
 
     @Mock
@@ -36,8 +37,7 @@ class RoleServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
-        role = new Role(1L, "USER", "일반 사용자");
+        role = Role.ofNewRole("USER", "일반 사용자");
     }
 
     @Test
@@ -85,7 +85,7 @@ class RoleServiceImplTest {
         // given
         RoleUpdateRequest request = new RoleUpdateRequest(1L, "수정된 설명");
         when(roleRepository.findById(1L)).thenReturn(Optional.of(role));
-        when(roleRepository.save(any(Role.class))).thenReturn(new Role(1L, "USER", "수정된 설명"));
+        when(roleRepository.save(any(Role.class))).thenReturn(Role.ofNewRole("USER", "수정된 설명"));
 
         // when
         RoleResponse response = roleService.updateRole(request);

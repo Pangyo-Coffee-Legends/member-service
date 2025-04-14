@@ -1,6 +1,5 @@
 package com.nhnacademy.memberservice.role.service;
 
-import com.nhnacademy.memberservice.role.domain.Role;
 import com.nhnacademy.memberservice.role.dto.RoleRegisterRequest;
 import com.nhnacademy.memberservice.role.dto.RoleResponse;
 import com.nhnacademy.memberservice.role.dto.RoleUpdateRequest;

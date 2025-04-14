@@ -3,16 +3,19 @@ package com.nhnacademy.memberservice.member.service.impl;
 import com.nhnacademy.memberservice.member.domain.Member;
 import com.nhnacademy.memberservice.member.dto.MemberRegisterRequest;
 import com.nhnacademy.memberservice.member.dto.MemberResponse;
+import com.nhnacademy.memberservice.member.dto.MemberUpdatePasswordRequest;
 import com.nhnacademy.memberservice.member.dto.MemberUpdateRequest;
 import com.nhnacademy.memberservice.member.exception.MemberNotFoundException;
 import com.nhnacademy.memberservice.member.repository.MemberRepository;
 import com.nhnacademy.memberservice.member.service.MemberService;
 import com.nhnacademy.memberservice.role.domain.Role;
+import com.nhnacademy.memberservice.role.exception.RoleNotFoundException;
 import com.nhnacademy.memberservice.role.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -24,25 +27,21 @@ import java.util.Optional;
  */
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
     private final RoleRepository roleRepository;
 
     /**
-     * 새로운 회원을 등록합니다.
-     * <p>
-     * 회원가입 요청 정보를 받아 {@link Member} 엔티티로 변환 후 저장합니다.
-     * </p>
+     * {@inheritDoc}
      *
-     * @param request 회원 가입 요청 정보
-     * @return 등록된 회원 정보
+     * @throws RoleNotFoundException 기본 역할(USER)을 찾을 수 없습니다.
      */
     @Override
-    @Transactional
     public MemberResponse registerMember(MemberRegisterRequest request) {
         Role role = Optional.ofNullable(request.getRole()).orElseGet(() -> roleRepository.findByRoleName("USER")
-                .orElseThrow(() -> new IllegalArgumentException("기본 역할(USER)을 찾을 수 없습니다.")));
+                .orElseThrow(() -> new RoleNotFoundException("기본 역할(USER)을 찾을 수 없습니다.")));
 
         Member member = Member.ofNewMember(request.getName(), request.getEmail(), request.getPassword(), request.getPhoneNumber());
 
@@ -50,39 +49,41 @@ public class MemberServiceImpl implements MemberService {
 
         Member saved = memberRepository.save(member);
 
+        if (!request.isPasswordValid()) {
+            throw new IllegalArgumentException("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+        }
+
         return new MemberResponse(saved.getRole(), saved.getMbName(), saved.getMbEmail(), saved.getPhoneNumber());
     }
 
     /**
-     * 회원 고유 ID로 회원 정보를 조회합니다.
+     * {@inheritDoc}
      *
-     * @param mbNo 회원 고유 번호
-     * @return 해당 회원의 정보
      * @throws MemberNotFoundException 회원이 존재하지 않을 경우 예외 발생
      */
     @Override
     @Transactional(readOnly = true)
     public MemberResponse getMember(Long mbNo) {
-        Member member = memberRepository.findById(mbNo).orElseThrow(() -> new MemberNotFoundException(mbNo + "는 존재하지 않는 회원입니다."));
+        Member member = memberRepository.findById(mbNo)
+                .orElseThrow(() -> new MemberNotFoundException(mbNo + "는 존재하지 않는 회원입니다."));
 
         return new MemberResponse(member.getRole(), member.getMbName(), member.getMbEmail(), member.getPhoneNumber());
     }
 
     /**
-     * 회원 정보를 수정합니다.
+     * {@inheritDoc}
      *
-     * @param request 수정 요청 DTO
-     * @return 수정된 회원 정보
      * @throws MemberNotFoundException  회원이 존재하지 않음
      * @throws IllegalArgumentException 역할이 존재하지 않을 경우
      */
     @Override
-    @Transactional
     public MemberResponse updateMember(MemberUpdateRequest request) {
         Member member = memberRepository.findById(request.getMbNo())
                 .orElseThrow(() -> new MemberNotFoundException("회원이 존재하지 않습니다."));
 
-        Role role = Optional.ofNullable(request.getRole()).orElseGet(() -> roleRepository.findByRoleName("USER").orElseThrow(() -> new IllegalArgumentException("기본 역할(USER)을 찾을 수 없습니다.")));
+        Role role = Optional.ofNullable(request.getRole())
+                .orElseGet(() -> roleRepository.findByRoleName("USER")
+                        .orElseThrow(() -> new RoleNotFoundException("기본 역할(USER)을 찾을 수 없습니다.")));
 
         member.assignRole(role);
 
@@ -96,20 +97,33 @@ public class MemberServiceImpl implements MemberService {
     }
 
     /**
-     * 회원을 탈퇴 처리(소프트 딜리트)합니다.
-     * <p>
-     * 실제로 삭제하지 않고, {@code withdrawnAt} 필드에 시각을 기록합니다.
-     * </p>
+     * {@inheritDoc}
      *
-     * @param mbNo 회원 고유 번호
      * @throws MemberNotFoundException 회원이 존재하지 않는 경우 예외 발생
      */
     @Override
-    @Transactional
     public void deleteMember(Long mbNo) {
         Member member = memberRepository.findById(mbNo)
                 .orElseThrow(() -> new MemberNotFoundException("회원이 존재하지 않습니다."));
 
         member.withdraw();
     }
+
+    @Override
+    public void updatePassword(Long mbNo, MemberUpdatePasswordRequest request) {
+        Member member = memberRepository.findById(mbNo)
+                .orElseThrow(() -> new MemberNotFoundException("회원이 존재하지 않습니다."));
+
+        if (!Objects.equals(member.getMbPassword(), request.getOldPassword())) {
+            throw new IllegalArgumentException("기존 비밀번호가 일치하지 않습니다.");
+        }
+
+        if (!request.isPasswordValid()) {
+            throw new IllegalArgumentException("새로운 비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+        }
+
+        member.updatePassword(request.getNewPassword());
+
+    }
+
 }
