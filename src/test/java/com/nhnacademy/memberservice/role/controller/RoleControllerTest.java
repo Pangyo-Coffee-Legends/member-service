@@ -65,7 +65,7 @@ class RoleControllerTest {
 
         when(roleService.registerRole(any())).thenReturn(response);
 
-        mockMvc.perform(post("/roles/register")
+        mockMvc.perform(post("/api/v1/roles/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
@@ -87,7 +87,7 @@ class RoleControllerTest {
 
         when(roleService.getRole(1L)).thenReturn(response);
 
-        mockMvc.perform(get("/roles/1"))
+        mockMvc.perform(get("/api/v1/roles/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.roleName").value("ADMIN"))
                 .andExpect(jsonPath("$.roleDescription").value("관리자 권한"));
@@ -105,7 +105,7 @@ class RoleControllerTest {
         );
         when(roleService.updateRole(any())).thenReturn(response);
 
-        mockMvc.perform(put("/roles")
+        mockMvc.perform(put("/api/v1/roles")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())

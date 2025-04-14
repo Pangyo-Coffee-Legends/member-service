@@ -37,7 +37,7 @@ class RoleServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        role = new Role(1L, "USER", "일반 사용자");
+        role = Role.ofNewRole("USER", "일반 사용자");
     }
 
     @Test
@@ -85,7 +85,7 @@ class RoleServiceImplTest {
         // given
         RoleUpdateRequest request = new RoleUpdateRequest(1L, "수정된 설명");
         when(roleRepository.findById(1L)).thenReturn(Optional.of(role));
-        when(roleRepository.save(any(Role.class))).thenReturn(new Role(1L, "USER", "수정된 설명"));
+        when(roleRepository.save(any(Role.class))).thenReturn(Role.ofNewRole("USER", "수정된 설명"));
 
         // when
         RoleResponse response = roleService.updateRole(request);

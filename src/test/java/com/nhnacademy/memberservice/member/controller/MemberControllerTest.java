@@ -42,7 +42,7 @@ class MemberControllerTest {
         objectMapper = new ObjectMapper();
 
         registerRequest = new MemberRegisterRequest(
-                new Role(1L, "USER", "일반 사용자"),
+                Role.ofNewRole("USER", "일반 사용자"),
                 "김미성",
                 "test@example.com",
                 "password",
@@ -63,7 +63,7 @@ class MemberControllerTest {
 
         when(memberService.registerMember(any())).thenReturn(response);
 
-        mockMvc.perform(post("/members/register")
+        mockMvc.perform(post("/api/v1/members/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(registerRequest)))
                 .andExpect(status().isCreated())
@@ -78,7 +78,7 @@ class MemberControllerTest {
     @DisplayName("2. 회원 조회 성공")
     void testGetMember() throws Exception {
         MemberResponse response = new MemberResponse(
-                new Role(1L, "USER", "일반 사용자"),
+                Role.ofNewRole("USER", "일반 사용자"),
                 "김미성",
                 "test@example.com",
                 "010-1234-5678"
@@ -86,7 +86,7 @@ class MemberControllerTest {
 
         when(memberService.getMember(1L)).thenReturn(response);
 
-        mockMvc.perform(get("/members/1"))
+        mockMvc.perform(get("/api/v1/members/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.mbName").value("김미성"))
                 .andExpect(jsonPath("$.mbEmail").value("test@example.com"));
@@ -99,7 +99,7 @@ class MemberControllerTest {
     void testUpdateMember() throws Exception {
         MemberUpdateRequest updateRequest = new MemberUpdateRequest(
                 1L,
-                new Role(1L, "USER", "일반 사용자"),
+                Role.ofNewRole("USER", "일반 사용자"),
                 "김미성",
                 "update@example.com",
                 "newpassword",
@@ -116,7 +116,7 @@ class MemberControllerTest {
 
         when(memberService.updateMember(any())).thenReturn(response);
 
-        mockMvc.perform(put("/members")
+        mockMvc.perform(put("/api/v1/members")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateRequest)))
                 .andExpect(status().isOk())
@@ -129,7 +129,7 @@ class MemberControllerTest {
     @Test
     @DisplayName("4. 회원 탈퇴 성공")
     void testDeleteMember() throws Exception {
-        mockMvc.perform(delete("/members/1"))
+        mockMvc.perform(delete("/api/v1/members/1"))
                 .andExpect(status().isNoContent());
 
         verify(memberService).deleteMember(1L);
