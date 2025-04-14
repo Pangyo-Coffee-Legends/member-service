@@ -58,6 +58,7 @@ class MemberControllerTest {
                 registerRequest.getRole(),
                 registerRequest.getName(),
                 registerRequest.getEmail(),
+                registerRequest.getPassword(),
                 registerRequest.getPhoneNumber()
         );
 
@@ -76,22 +77,23 @@ class MemberControllerTest {
 
     @Test
     @DisplayName("2. 회원 조회 성공")
-    void testGetMember() throws Exception {
+    void testGetMemberByEmail() throws Exception {
         MemberResponse response = new MemberResponse(
                 Role.ofNewRole("USER", "일반 사용자"),
                 "김미성",
                 "test@example.com",
+                "password",
                 "010-1234-5678"
         );
 
-        when(memberService.getMember(1L)).thenReturn(response);
+        when(memberService.getMemberByEmail("test@example.com")).thenReturn(response);
 
-        mockMvc.perform(get("/api/v1/members/1"))
+        mockMvc.perform(get("/api/v1/members/test@example.com"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.mbName").value("김미성"))
                 .andExpect(jsonPath("$.mbEmail").value("test@example.com"));
 
-        verify(memberService).getMember(1L);
+        verify(memberService).getMemberByEmail("test@example.com");
     }
 
     @Test
@@ -111,6 +113,7 @@ class MemberControllerTest {
                 updateRequest.getRole(),
                 updateRequest.getName(),
                 updateRequest.getEmail(),
+                updateRequest.getPassword(),
                 updateRequest.getPhoneNumber()
         );
 

@@ -86,19 +86,24 @@ class MemberServiceImplTest {
     @Test
     @DisplayName("2. 회원 조회 성공 테스트")
     void testGetMember_found() {
-        when(memberRepository.findById(1L)).thenReturn(Optional.of(member));
+        when(memberRepository.findByMbEmail("test@nhnacademy.com")).thenReturn(Optional.of(member));
 
-        MemberResponse response = memberService.getMember(1L);
+        MemberResponse response = memberService.getMemberByEmail(member.getMbEmail());
 
         assertThat(response.getMbEmail()).isEqualTo("test@nhnacademy.com");
     }
 
     @Test
-    @DisplayName("3. 존재하지 않는 회원 조회 실패 테스트")
+    @DisplayName("3. 존재하지 않는 회원 조회 시 MemberNotFoundException 발생")
     void testGetMember_notFound() {
-        when(memberRepository.findById(99L)).thenReturn(Optional.empty());
+        String nonExistentEmail = "test@eee.com";
+        when(memberRepository.findByMbEmail(nonExistentEmail)).thenReturn(Optional.empty());
 
-        assertThrows(MemberNotFoundException.class, () -> memberService.getMember(99L));
+        MemberNotFoundException exception = assertThrows(MemberNotFoundException.class,
+                () -> memberService.getMemberByEmail(nonExistentEmail)
+        );
+
+        assertTrue(exception.getMessage().contains(nonExistentEmail+"는 존재하지 않는 회원입니다."));
     }
 
     @Test
@@ -162,7 +167,7 @@ class MemberServiceImplTest {
                 newPassword
         );
 
-        when(memberRepository.findById(1L)).thenReturn(Optional.of(member));
+        when(memberRepository.findByMbEmail(member.getMbEmail())).thenReturn(Optional.of(member));
 
         // when: 수동으로 비밀번호 업데이트 시나리오 시뮬레이션
         if (!request.getOldPassword().equals(member.getMbPassword())) {
@@ -171,7 +176,7 @@ class MemberServiceImplTest {
         if (!request.isPasswordValid()) {
             fail("새 비밀번호와 확인 값 불일치");
         }
-
+        memberService.updatePassword(member.getMbEmail(),request);
         ReflectionTestUtils.setField(member, "mbPassword", request.getNewPassword());
 
         // then
