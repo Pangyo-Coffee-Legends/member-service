@@ -2,6 +2,7 @@ package com.nhnacademy.memberservice.member.service;
 
 import com.nhnacademy.memberservice.member.dto.MemberRegisterRequest;
 import com.nhnacademy.memberservice.member.dto.MemberResponse;
+import com.nhnacademy.memberservice.member.dto.MemberUpdatePasswordRequest;
 import com.nhnacademy.memberservice.member.dto.MemberUpdateRequest;
 
 /**
@@ -56,4 +57,14 @@ public interface MemberService {
      * @param mbNo 삭제할 회원의 고유 ID
      */
     void deleteMember(Long mbNo);
+
+    /**
+     * 지정된 회원 번호에 해당하는 사용자의 비밀번호를 수정합니다.
+     *
+     * @param mbNo 비밀번호를 수정할 대상 회원의 고유 번호 (Primary Key)
+     * @param request 비밀번호 수정 요청 정보를 담은 DTO 객체.
+     *                현재 비밀번호, 새로운 비밀번호, 비밀번호 확인 등의 정보가 포함됩니다.
+     */
+    void updatePassword(Long mbNo, MemberUpdatePasswordRequest request);
+
 }

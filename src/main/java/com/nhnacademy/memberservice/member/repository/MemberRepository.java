@@ -13,5 +13,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * </p>
  */
 public interface MemberRepository extends JpaRepository<Member, Long> {
-    // 기본 CRUD 메서드는 JpaRepository에서 제공되므로 추가적인 메서드는 필요하지 않습니다.
 }

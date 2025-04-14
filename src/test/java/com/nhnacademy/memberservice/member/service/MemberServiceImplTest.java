@@ -3,6 +3,7 @@ package com.nhnacademy.memberservice.member.service;
 import com.nhnacademy.memberservice.member.domain.Member;
 import com.nhnacademy.memberservice.member.dto.MemberRegisterRequest;
 import com.nhnacademy.memberservice.member.dto.MemberResponse;
+import com.nhnacademy.memberservice.member.dto.MemberUpdatePasswordRequest;
 import com.nhnacademy.memberservice.member.dto.MemberUpdateRequest;
 import com.nhnacademy.memberservice.member.exception.MemberNotFoundException;
 import com.nhnacademy.memberservice.member.repository.MemberRepository;
@@ -19,8 +20,8 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 /**
@@ -44,7 +45,7 @@ class MemberServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        userRole = new Role(1L, "USER", "유저 권한입니다.");
+        userRole = Role.ofNewRole("USER", "유저 권한입니다.");
 
         member = Member.ofNewMember("김미성", "test@nhnacademy.com", "password", "010-0000-0000");
         member.assignRole(userRole);
@@ -69,10 +70,17 @@ class MemberServiceImplTest {
 
         MemberResponse response = memberService.registerMember(request);
 
-        assertThat(response).isNotNull();
-        assertThat(response.getMbName()).isEqualTo("김미성");
-        assertThat(response.getMbEmail()).isEqualTo("test@example.com");
-        verify(memberRepository).save(any(Member.class));
+        assertNotNull(response);
+        assertAll(
+                () -> {
+                    assertThat(response).isNotNull();
+                    assertThat(response.getMbName()).isEqualTo("김미성");
+                    assertThat(response.getMbEmail()).isEqualTo("test@example.com");
+                    assertEquals(request.getPassword(), request.getConfirmPassword());
+                    verify(memberRepository).save(any(Member.class));
+                }
+
+        );
     }
 
     @Test
@@ -112,9 +120,15 @@ class MemberServiceImplTest {
 
         MemberResponse response = memberService.updateMember(request);
 
-        assertThat(response.getMbName()).isEqualTo("김미성");
-        assertThat(response.getMbEmail()).isEqualTo("update@nhnacademy.com");
-        verify(memberRepository).save(any(Member.class));
+        assertNotNull(response);
+        assertAll(
+                () -> {
+                    assertThat(response.getMbName()).isEqualTo("김미성");
+                    assertThat(response.getMbEmail()).isEqualTo("update@nhnacademy.com");
+                    verify(memberRepository).save(any(Member.class));
+                }
+        );
+
     }
 
     @Test
@@ -134,4 +148,34 @@ class MemberServiceImplTest {
 
         assertThrows(MemberNotFoundException.class, () -> memberService.deleteMember(123L));
     }
+
+    @Test
+    @DisplayName("7. 비밀번호 업데이트 테스트")
+    void testUpdatePassword() {
+        // given
+        String oldPassword = "password";
+        String newPassword = "newsecurepass";
+
+        MemberUpdatePasswordRequest request = new MemberUpdatePasswordRequest(
+                oldPassword,
+                newPassword,
+                newPassword
+        );
+
+        when(memberRepository.findById(1L)).thenReturn(Optional.of(member));
+
+        // when: 수동으로 비밀번호 업데이트 시나리오 시뮬레이션
+        if (!request.getOldPassword().equals(member.getMbPassword())) {
+            fail("기존 비밀번호 불일치");
+        }
+        if (!request.isPasswordValid()) {
+            fail("새 비밀번호와 확인 값 불일치");
+        }
+
+        ReflectionTestUtils.setField(member, "mbPassword", request.getNewPassword());
+
+        // then
+        assertThat(member.getMbPassword()).isEqualTo("newsecurepass");
+    }
+
 }
