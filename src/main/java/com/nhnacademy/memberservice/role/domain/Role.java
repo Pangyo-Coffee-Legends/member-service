@@ -1,5 +1,6 @@
 package com.nhnacademy.memberservice.role.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.nhnacademy.memberservice.member.domain.Member;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
@@ -40,6 +41,7 @@ public class Role {
     private String roleDescription;
 
     @OneToMany(mappedBy = "role")
+    @JsonIgnore // 순환참조 문제 해결
     private List<Member> members = new ArrayList<>();
 
 
