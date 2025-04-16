@@ -41,7 +41,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public MemberResponse registerMember(MemberRegisterRequest request) {
         Role role = Optional.ofNullable(request.getRole()).orElseGet(() -> roleRepository.findByRoleName("USER")
-                .orElseThrow(() -> new RoleNotFoundException("기본 역할(USER)을 찾을 수 없습니다.")));
+                .orElseThrow(() -> new RoleNotFoundException("USER")));
 
         Member member = Member.ofNewMember(request.getName(), request.getEmail(), request.getPassword(), request.getPhoneNumber());
 
@@ -81,7 +81,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public MemberResponse updateMember(MemberUpdateRequest request) {
         Member member = memberRepository.findById(request.getMbNo())
-                .orElseThrow(() -> new MemberNotFoundException("회원이 존재하지 않습니다."));
+                .orElseThrow(MemberNotFoundException::new);
 
         Role role = Optional.ofNullable(request.getRole())
                 .orElseGet(() -> roleRepository.findByRoleName("USER")
@@ -106,7 +106,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public void deleteMember(Long mbNo) {
         Member member = memberRepository.findById(mbNo)
-                .orElseThrow(() -> new MemberNotFoundException("회원이 존재하지 않습니다."));
+                .orElseThrow(MemberNotFoundException::new);
 
         member.withdraw();
     }
