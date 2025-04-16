@@ -39,7 +39,7 @@ class RoleControllerIntegrationTest {
     void testRegisterRole() throws Exception {
         RoleRegisterRequest request = new RoleRegisterRequest("INTEGRATION_TEST", "통합테스트용 권한");
 
-        mockMvc.perform(post("/api/v1/roles/register")
+        mockMvc.perform(post("/api/v1/roles")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                  .andExpect(status().isCreated())
@@ -56,7 +56,7 @@ class RoleControllerIntegrationTest {
         Role role = Role.ofNewRole("FETCH_TEST", "조회 테스트용");
         Role saved = roleRepository.save(role);
 
-        mockMvc.perform(get("/api/v1/roles/" + saved.getRoleNo()))
+        mockMvc.perform(get("/api/v1/roles/id/" + saved.getRoleNo()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.roleName").value("FETCH_TEST"))
                 .andExpect(jsonPath("$.roleDescription").value("조회 테스트용"));

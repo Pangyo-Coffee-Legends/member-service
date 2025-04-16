@@ -20,8 +20,6 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class MemberUpdateRequest {
 
-    private Long mbNo;
-
     private Role role;
 
     @NotBlank
@@ -42,8 +40,7 @@ public class MemberUpdateRequest {
     @Size(max = 15)
     private String phoneNumber;
 
-    public MemberUpdateRequest(Long mbNo, Role role, String name, String email, String password, String confirmPassword, String phoneNumber) {
-        this.mbNo = mbNo;
+    public MemberUpdateRequest(Role role, String name, String email, String password, String confirmPassword, String phoneNumber) {
         this.role = role;
         this.name = name;
         this.email = email;
@@ -51,9 +48,6 @@ public class MemberUpdateRequest {
         this.phoneNumber = phoneNumber;
     }
 
-    public Long getMbNo() {
-        return mbNo;
-    }
 
     public Role getRole() {
         return role;

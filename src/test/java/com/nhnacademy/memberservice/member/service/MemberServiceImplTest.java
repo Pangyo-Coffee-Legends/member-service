@@ -109,7 +109,7 @@ class MemberServiceImplTest {
     @DisplayName("4. 회원 정보 수정 성공 테스트")
     void testUpdateMember() {
         MemberUpdateRequest request = new MemberUpdateRequest(
-                1L, userRole, "김미성", "update@nhnacademy.com", "newpass", "newpass", "010-1111-2222"
+               userRole, "김미성", "update@nhnacademy.com", "newpass", "newpass", "010-1111-2222"
         );
 
         Member updated = Member.ofNewMember(
@@ -121,7 +121,7 @@ class MemberServiceImplTest {
         when(roleRepository.findByRoleName("USER")).thenReturn(Optional.of(userRole));
         when(memberRepository.save(any(Member.class))).thenReturn(updated);
 
-        MemberResponse response = memberService.updateMember(request);
+        MemberResponse response = memberService.updateMember(member.getMbNo(), request);
 
         assertNotNull(response);
         assertAll(

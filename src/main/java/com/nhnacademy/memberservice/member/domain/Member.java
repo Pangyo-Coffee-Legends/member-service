@@ -23,11 +23,10 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode
 public class Member {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "mb_no")
-    @Comment("회원번호") // Hibernate 전용 어노테이션
+    @Comment("회원번호")
     private Long mbNo;
 
 
@@ -88,8 +87,29 @@ public class Member {
         return new Member(mbName, mbEmail, mbPassword, phoneNumber);
     }
 
+    /**
+     * 사용자의 비밀번호를 새 비밀번호로 변경합니다.
+     *
+     * @param newPassword 새로 설정할 비밀번호
+     */
     public void updatePassword(String newPassword) {
         this.mbPassword = newPassword;
+    }
+
+    /**
+     * 사용자 정보를 수정합니다.
+     * 이름, 이메일, 비밀번호, 전화번호를 새 값으로 업데이트합니다.
+     *
+     * @param mbName       새 이름
+     * @param mbEmail      새 이메일 주소
+     * @param mbPassword   새 비밀번호
+     * @param phoneNumber  새 전화번호
+     */
+    public void update(String mbName, String mbEmail, String mbPassword, String phoneNumber) {
+        this.mbName = mbName;
+        this.mbEmail = mbEmail;
+        this.mbPassword = mbPassword;
+        this.phoneNumber = phoneNumber;
     }
 
     /**

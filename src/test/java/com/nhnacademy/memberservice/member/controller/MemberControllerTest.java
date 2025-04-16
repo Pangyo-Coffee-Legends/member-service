@@ -37,16 +37,16 @@ class MemberControllerTest {
 
     private ObjectMapper objectMapper;
 
-
+    private Role role;
     private MemberRegisterRequest registerRequest;
 
     @BeforeEach
     void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(memberController).build();
         objectMapper = new ObjectMapper();
-
+        role=Role.ofNewRole("USER", "일반 사용자");
         registerRequest = new MemberRegisterRequest(
-                Role.ofNewRole("USER", "일반 사용자"),
+                role,
                 "김미성",
                 "test@example.com",
                 "password",
@@ -68,7 +68,7 @@ class MemberControllerTest {
 
         when(memberService.registerMember(any())).thenReturn(response);
 
-        mockMvc.perform(post("/api/v1/members/register")
+        mockMvc.perform(post("/api/v1/members")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(registerRequest)))
                 .andExpect(status().isCreated())
@@ -83,7 +83,7 @@ class MemberControllerTest {
     @DisplayName("2. 회원 조회 성공")
     void testGetMemberByEmail() throws Exception {
         MemberResponse response = new MemberResponse(
-                Role.ofNewRole("USER", "일반 사용자"),
+               role,
                 "김미성",
                 "test@example.com",
                 "password",
@@ -92,7 +92,7 @@ class MemberControllerTest {
 
         when(memberService.getMemberByEmail("test@example.com")).thenReturn(response);
 
-        mockMvc.perform(get("/api/v1/members/test@example.com"))
+        mockMvc.perform(get("/api/v1/members/email/test@example.com"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.mbName").value("김미성"))
                 .andExpect(jsonPath("$.mbEmail").value("test@example.com"));
@@ -103,9 +103,10 @@ class MemberControllerTest {
     @Test
     @DisplayName("3. 회원 수정 성공")
     void testUpdateMember() throws Exception {
+        long mbNo = 1L;
+
         MemberUpdateRequest updateRequest = new MemberUpdateRequest(
-                1L,
-                Role.ofNewRole("USER", "일반 사용자"),
+                role,
                 "김미성",
                 "update@example.com",
                 "newpassword",
@@ -113,25 +114,27 @@ class MemberControllerTest {
                 "010-0000-0000"
         );
 
-        MemberResponse response = new MemberResponse(
-                updateRequest.getRole(),
-                updateRequest.getName(),
-                updateRequest.getEmail(),
-                updateRequest.getPassword(),
-                updateRequest.getPhoneNumber()
+        MemberResponse stubResponse = new MemberResponse(
+                role,
+                "김미성",
+                "update@example.com",
+                "newpassword",
+                "010-0000-0000"
         );
 
-        when(memberService.updateMember(any())).thenReturn(response);
+        when(memberService.updateMember(eq(mbNo), any(MemberUpdateRequest.class)))
+                .thenReturn(stubResponse);
 
-        mockMvc.perform(put("/api/v1/members")
+        mockMvc.perform(put("/api/v1/members/" + mbNo)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateRequest)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.mbEmail").value("update@example.com"))
                 .andExpect(jsonPath("$.phoneNumber").value("010-0000-0000"));
 
-        verify(memberService).updateMember(any());
+        verify(memberService).updateMember(eq(mbNo), any(MemberUpdateRequest.class));
     }
+
 
     @Test
     @DisplayName("4. 회원 탈퇴 성공")
@@ -155,7 +158,7 @@ class MemberControllerTest {
         }
         """;
 
-        mockMvc.perform(put("/api/v1/members/{mbNo}", mbNo)
+        mockMvc.perform(put("/api/v1/members/{mbNo}/password", mbNo)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
                 .andExpect(status().isNoContent());
