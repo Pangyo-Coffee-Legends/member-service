@@ -60,7 +60,7 @@ public class Member {
     @Comment("생성일자")
     private LocalDateTime createdAt;
 
-
+//    @Column(name = "withdraw_At", nullable = false, length = 200) 로컬 db 컬럼명이 달라서 설정함. 타인이 사용시 주석으로 처리
     @Comment("탈퇴일자")
     private LocalDateTime withdrawnAt;
 
