@@ -5,6 +5,7 @@ import com.nhnacademy.memberservice.member.dto.MemberRegisterRequest;
 import com.nhnacademy.memberservice.member.dto.MemberResponse;
 import com.nhnacademy.memberservice.member.dto.MemberUpdatePasswordRequest;
 import com.nhnacademy.memberservice.member.dto.MemberUpdateRequest;
+import com.nhnacademy.memberservice.member.exception.MemberEmailNotFoundException;
 import com.nhnacademy.memberservice.member.exception.MemberNotFoundException;
 import com.nhnacademy.memberservice.member.exception.NewPasswordNotMatchException;
 import com.nhnacademy.memberservice.member.exception.PasswordNotMatchException;
@@ -52,7 +53,7 @@ public class MemberServiceImpl implements MemberService {
         Member saved = memberRepository.save(member);
 
         if (!request.isPasswordValid()) {
-            throw new IllegalArgumentException("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+            throw new PasswordNotMatchException();
         }
 
         return new MemberResponse(saved.getRole(), saved.getMbName(), saved.getMbEmail(), saved.getMbPassword(), saved.getPhoneNumber());
@@ -62,7 +63,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public MemberResponse getMemberByMbNo(Long mbNo) {
         Member member = memberRepository.findById(mbNo)
-                .orElseThrow(() -> new MemberNotFoundException(mbNo + "는 존재하지 않는 회원입니다."));
+                .orElseThrow(() -> new MemberNotFoundException(mbNo));
 
         return new MemberResponse(member.getRole(), member.getMbName(), member.getMbEmail(), member.getMbPassword(), member.getPhoneNumber());
     }
@@ -76,7 +77,7 @@ public class MemberServiceImpl implements MemberService {
     @Transactional(readOnly = true)
     public MemberResponse getMemberByEmail(String mbEmail) {
         Member member = memberRepository.findByMbEmail(mbEmail)
-                .orElseThrow(() -> new MemberNotFoundException(mbEmail + "는 존재하지 않는 회원입니다."));
+                .orElseThrow(() -> new MemberEmailNotFoundException(mbEmail));
 
         return new MemberResponse(member.getRole(), member.getMbName(), member.getMbEmail(), member.getMbPassword(), member.getPhoneNumber());
 
@@ -91,11 +92,11 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public MemberResponse updateMember(MemberUpdateRequest request) {
         Member member = memberRepository.findById(request.getMbNo())
-                .orElseThrow(MemberNotFoundException::new);
+                .orElseThrow(() -> new MemberNotFoundException(request.getMbNo()));
 
         Role role = Optional.ofNullable(request.getRole())
                 .orElseGet(() -> roleRepository.findByRoleName("USER")
-                        .orElseThrow(() -> new RoleNotFoundException("기본 역할(USER)을 찾을 수 없습니다.")));
+                        .orElseThrow(() -> new RoleNotFoundException(request.getName())));
 
         member.assignRole(role);
 
@@ -116,7 +117,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public void deleteMember(Long mbNo) {
         Member member = memberRepository.findById(mbNo)
-                .orElseThrow(MemberNotFoundException::new);
+                .orElseThrow(() -> new MemberNotFoundException(mbNo));
 
         member.withdraw();
     }
@@ -124,7 +125,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public void updatePassword(Long mbNo, MemberUpdatePasswordRequest request) {
         Member member = memberRepository.findById(mbNo)
-                .orElseThrow(MemberNotFoundException::new);
+                .orElseThrow(() -> new MemberNotFoundException(mbNo));
 
         if (!Objects.equals(member.getMbPassword(), request.getOldPassword())) {
             throw new PasswordNotMatchException();

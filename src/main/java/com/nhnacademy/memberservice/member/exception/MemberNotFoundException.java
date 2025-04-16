@@ -13,13 +13,6 @@ public class MemberNotFoundException extends RuntimeException {
     private static final String DEFAULT_MESSAGE = "회원을 찾을 수 없습니다.";
 
     /**
-     * 고정된 기본 메시지를 포함하는 예외 생성자입니다.
-     */
-    public MemberNotFoundException() {
-        super(DEFAULT_MESSAGE);
-    }
-
-    /**
      * 회원 번호를 포함하여 상세 메시지를 구성하는 예외 생성자입니다.
      *
      * @param mbNo 찾으려는 회원의 고유 식별자
@@ -28,12 +21,4 @@ public class MemberNotFoundException extends RuntimeException {
         super(DEFAULT_MESSAGE + " [회원번호: " + mbNo + "]");
     }
 
-    /**
-     * 사용자 정의 메시지를 직접 지정하는 생성자입니다.
-     *
-     * @param message 예외에 대한 사용자 정의 메시지
-     */
-    public MemberNotFoundException(String message) {
-        super(message);
-    }
 }
