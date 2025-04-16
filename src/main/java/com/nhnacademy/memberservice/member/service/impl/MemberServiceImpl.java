@@ -6,6 +6,8 @@ import com.nhnacademy.memberservice.member.dto.MemberResponse;
 import com.nhnacademy.memberservice.member.dto.MemberUpdatePasswordRequest;
 import com.nhnacademy.memberservice.member.dto.MemberUpdateRequest;
 import com.nhnacademy.memberservice.member.exception.MemberNotFoundException;
+import com.nhnacademy.memberservice.member.exception.NewPasswordNotMatchException;
+import com.nhnacademy.memberservice.member.exception.PasswordNotMatchException;
 import com.nhnacademy.memberservice.member.repository.MemberRepository;
 import com.nhnacademy.memberservice.member.service.MemberService;
 import com.nhnacademy.memberservice.role.domain.Role;
@@ -55,6 +57,14 @@ public class MemberServiceImpl implements MemberService {
 
         return new MemberResponse(saved.getRole(), saved.getMbName(), saved.getMbEmail(), saved.getMbPassword(), saved.getPhoneNumber());
 
+    }
+
+    @Override
+    public MemberResponse getMemberByMbNo(Long mbNo) {
+        Member member = memberRepository.findById(mbNo)
+                .orElseThrow(() -> new MemberNotFoundException(mbNo + "는 존재하지 않는 회원입니다."));
+
+        return new MemberResponse(member.getRole(), member.getMbName(), member.getMbEmail(), member.getMbPassword(), member.getPhoneNumber());
     }
 
     /**
@@ -112,16 +122,16 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void updatePassword(String mbEmail, MemberUpdatePasswordRequest request) {
-        Member member = memberRepository.findByMbEmail(mbEmail)
-                .orElseThrow(() -> new MemberNotFoundException("회원이 존재하지 않습니다."));
+    public void updatePassword(Long mbNo, MemberUpdatePasswordRequest request) {
+        Member member = memberRepository.findById(mbNo)
+                .orElseThrow(MemberNotFoundException::new);
 
         if (!Objects.equals(member.getMbPassword(), request.getOldPassword())) {
-            throw new IllegalArgumentException("기존 비밀번호가 일치하지 않습니다.");
+            throw new PasswordNotMatchException();
         }
 
         if (!request.isPasswordValid()) {
-            throw new IllegalArgumentException("새로운 비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+            throw new NewPasswordNotMatchException();
         }
 
         member.updatePassword(request.getNewPassword());

@@ -1,5 +1,6 @@
 package com.nhnacademy.memberservice.role.controller;
 
+import com.nhnacademy.memberservice.member.domain.Member;
 import com.nhnacademy.memberservice.role.dto.RoleRegisterRequest;
 import com.nhnacademy.memberservice.role.dto.RoleResponse;
 import com.nhnacademy.memberservice.role.dto.RoleUpdateRequest;
@@ -10,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
+
+import java.util.List;
 
 /**
  * 역할(Role) 관련 요청을 처리하는 REST 컨트롤러입니다.
@@ -33,7 +36,7 @@ public class RoleController {
      * @return 등록된 역할 정보를 포함한 응답 객체
      *         (예: 역할 이름: "ADMIN", 설명: "관리자 권한")
      */
-    @PostMapping("/register")
+    @PostMapping
     public ResponseEntity<RoleResponse> registerRole(@Valid @RequestBody RoleRegisterRequest request) {
         RoleResponse role = roleService.registerRole(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(role);
@@ -46,10 +49,26 @@ public class RoleController {
      * @return 해당 역할의 정보가 담긴 응답 객체
      *         (예: 역할 이름: "USER", 설명: "일반 사용자")
      */
-    @GetMapping("/{roleNo}")
+    @GetMapping("/id/{roleNo}")
     public ResponseEntity<RoleResponse> getRole(@PathVariable Long roleNo) {
         RoleResponse role = roleService.getRole(roleNo);
         return ResponseEntity.ok(role);
+    }
+
+    /**
+     * 역할 이름(roleName)을 기준으로 해당 역할을 가진 회원 목록을 조회합니다.
+     * <p>
+     * 예를 들어, "USER"라는 역할 이름을 입력하면 "USER" 역할을 가진 모든 회원 정보를 반환합니다.
+     * </p>
+     *
+     * @param roleName 조회할 역할 이름 (예: "USER")
+     * @return 해당 역할을 가진 회원들의 목록이 담긴 응답 객체
+     */
+    @GetMapping("/name/{roleName}")
+    public ResponseEntity<List<Member>> getMemberList(@PathVariable String roleName){
+        List<Member> roleList = roleService.getRoleList(roleName);
+
+        return ResponseEntity.ok(roleList);
     }
 
     /**

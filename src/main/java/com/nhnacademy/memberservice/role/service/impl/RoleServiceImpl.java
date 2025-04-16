@@ -1,14 +1,18 @@
 package com.nhnacademy.memberservice.role.service.impl;
 
+import com.nhnacademy.memberservice.member.domain.Member;
 import com.nhnacademy.memberservice.role.domain.Role;
 import com.nhnacademy.memberservice.role.dto.RoleRegisterRequest;
 import com.nhnacademy.memberservice.role.dto.RoleResponse;
 import com.nhnacademy.memberservice.role.dto.RoleUpdateRequest;
+import com.nhnacademy.memberservice.role.exception.RoleNotFoundException;
 import com.nhnacademy.memberservice.role.repository.RoleRepository;
 import com.nhnacademy.memberservice.role.service.RoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * 역할(Role)에 대한 비즈니스 로직을 처리하는 서비스 구현 클래스입니다.
@@ -35,10 +39,9 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public RoleResponse getRole(Long roleNo) {
         Role role = roleRepository.findById(roleNo)
-                .orElseThrow(() -> new IllegalArgumentException("해당 역할을 찾을 수 없습니다: roleNo=" + roleNo));
+                .orElseThrow(() -> new RoleNotFoundException("회원 번호를 찾을 수 없습니다."));
 
         return new RoleResponse(
                 role.getRoleName(),
@@ -46,10 +49,25 @@ public class RoleServiceImpl implements RoleService {
         );
     }
 
+    /**
+     * 역할 이름(roleName)을 기준으로 해당 역할에 속한 회원 목록을 조회합니다.
+     *
+     * @param roleName 조회할 역할 이름
+     * @return 해당 역할에 속한 회원 목록
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<Member> getRoleList(String roleName) {
+        Role role = roleRepository.findByRoleName(roleName)
+                .orElseThrow(() -> new RoleNotFoundException(roleName));
+
+        return role.getMembers();
+    }
+
     @Override
     public RoleResponse updateRole(RoleUpdateRequest request) {
         Role role = roleRepository.findById(request.getRoleNo())
-                .orElseThrow(() -> new IllegalArgumentException("해당 역할을 찾을 수 없습니다: roleNo=" + request.getRoleNo()));
+                .orElseThrow(() -> new RoleNotFoundException(request.getRoleName()));
 
         role.update(role.getRoleName(), request.getRoleDescription());
         Role updated = roleRepository.save(role);

@@ -18,15 +18,22 @@ public class RoleUpdateRequest {
 
     private Long roleNo;
 
+    private String roleName;
+
     private String roleDescription;
 
-    public RoleUpdateRequest(Long roleNo, String roleDescription) {
+    public RoleUpdateRequest(Long roleNo, String roleName, String roleDescription) {
         this.roleNo = roleNo;
+        this.roleName = roleName;
         this.roleDescription = roleDescription;
     }
 
     public Long getRoleNo() {
         return roleNo;
+    }
+
+    public String getRoleName() {
+        return roleName;
     }
 
     public String getRoleDescription() {

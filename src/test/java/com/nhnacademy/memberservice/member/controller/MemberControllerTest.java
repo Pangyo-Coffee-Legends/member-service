@@ -1,14 +1,17 @@
 package com.nhnacademy.memberservice.member.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nhnacademy.memberservice.member.domain.Member;
 import com.nhnacademy.memberservice.member.dto.MemberRegisterRequest;
 import com.nhnacademy.memberservice.member.dto.MemberResponse;
+import com.nhnacademy.memberservice.member.dto.MemberUpdatePasswordRequest;
 import com.nhnacademy.memberservice.member.dto.MemberUpdateRequest;
 import com.nhnacademy.memberservice.member.service.MemberService;
 import com.nhnacademy.memberservice.role.domain.Role;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -136,5 +140,31 @@ class MemberControllerTest {
                 .andExpect(status().isNoContent());
 
         verify(memberService).deleteMember(1L);
+    }
+
+    @Test
+    @DisplayName("5. 회원 비밀번호 업데이트 성공")
+    void testUpdatePassword() throws Exception {
+        Long mbNo = 1L;
+
+        String requestBody = """
+        {
+          "oldPassword": "12345678",
+          "newPassword": "newsecurepass",
+          "newConfirmPassword": "newsecurepass"
+        }
+        """;
+
+        mockMvc.perform(put("/api/v1/members/{mbNo}", mbNo)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(status().isNoContent());
+
+        ArgumentCaptor<MemberUpdatePasswordRequest> captor = ArgumentCaptor.forClass(MemberUpdatePasswordRequest.class);
+        verify(memberService).updatePassword(eq(mbNo), captor.capture());
+
+        MemberUpdatePasswordRequest capturedRequest = captor.getValue();
+        assertThat(capturedRequest.getOldPassword()).isEqualTo("12345678");
+        assertThat(capturedRequest.getNewPassword()).isEqualTo("newsecurepass");
     }
 }

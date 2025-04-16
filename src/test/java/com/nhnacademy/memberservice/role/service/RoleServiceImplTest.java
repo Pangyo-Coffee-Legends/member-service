@@ -1,9 +1,11 @@
 package com.nhnacademy.memberservice.role.service;
 
+import com.nhnacademy.memberservice.member.domain.Member;
 import com.nhnacademy.memberservice.role.domain.Role;
 import com.nhnacademy.memberservice.role.dto.RoleRegisterRequest;
 import com.nhnacademy.memberservice.role.dto.RoleResponse;
 import com.nhnacademy.memberservice.role.dto.RoleUpdateRequest;
+import com.nhnacademy.memberservice.role.exception.RoleNotFoundException;
 import com.nhnacademy.memberservice.role.repository.RoleRepository;
 import com.nhnacademy.memberservice.role.service.impl.RoleServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -70,20 +73,42 @@ class RoleServiceImplTest {
     }
 
     @Test
+    @DisplayName("3. 특정 역할 리스트 조회 성공 테스트")
+    void testGetRoleList_success() {
+        Role role = Role.ofNewRole("USER", "일반 사용자");
+
+        Member member1 = Member.ofNewMember("홍길동", "hong@test.com", "1234test!", "010-0000-0000");
+        Member member2 = Member.ofNewMember("이몽룡", "lee@test.com", "abcd1234!", "010-1111-1111");
+
+        role.getMembers().add(member1);
+        role.getMembers().add(member2);
+
+        when(roleRepository.findByRoleName("USER")).thenReturn(Optional.of(role));
+
+        // when
+        List<Member> result = roleService.getRoleList("USER");
+
+        // then
+        assertThat(result).hasSize(2);
+        assertThat(result).extracting(Member::getMbName)
+                .containsExactlyInAnyOrder("홍길동", "이몽룡");
+    }
+
+    @Test
     @DisplayName("3. 존재하지 않는 역할 조회 실패 테스트")
     void testGetRole_notFound() {
         // given
         when(roleRepository.findById(99L)).thenReturn(Optional.empty());
 
         // then
-        assertThrows(IllegalArgumentException.class, () -> roleService.getRole(99L));
+        assertThrows(RoleNotFoundException.class, () -> roleService.getRole(99L));
     }
 
     @Test
     @DisplayName("4. 역할 수정 성공 테스트")
     void testUpdateRole_success() {
         // given
-        RoleUpdateRequest request = new RoleUpdateRequest(1L, "수정된 설명");
+        RoleUpdateRequest request = new RoleUpdateRequest(1L, "testName", "수정된 설명");
         when(roleRepository.findById(1L)).thenReturn(Optional.of(role));
         when(roleRepository.save(any(Role.class))).thenReturn(Role.ofNewRole("USER", "수정된 설명"));
 
@@ -98,10 +123,10 @@ class RoleServiceImplTest {
     @DisplayName("5. 존재하지 않는 역할 수정 실패 테스트")
     void testUpdateRole_notFound() {
         // given
-        RoleUpdateRequest request = new RoleUpdateRequest(999L, "설명 없음");
+        RoleUpdateRequest request = new RoleUpdateRequest(999L, "testName", "설명 없음");
         when(roleRepository.findById(999L)).thenReturn(Optional.empty());
 
         // then
-        assertThrows(IllegalArgumentException.class, () -> roleService.updateRole(request));
+        assertThrows(RoleNotFoundException.class, () -> roleService.updateRole(request));
     }
 }

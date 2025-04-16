@@ -2,6 +2,7 @@ package com.nhnacademy.memberservice.member.controller;
 
 import com.nhnacademy.memberservice.member.dto.MemberRegisterRequest;
 import com.nhnacademy.memberservice.member.dto.MemberResponse;
+import com.nhnacademy.memberservice.member.dto.MemberUpdatePasswordRequest;
 import com.nhnacademy.memberservice.member.dto.MemberUpdateRequest;
 import com.nhnacademy.memberservice.member.service.MemberService;
 import jakarta.validation.Valid;
@@ -75,6 +76,24 @@ public class MemberController {
     @DeleteMapping("/{mbNo}")
     public ResponseEntity<Void> deleteMember(@PathVariable Long mbNo) {
         memberService.deleteMember(mbNo);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * 회원의 비밀번호를 업데이트합니다.
+     * <p>
+     * 기존 비밀번호를 확인하고, 새로운 비밀번호가 유효한지 체크한 후, 비밀번호를 변경합니다.
+     * </p>
+     *
+     * @param mbNo 회원의 고유 번호 (PathVariable)
+     * @param request 비밀번호 업데이트에 필요한 정보 (새로운 비밀번호, 기존 비밀번호 등)
+     * @return 내용 없는 응답 ResponseEntity (HTTP 204 No Content)
+     */
+    @PutMapping("/{mbNo}")
+    public ResponseEntity<Void> updatePassword(@PathVariable Long mbNo, @RequestBody @Valid MemberUpdatePasswordRequest request){
+        memberService.updatePassword(mbNo, request);
+
         return ResponseEntity.noContent().build();
     }
 }

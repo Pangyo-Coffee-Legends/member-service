@@ -63,7 +63,6 @@ class MemberServiceImplTest {
                 request.getName(), request.getEmail(), request.getPassword(), request.getPhoneNumber()
         );
         save.assignRole(userRole);
-        ReflectionTestUtils.setField(save, "mbNo", 1L);
 
         when(roleRepository.findByRoleName("USER")).thenReturn(Optional.of(userRole));
         when(memberRepository.save(any(Member.class))).thenReturn(save);
@@ -117,7 +116,6 @@ class MemberServiceImplTest {
                 request.getName(), request.getEmail(), request.getPassword(), request.getPhoneNumber()
         );
         updated.assignRole(userRole);
-        ReflectionTestUtils.setField(updated, "mbNo", 1L);
 
         when(memberRepository.findById(1L)).thenReturn(Optional.of(member));
         when(roleRepository.findByRoleName("USER")).thenReturn(Optional.of(userRole));
@@ -157,7 +155,7 @@ class MemberServiceImplTest {
     @Test
     @DisplayName("7. 비밀번호 업데이트 테스트")
     void testUpdatePassword() {
-        // given
+
         String oldPassword = "password";
         String newPassword = "newsecurepass";
 
@@ -167,19 +165,10 @@ class MemberServiceImplTest {
                 newPassword
         );
 
-        when(memberRepository.findByMbEmail(member.getMbEmail())).thenReturn(Optional.of(member));
+        when(memberRepository.findById(member.getMbNo())).thenReturn(Optional.of(member));
 
-        // when: 수동으로 비밀번호 업데이트 시나리오 시뮬레이션
-        if (!request.getOldPassword().equals(member.getMbPassword())) {
-            fail("기존 비밀번호 불일치");
-        }
-        if (!request.isPasswordValid()) {
-            fail("새 비밀번호와 확인 값 불일치");
-        }
-        memberService.updatePassword(member.getMbEmail(),request);
-        ReflectionTestUtils.setField(member, "mbPassword", request.getNewPassword());
+        memberService.updatePassword(member.getMbNo(),request);
 
-        // then
         assertThat(member.getMbPassword()).isEqualTo("newsecurepass");
     }
 
