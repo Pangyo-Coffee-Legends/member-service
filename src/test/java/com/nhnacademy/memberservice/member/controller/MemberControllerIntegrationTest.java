@@ -16,7 +16,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
@@ -46,6 +49,7 @@ class MemberControllerIntegrationTest {
     @Autowired
     private RoleRepository roleRepository;
 
+    private  MemberRegisterRequest request;
     private Long mbNo;
     private String email = "test@example123.com";
 
@@ -54,7 +58,7 @@ class MemberControllerIntegrationTest {
      */
     @BeforeEach
     void setUp() {
-        MemberRegisterRequest request = new MemberRegisterRequest(
+    request = new MemberRegisterRequest(
                 "USER_MEMBER",
                 "김미성",
                 email,
@@ -65,12 +69,19 @@ class MemberControllerIntegrationTest {
         mbNo = memberService.registerMember(request).getMbNo();
     }
 
+
+    @Test
+    @DisplayName("1. 회원 등록 성공")
+    void testRegisterMember() throws Exception {
+
+
+    }
     /**
      * 이메일을 기준으로 회원 조회 요청을 수행하여,
      * 200 OK 응답과 함께 올바른 회원 정보를 반환하는지 검증합니다.
      */
     @Test
-    @DisplayName("1. 회원 조회 성공")
+    @DisplayName("2. 회원 조회 성공")
     void testGetMemberByEmail() throws Exception {
         mockMvc.perform(get("/api/v1/members/email/" + email))
                 .andExpect(status().isOk())
@@ -83,7 +94,7 @@ class MemberControllerIntegrationTest {
      * 수정된 결과가 정상적으로 반영되는지 검증합니다.
      */
     @Test
-    @DisplayName("2. 회원 수정 성공")
+    @DisplayName("3. 회원 수정 성공")
     void testUpdateMember() throws Exception {
         MemberUpdateRequest updateRequest = new MemberUpdateRequest(
                 "김미성",
@@ -105,7 +116,7 @@ class MemberControllerIntegrationTest {
      * 회원 탈퇴 요청을 수행하고, 204 No Content 응답이 정상적으로 반환되는지 확인합니다.
      */
     @Test
-    @DisplayName("3. 회원 탈퇴 성공")
+    @DisplayName("4. 회원 탈퇴 성공")
     void testDeleteMember() throws Exception {
         mockMvc.perform(delete("/api/v1/members/" + mbNo))
                 .andExpect(status().isNoContent());

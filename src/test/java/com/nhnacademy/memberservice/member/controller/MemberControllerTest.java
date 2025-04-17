@@ -49,7 +49,7 @@ class MemberControllerTest {
 
 
         registerRequest = new MemberRegisterRequest(
-                role,
+                "role",
                 "김미성",
                 "test@example.com",
                 "password",
@@ -79,7 +79,7 @@ class MemberControllerTest {
     void testGetMemberByEmail() throws Exception {
         MemberResponse response = new MemberResponse(
                 1L,
-               role,
+               "role",
                 "김미성",
                 "test@example.com",
                 "010-1234-5678"
@@ -101,17 +101,16 @@ class MemberControllerTest {
         long mbNo = 1L;
 
         MemberUpdateRequest updateRequest = new MemberUpdateRequest(
-                role,
-                "김미성",
-                "update@example.com",
-                "newpassword",
-                "newpassword",
-                "010-0000-0000"
+                "이름",
+                "testtest@test.com",
+                "Password123!",
+                "Password123!",
+                "010-1111-1111"
         );
 
         MemberResponse stubResponse = new MemberResponse(
                 1L,
-                role,
+                "ROLE_MEMBER",
                 "김미성",
                 "update@example.com",
                 "010-0000-0000"
