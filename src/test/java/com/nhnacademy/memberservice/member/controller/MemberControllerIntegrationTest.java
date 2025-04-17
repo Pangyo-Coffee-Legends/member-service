@@ -35,7 +35,7 @@ class MemberControllerIntegrationTest {
     private RoleRepository roleRepository;
 
     private Long mbNo;
-    private String email = "test@example.com";
+    private String email = "test@example1.com";
     private Role savedRole;
 
     @BeforeEach

@@ -5,11 +5,13 @@ import com.nhnacademy.memberservice.member.dto.MemberRegisterRequest;
 import com.nhnacademy.memberservice.member.dto.MemberResponse;
 import com.nhnacademy.memberservice.member.dto.MemberUpdatePasswordRequest;
 import com.nhnacademy.memberservice.member.dto.MemberUpdateRequest;
+import com.nhnacademy.memberservice.member.exception.MemberEmailNotFoundException;
 import com.nhnacademy.memberservice.member.exception.MemberNotFoundException;
 import com.nhnacademy.memberservice.member.repository.MemberRepository;
 import com.nhnacademy.memberservice.member.service.impl.MemberServiceImpl;
 import com.nhnacademy.memberservice.role.domain.Role;
 import com.nhnacademy.memberservice.role.repository.RoleRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,6 +19,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -29,6 +32,7 @@ import static org.mockito.Mockito.*;
  * 회원 등록, 조회, 수정, 삭제 로직을 검증합니다.
  */
 @SpringBootTest
+@Transactional
 class MemberServiceImplTest {
 
     @Mock
@@ -98,11 +102,9 @@ class MemberServiceImplTest {
         String nonExistentEmail = "test@eee.com";
         when(memberRepository.findByMbEmail(nonExistentEmail)).thenReturn(Optional.empty());
 
-        MemberNotFoundException exception = assertThrows(MemberNotFoundException.class,
-                () -> memberService.getMemberByEmail(nonExistentEmail)
-        );
-
-        assertTrue(exception.getMessage().contains(nonExistentEmail+"는 존재하지 않는 회원입니다."));
+        Assertions.assertThrows(MemberEmailNotFoundException.class, ()-> {
+            memberService.getMemberByEmail(nonExistentEmail);
+        });
     }
 
     @Test
@@ -131,7 +133,6 @@ class MemberServiceImplTest {
                     verify(memberRepository).save(any(Member.class));
                 }
         );
-
     }
 
     @Test

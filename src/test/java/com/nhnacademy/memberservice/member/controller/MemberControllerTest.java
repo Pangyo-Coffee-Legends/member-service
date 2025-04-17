@@ -43,7 +43,9 @@ class MemberControllerTest {
     @BeforeEach
     void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(memberController).build();
+
         objectMapper = new ObjectMapper();
+
         role=Role.ofNewRole("USER", "일반 사용자");
         registerRequest = new MemberRegisterRequest(
                 role,

@@ -40,7 +40,7 @@ public class Member {
     private String mbName;
 
 
-    @Column(name = "mb_email", nullable = false, length = 100)
+    @Column(name = "mb_email", nullable = false, length = 100, unique = true)
     @Comment("이메일")
     private String mbEmail;
 
