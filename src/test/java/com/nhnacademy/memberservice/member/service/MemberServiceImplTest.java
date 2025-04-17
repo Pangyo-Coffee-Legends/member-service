@@ -17,6 +17,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +33,6 @@ import static org.mockito.Mockito.*;
  * 회원 등록, 조회, 수정, 삭제 로직을 검증합니다.
  */
 @SpringBootTest
-@Transactional
 class MemberServiceImplTest {
 
     @Mock
@@ -72,6 +72,9 @@ class MemberServiceImplTest {
         when(memberRepository.save(any(Member.class))).thenReturn(save);
 
         MemberResponse response = memberService.registerMember(request);
+
+        verify(roleRepository, Mockito.times(1)).findByRoleName(Mockito.anyString());
+        verify(memberRepository, Mockito.times(1)).save(Mockito.any());
 
         assertNotNull(response);
         assertAll(

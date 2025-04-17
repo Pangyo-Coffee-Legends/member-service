@@ -1,0 +1,23 @@
+### member 등록
+POST http://localhost:8080/api/v1/members
+Content-Type: application/json
+Accept: application/json
+
+{
+  "roleName": "ROLE_USER",
+  "name": "asdf",
+  "email": "test@testaaa.com",
+  "password" : "123Asd!@#",
+  "confirmPassword": "123Asd!@#",
+  "phoneNumber": "010-1111-2222"
+}
+
+### role 등록
+POST http://localhost:8080/api/v1/roles
+Content-Type: application/json
+Accept: application/json
+
+{
+  "roleName": "ROLE_USER",
+  "roleDescription": "asdf"
+}

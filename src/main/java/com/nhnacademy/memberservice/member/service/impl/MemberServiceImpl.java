@@ -43,29 +43,46 @@ public class MemberServiceImpl implements MemberService {
      */
     @Override
     public MemberResponse registerMember(MemberRegisterRequest request) {
-        Role role = Optional.ofNullable(request.getRole()).orElseGet(() -> roleRepository.findByRoleName("USER")
-                .orElseThrow(() -> new RoleNotFoundException("USER")));
-
-        Member member = Member.ofNewMember(request.getName(), request.getEmail(), request.getPassword(), request.getPhoneNumber());
-
-        member.assignRole(role);
-
-        Member saved = memberRepository.save(member);
-
         if (!request.isPasswordValid()) {
             throw new PasswordNotMatchException();
         }
 
-        return new MemberResponse(saved.getMbNo(),saved.getRole(), saved.getMbName(), saved.getMbEmail(), saved.getMbPassword(), saved.getPhoneNumber());
+        Role role = roleRepository.findByRoleName(request.getRoleName())
+                .orElseThrow(() -> new RoleNotFoundException(request.getRoleName()));
+
+        Member member = Member.ofNewMember(
+                role,
+                request.getName(),
+                request.getEmail(),
+                request.getPassword(),
+                request.getPhoneNumber()
+        );
+
+        Member savedMember = memberRepository.save(member);
+
+
+        return new MemberResponse(
+                savedMember.getMbNo(),
+                member.getRole().getRoleName(),
+                savedMember.getMbName(),
+                savedMember.getMbEmail(),
+                savedMember.getPhoneNumber()
+        );
 
     }
 
     @Override
     public MemberResponse getMemberByMbNo(Long mbNo) {
         Member member = memberRepository.findById(mbNo)
-                .orElseThrow(() -> new MemberNotFoundException("맴버를 찾을 수 없습니다."));
+                .orElseThrow(() -> new MemberNotFoundException(mbNo));
 
-        return new MemberResponse(member.getMbNo(),member.getRole(), member.getMbName(), member.getMbEmail(), member.getMbPassword(), member.getPhoneNumber());
+        return new MemberResponse(
+                member.getMbNo(),
+                member.getRole().getRoleName(),
+                member.getMbName(),
+                member.getMbEmail(),
+                member.getPhoneNumber()
+        );
     }
 
     /**
@@ -79,7 +96,7 @@ public class MemberServiceImpl implements MemberService {
         Member member = memberRepository.findByMbEmail(mbEmail)
                 .orElseThrow(() -> new MemberEmailNotFoundException(mbEmail));
 
-        return new MemberResponse(member.getMbNo(),member.getRole(), member.getMbName(), member.getMbEmail(), member.getMbPassword(), member.getPhoneNumber());
+        return new MemberResponse(member.getMbNo(), member.getRole().getRoleName(), member.getMbName(), member.getMbEmail(), member.getPhoneNumber());
 
     }
 
@@ -91,22 +108,17 @@ public class MemberServiceImpl implements MemberService {
      */
     @Override
     public MemberResponse updateMember(Long mbNo, MemberUpdateRequest request) {
-        Member member = memberRepository.findByMbEmail(request.getEmail())
-                .orElseThrow(() -> new MemberNotFoundException(request.getEmail()));
+        Member member = memberRepository.findById(mbNo)
+                .orElseThrow(() -> new MemberNotFoundException(mbNo));
 
-        Role role = Optional.ofNullable(request.getRole())
-                .orElseGet(() -> roleRepository.findByRoleName("USER")
-                        .orElseThrow(() -> new RoleNotFoundException(request.getName())));
-
-        member.assignRole(role);
-
-        // 필드 직접 설정
-        member = Member.ofNewMember(request.getName(), request.getEmail(), request.getPassword(), request.getPhoneNumber());
-        member.assignRole(role);
+        member.update(
+                request.getName(),
+                request.getPhoneNumber()
+        );
 
         Member updated = memberRepository.save(member);
 
-        return new MemberResponse(updated.getMbNo(),updated.getRole(), updated.getMbName(), updated.getMbEmail(), updated.getMbPassword(), updated.getPhoneNumber());
+        return new MemberResponse(updated.getMbNo(), updated.getRole().getRoleName(), updated.getMbName(), updated.getMbEmail(), updated.getPhoneNumber());
     }
 
     /**
@@ -117,7 +129,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public void deleteMember(Long mbNo) {
         Member member = memberRepository.findById(mbNo)
-                .orElseThrow(() -> new MemberNotFoundException("맴버를 찾을 수 없습니다."));
+                .orElseThrow(() -> new MemberNotFoundException(mbNo));
 
         member.withdraw();
     }
@@ -125,7 +137,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public void updatePassword(Long mbNo, MemberUpdatePasswordRequest request) {
         Member member = memberRepository.findById(mbNo)
-                .orElseThrow(() -> new MemberNotFoundException("맴버를 찾을 수 없습니다."));
+                .orElseThrow(() -> new MemberNotFoundException(mbNo));
 
         if (!Objects.equals(member.getMbPassword(), request.getOldPassword())) {
             throw new PasswordNotMatchException();

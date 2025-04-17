@@ -35,14 +35,6 @@ public interface RoleService {
     RoleResponse getRole(Long roleNo);
 
     /**
-     * 역할 이름(roleName)를 기준으로 역할 정보를 조회합니다.
-     *
-     * @param roleName 조회할 역할 이름
-     * @return 조회된 역할 정보를 담은 응답 객체
-     */
-    List<Member> getRoleList(String roleName);
-
-    /**
      * 역할 정보를 수정합니다.
      * <p>
      * 주로 역할 설명(`roleDescription`)을 수정하는 데 사용됩니다.

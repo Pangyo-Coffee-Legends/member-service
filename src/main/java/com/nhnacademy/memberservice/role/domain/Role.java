@@ -16,14 +16,15 @@ import java.util.List;
  * 권한 정보를 저장하는 JPA 엔티티입니다.
  * <p>
  * 이 엔티티는 사용자의 역할을 정의하는 역할을 합니다. 역할 번호, 역할 이름,
- * 역할 설명 등의 정보를 포함합니다.
+ * 역할 설명 등의 정보를 포함합니다. 또한, {@link Role#roleName}을 기준으로
+ * 객체 비교를 하여 중복된 권한이 저장되지 않도록 처리됩니다.
  * </p>
  */
 @Entity
 @Table(name = "roles")
 @NoArgsConstructor
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Role {
 
     @Id
@@ -32,18 +33,14 @@ public class Role {
     @Comment("권한번호")
     private Long roleNo;
 
-    @Column(name = "role_name", nullable = false, length = 50)
+    @EqualsAndHashCode.Include
+    @Column(name = "role_name", nullable = false, length = 50, unique = true)
     @Comment("권한명")
     private String roleName;
 
-    @Column(name = "role_description", nullable = false, length = 200)
+    @Column(name = "role_description", nullable = false, length = 200, unique = true)
     @Comment("권한설명")
     private String roleDescription;
-
-    @OneToMany(mappedBy = "role")
-    @JsonIgnore // 순환참조 문제 해결
-    private List<Member> members = new ArrayList<>();
-
 
     private Role(String roleName, String roleDescription) {
         this.roleName = roleName;
@@ -78,8 +75,5 @@ public class Role {
         return roleDescription;
     }
 
-    public List<Member> getMembers() {
-        return members;
-    }
 }
 

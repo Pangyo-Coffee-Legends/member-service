@@ -1,7 +1,6 @@
 package com.nhnacademy.memberservice.member.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nhnacademy.memberservice.member.domain.Member;
 import com.nhnacademy.memberservice.member.dto.MemberRegisterRequest;
 import com.nhnacademy.memberservice.member.dto.MemberResponse;
 import com.nhnacademy.memberservice.member.dto.MemberUpdatePasswordRequest;
@@ -14,25 +13,27 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest
+@WebMvcTest(controllers = MemberController.class)
 class MemberControllerTest {
 
+    @Autowired
     private MockMvc mockMvc;
 
-    @InjectMocks
-    private MemberController memberController;
-
-    @Mock
+    @MockitoBean
     private MemberService memberService;
 
     private ObjectMapper objectMapper;
@@ -42,11 +43,11 @@ class MemberControllerTest {
 
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(memberController).build();
-
         objectMapper = new ObjectMapper();
 
         role=Role.ofNewRole("USER", "일반 사용자");
+
+
         registerRequest = new MemberRegisterRequest(
                 role,
                 "김미성",
@@ -60,24 +61,15 @@ class MemberControllerTest {
     @Test
     @DisplayName("1. 회원 등록 성공")
     void testRegisterMember() throws Exception {
-        MemberResponse response = new MemberResponse(
-                1L,
-                registerRequest.getRole(),
-                registerRequest.getName(),
-                registerRequest.getEmail(),
-                registerRequest.getPassword(),
-                registerRequest.getPhoneNumber()
-        );
-
-        when(memberService.registerMember(any())).thenReturn(response);
-
         mockMvc.perform(post("/api/v1/members")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(registerRequest)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.mbName").value("김미성"))
-                .andExpect(jsonPath("$.mbEmail").value("test@example.com"))
-                .andExpect(jsonPath("$.phoneNumber").value("010-1234-5678"));
+                .andExpect(jsonPath("$.name").value("김미성"))
+                .andExpect(jsonPath("$.email").value("test@example.com"))
+                .andExpect(jsonPath("$.phoneNumber").value("010-1234-5678"))
+                .andDo(print());
 
         verify(memberService).registerMember(any());
     }
@@ -90,7 +82,6 @@ class MemberControllerTest {
                role,
                 "김미성",
                 "test@example.com",
-                "password",
                 "010-1234-5678"
         );
 
@@ -122,8 +113,7 @@ class MemberControllerTest {
                 1L,
                 role,
                 "김미성",
-                "update@example.com",  // ✔ 응답 검증용 값 일치
-                "newpassword",
+                "update@example.com",
                 "010-0000-0000"
         );
 

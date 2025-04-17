@@ -48,7 +48,6 @@ public class MemberUpdateRequest {
         this.phoneNumber = phoneNumber;
     }
 
-
     public Role getRole() {
         return role;
     }
@@ -68,4 +67,5 @@ public class MemberUpdateRequest {
     public String getPhoneNumber() {
         return phoneNumber;
     }
+
 }

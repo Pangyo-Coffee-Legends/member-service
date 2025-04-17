@@ -5,6 +5,7 @@ import com.nhnacademy.memberservice.role.domain.Role;
 import com.nhnacademy.memberservice.role.dto.RoleRegisterRequest;
 import com.nhnacademy.memberservice.role.dto.RoleResponse;
 import com.nhnacademy.memberservice.role.dto.RoleUpdateRequest;
+import com.nhnacademy.memberservice.role.exception.RoleConflictException;
 import com.nhnacademy.memberservice.role.exception.RoleNotFoundException;
 import com.nhnacademy.memberservice.role.repository.RoleRepository;
 import com.nhnacademy.memberservice.role.service.RoleService;
@@ -29,9 +30,16 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public RoleResponse registerRole(RoleRegisterRequest request) {
+        roleRepository.findByRoleName(request.getRoleName())
+                .orElseThrow(() -> new RoleConflictException(request.getRoleName()));
+
+        // 중복이 없으면 새로 Role 생성
         Role role = Role.ofNewRole(request.getRoleName(), request.getRoleDescription());
+
+        // Role 저장
         Role saved = roleRepository.save(role);
 
+        // 성공적으로 저장된 Role 정보 반환
         return new RoleResponse(
                 saved.getRoleName(),
                 saved.getRoleDescription()
@@ -47,21 +55,6 @@ public class RoleServiceImpl implements RoleService {
                 role.getRoleName(),
                 role.getRoleDescription()
         );
-    }
-
-    /**
-     * 역할 이름(roleName)을 기준으로 해당 역할에 속한 회원 목록을 조회합니다.
-     *
-     * @param roleName 조회할 역할 이름
-     * @return 해당 역할에 속한 회원 목록
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public List<Member> getRoleList(String roleName) {
-        Role role = roleRepository.findByRoleName(roleName)
-                .orElseThrow(() -> new RoleNotFoundException(roleName));
-
-        return role.getMembers();
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.nhnacademy.memberservice.member.domain;
 
 import com.nhnacademy.memberservice.role.domain.Role;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -76,15 +77,17 @@ public class Member {
      * <p>
      * 이 메서드는 새로운 회원을 생성하기 위한 간편한 방법을 제공합니다.
      * </p>
-     *
-     * @param mbName      회원 이름
-     * @param mbEmail     회원 이메일
-     * @param mbPassword  회원 비밀번호
-     * @param phoneNumber 회원 전화번호
-     * @return 새로운 회원 객체
+     * @param role
+     * @param mbName
+     * @param mbEmail
+     * @param mbPassword
+     * @param phoneNumber
+     * @return
      */
-    public static Member ofNewMember(String mbName, String mbEmail, String mbPassword, String phoneNumber) {
-        return new Member(mbName, mbEmail, mbPassword, phoneNumber);
+    public static Member ofNewMember(Role role, String mbName, String mbEmail, String mbPassword, String phoneNumber) {
+        Member member = new Member(mbName, mbEmail, mbPassword, phoneNumber);
+        member.role = role;
+        return member;
     }
 
     /**
@@ -98,17 +101,13 @@ public class Member {
 
     /**
      * 사용자 정보를 수정합니다.
-     * 이름, 이메일, 비밀번호, 전화번호를 새 값으로 업데이트합니다.
+     * 이름, 전화번호를 새 값으로 업데이트합니다.
      *
      * @param mbName       새 이름
-     * @param mbEmail      새 이메일 주소
-     * @param mbPassword   새 비밀번호
      * @param phoneNumber  새 전화번호
      */
-    public void update(String mbName, String mbEmail, String mbPassword, String phoneNumber) {
+    public void update(String mbName, String phoneNumber) {
         this.mbName = mbName;
-        this.mbEmail = mbEmail;
-        this.mbPassword = mbPassword;
         this.phoneNumber = phoneNumber;
     }
 
@@ -127,18 +126,6 @@ public class Member {
      */
     public void withdraw() {
         this.withdrawnAt = LocalDateTime.now();
-    }
-
-    /**
-     * 회원에게 역할을 부여하는 메서드입니다.
-     * <p>
-     * 이 메서드는 {@link Role} 엔티티를 회원에게 할당합니다.
-     * </p>
-     *
-     * @param role 부여할 역할
-     */
-    public void assignRole(Role role) {
-        this.role = role;
     }
 
     public Long getMbNo() {
@@ -181,6 +168,7 @@ public class Member {
     public boolean isWithdrawn() {
         return this.withdrawnAt != null;
     }
+
 
 
 
