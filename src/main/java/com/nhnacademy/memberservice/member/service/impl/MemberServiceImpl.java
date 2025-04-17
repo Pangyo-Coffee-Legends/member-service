@@ -60,7 +60,6 @@ public class MemberServiceImpl implements MemberService {
 
         Member savedMember = memberRepository.save(member);
 
-
         return new MemberResponse(
                 savedMember.getMbNo(),
                 member.getRole().getRoleName(),
@@ -116,9 +115,7 @@ public class MemberServiceImpl implements MemberService {
                 request.getPhoneNumber()
         );
 
-        Member updated = memberRepository.save(member);
-
-        return new MemberResponse(updated.getMbNo(), updated.getRole().getRoleName(), updated.getMbName(), updated.getMbEmail(), updated.getPhoneNumber());
+        return new MemberResponse(member.getMbNo(), member.getRole().getRoleName(), member.getMbName(), member.getMbEmail(), member.getPhoneNumber());
     }
 
     /**

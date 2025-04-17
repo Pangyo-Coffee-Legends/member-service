@@ -31,20 +31,14 @@ public class MemberUpdateRequest {
     @Size(max = 100)
     private String email;
 
-    @ToString.Exclude
-    @NotBlank
-    @Size(min = 8, max = 200)
-    private String password;
-
     @NotBlank
     @Size(max = 15)
     private String phoneNumber;
 
-    public MemberUpdateRequest(Role role, String name, String email, String password, String confirmPassword, String phoneNumber) {
+    public MemberUpdateRequest(Role role, String name, String email, String phoneNumber) {
         this.role = role;
         this.name = name;
         this.email = email;
-        this.password = password;
         this.phoneNumber = phoneNumber;
     }
 
@@ -58,10 +52,6 @@ public class MemberUpdateRequest {
 
     public String getEmail() {
         return email;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public String getPhoneNumber() {
