@@ -43,7 +43,7 @@ class MemberControllerIntegrationTest {
         savedRole = roleRepository.save(Role.ofNewRole("USER", "일반 사용자"));
 
         MemberRegisterRequest request = new MemberRegisterRequest(
-                savedRole,
+                savedRole.getRoleName(),
                 "김미성",
                 email,
                 "password",
@@ -69,8 +69,6 @@ class MemberControllerIntegrationTest {
                 savedRole,
                 "김미성",
                 "update@example.com",
-                "newpassword",
-                "newpassword",
                 "010-0000-0000"
         );
 
