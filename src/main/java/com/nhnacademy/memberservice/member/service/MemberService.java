@@ -59,7 +59,7 @@ public interface MemberService {
      * @param request 수정된 회원 정보를 담은 {@link MemberUpdateRequest} 객체
      * @return 수정된 회원의 정보가 담긴 {@link MemberResponse} 객체
      */
-    MemberResponse updateMember(Long mbNo,MemberUpdateRequest request);
+    MemberResponse updateMember(Long mbNo, MemberUpdateRequest request);
 
     /**
      * 회원을 삭제하는 메서드입니다.

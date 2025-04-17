@@ -59,6 +59,7 @@ class MemberControllerTest {
     @DisplayName("1. 회원 등록 성공")
     void testRegisterMember() throws Exception {
         MemberResponse response = new MemberResponse(
+                1L,
                 registerRequest.getRole(),
                 registerRequest.getName(),
                 registerRequest.getEmail(),
@@ -83,6 +84,7 @@ class MemberControllerTest {
     @DisplayName("2. 회원 조회 성공")
     void testGetMemberByEmail() throws Exception {
         MemberResponse response = new MemberResponse(
+                1L,
                role,
                 "김미성",
                 "test@example.com",
@@ -115,13 +117,15 @@ class MemberControllerTest {
         );
 
         MemberResponse stubResponse = new MemberResponse(
+                1L,
                 role,
                 "김미성",
-                "update@example.com",
+                "update@example.com",  // ✔ 응답 검증용 값 일치
                 "newpassword",
                 "010-0000-0000"
         );
 
+        // ✔ mbNo 기준 stub 등록
         when(memberService.updateMember(eq(mbNo), any(MemberUpdateRequest.class)))
                 .thenReturn(stubResponse);
 
@@ -134,6 +138,7 @@ class MemberControllerTest {
 
         verify(memberService).updateMember(eq(mbNo), any(MemberUpdateRequest.class));
     }
+
 
 
     @Test

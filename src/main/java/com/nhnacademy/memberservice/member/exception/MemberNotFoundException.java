@@ -15,10 +15,10 @@ public class MemberNotFoundException extends RuntimeException {
     /**
      * 회원 번호를 포함하여 상세 메시지를 구성하는 예외 생성자입니다.
      *
-     * @param mbNo 찾으려는 회원의 고유 식별자
+     * @param message 찾으려는 회원의 고유 식별자
      */
-    public MemberNotFoundException(Long mbNo) {
-        super(DEFAULT_MESSAGE + " [회원번호: " + mbNo + "]");
+    public MemberNotFoundException(String message) {
+        super(DEFAULT_MESSAGE + " [회원번호: " + message + "]");
     }
 
 }
