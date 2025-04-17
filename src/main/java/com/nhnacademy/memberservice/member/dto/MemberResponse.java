@@ -39,11 +39,11 @@ public class MemberResponse {
         return roleName;
     }
 
-    public String getMbName() {
+    public String getName() {
         return name;
     }
 
-    public String getMbEmail() {
+    public String getEmail() {
         return email;
     }
 

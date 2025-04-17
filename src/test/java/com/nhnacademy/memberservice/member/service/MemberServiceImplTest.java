@@ -91,8 +91,8 @@ class MemberServiceImplTest {
         assertNotNull(response);
         assertAll(
                 () -> {
-                    assertThat(response.getMbName()).isEqualTo("marco");
-                    assertThat(response.getMbEmail()).isEqualTo("test@example.com");
+                    assertThat(response.getName()).isEqualTo("marco");
+                    assertThat(response.getEmail()).isEqualTo("test@example.com");
                     assertEquals(request.getPassword(), request.getConfirmPassword());
                     verify(memberRepository).save(any(Member.class));
                 }
@@ -123,6 +123,21 @@ class MemberServiceImplTest {
         });
     }
 
+    @Test
+    @DisplayName("4. 회원 정보 수정 성공 테스트")
+    void testUpdateMember() {
+        when(memberRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(member));
+
+        MemberUpdateRequest updateRequest = new MemberUpdateRequest(mockRole, "이름바꿈", "test@example.com", "010-0000-0000");
+
+        MemberResponse response = memberService.updateMember(member.getMbNo(), updateRequest);
+
+        verify(memberRepository, Mockito.times(1)).findById(Mockito.anyLong());
+
+        assertNotNull(response);
+        assertThat(response.getName()).isEqualTo("이름바꿈");
+
+    }
 //    @Test
 //    @DisplayName("4. 회원 정보 수정 성공 테스트")
 //    void testUpdateMember() {
