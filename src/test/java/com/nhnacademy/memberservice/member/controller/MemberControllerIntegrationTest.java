@@ -1,9 +1,7 @@
 package com.nhnacademy.memberservice.member.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nhnacademy.memberservice.member.domain.Member;
 import com.nhnacademy.memberservice.member.dto.MemberRegisterRequest;
-import com.nhnacademy.memberservice.member.dto.MemberResponse;
 import com.nhnacademy.memberservice.member.dto.MemberUpdatePasswordRequest;
 import com.nhnacademy.memberservice.member.dto.MemberUpdateRequest;
 import com.nhnacademy.memberservice.member.service.MemberService;
@@ -21,29 +19,43 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+/**
+ * {@code MemberControllerIntegrationTest}는 {@link com.nhnacademy.memberservice.member.controller.MemberController}
+ * 클래스에 대한 통합 테스트를 수행하는 클래스입니다.
+ * <p>
+ * {@code MockMvc}를 이용하여 실제 HTTP 요청/응답 흐름을 테스트하며,
+ * 회원 등록, 조회, 수정, 탈퇴 기능의 전체 API 동작을 검증합니다.
+ * </p>
+ * <p>
+ * Spring Boot의 전체 컨텍스트를 로딩하여 Service, Repository를 포함한 종단 간 테스트를 수행합니다.
+ * </p>
+ */
 @SpringBootTest
 @AutoConfigureMockMvc
 class MemberControllerIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
+
     @Autowired
     private ObjectMapper objectMapper;
+
     @Autowired
     private MemberService memberService;
+
     @Autowired
     private RoleRepository roleRepository;
 
     private Long mbNo;
-    private String email = "test@example1.com";
-    private Role savedRole;
+    private String email = "test@example123.com";
 
+    /**
+     * 테스트 실행 전, 회원 등록을 통해 테스트 데이터를 세팅합니다.
+     */
     @BeforeEach
     void setUp() {
-        savedRole = roleRepository.save(Role.ofNewRole("USER", "일반 사용자"));
-
         MemberRegisterRequest request = new MemberRegisterRequest(
-                savedRole,
+                "USER_MEMBER",
                 "김미성",
                 email,
                 "password",
@@ -53,6 +65,10 @@ class MemberControllerIntegrationTest {
         mbNo = memberService.registerMember(request).getMbNo();
     }
 
+    /**
+     * 이메일을 기준으로 회원 조회 요청을 수행하여,
+     * 200 OK 응답과 함께 올바른 회원 정보를 반환하는지 검증합니다.
+     */
     @Test
     @DisplayName("1. 회원 조회 성공")
     void testGetMemberByEmail() throws Exception {
@@ -62,11 +78,14 @@ class MemberControllerIntegrationTest {
                 .andExpect(jsonPath("$.mbEmail").value(email));
     }
 
+    /**
+     * 회원 수정 요청을 통해 이메일과 전화번호를 변경하고,
+     * 수정된 결과가 정상적으로 반영되는지 검증합니다.
+     */
     @Test
     @DisplayName("2. 회원 수정 성공")
     void testUpdateMember() throws Exception {
         MemberUpdateRequest updateRequest = new MemberUpdateRequest(
-                savedRole,
                 "김미성",
                 "update@example.com",
                 "newpassword",
@@ -82,10 +101,15 @@ class MemberControllerIntegrationTest {
                 .andExpect(jsonPath("$.phoneNumber").value("010-0000-0000"));
     }
 
+    /**
+     * 회원 탈퇴 요청을 수행하고, 204 No Content 응답이 정상적으로 반환되는지 확인합니다.
+     */
     @Test
     @DisplayName("3. 회원 탈퇴 성공")
     void testDeleteMember() throws Exception {
         mockMvc.perform(delete("/api/v1/members/" + mbNo))
                 .andExpect(status().isNoContent());
     }
+
+
 }

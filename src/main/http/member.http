@@ -6,7 +6,7 @@ Accept: application/json
 {
   "roleName": "ROLE_USER",
   "name": "asdf",
-  "email": "test@testbbb.com",
+  "email": "asdfasdfasdf@testbbb.com",
   "password" : "123Asd!@#",
   "confirmPassword": "123Asd!@#",
   "phoneNumber": "010-1111-2222"
