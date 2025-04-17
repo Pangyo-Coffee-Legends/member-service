@@ -31,7 +31,9 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public RoleResponse registerRole(RoleRegisterRequest request) {
         roleRepository.findByRoleName(request.getRoleName())
-                .orElseThrow(() -> new RoleConflictException(request.getRoleName()));
+                .ifPresent(existingRole -> {
+                    throw new RoleConflictException(request.getRoleName());
+                });
 
         // 중복이 없으면 새로 Role 생성
         Role role = Role.ofNewRole(request.getRoleName(), request.getRoleDescription());
