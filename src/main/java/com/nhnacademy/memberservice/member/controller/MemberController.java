@@ -34,6 +34,7 @@ public class MemberController {
     @PostMapping
     public ResponseEntity<MemberResponse> registerMember(@RequestBody @Valid MemberRegisterRequest request) {
         MemberResponse response = memberService.registerMember(request);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -46,6 +47,7 @@ public class MemberController {
     @GetMapping("/email/{mbEmail}")
     public ResponseEntity<MemberResponse> getMemberByEmail(@PathVariable String mbEmail) {
         MemberResponse response = memberService.getMemberByEmail(mbEmail);
+
         return ResponseEntity.ok(response);
     }
 
@@ -61,6 +63,7 @@ public class MemberController {
     @PutMapping("/{mbNo}")
     public ResponseEntity<MemberResponse> updateMember(@PathVariable Long mbNo,@RequestBody @Valid MemberUpdateRequest request) {
         MemberResponse response = memberService.updateMember(mbNo,request);
+
         return ResponseEntity.ok(response);
     }
 

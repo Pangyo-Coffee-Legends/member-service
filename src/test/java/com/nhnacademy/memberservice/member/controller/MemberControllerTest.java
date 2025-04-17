@@ -11,15 +11,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -38,29 +35,40 @@ class MemberControllerTest {
 
     private ObjectMapper objectMapper;
 
-    private Role role;
+    private Role mockRole;
     private MemberRegisterRequest registerRequest;
 
     @BeforeEach
     void setUp() {
         objectMapper = new ObjectMapper();
 
-        role=Role.ofNewRole("USER", "일반 사용자");
+        mockRole = Role.ofNewRole("ROLE_MEMBER", "일반 회원 권한");
+        ReflectionTestUtils.setField(mockRole, "roleNo", 1L);
 
 
         registerRequest = new MemberRegisterRequest(
-                role,
+                "ROLE_MEMBER",
                 "김미성",
                 "test@example.com",
-                "password",
-                "010-1234-5678",
-                "password"
+                "123Asd!@#",
+                "123Asd!@#",
+                "010-1234-5678"
         );
     }
 
     @Test
     @DisplayName("1. 회원 등록 성공")
     void testRegisterMember() throws Exception {
+        MemberResponse mockResponse = new MemberResponse(
+                1L,
+                "ROLE_MEMBER",
+                "김미성",
+                "test@example.com",
+                "010-1234-5678"
+        );
+
+        when(memberService.registerMember(any())).thenReturn(mockResponse);
+
         mockMvc.perform(post("/api/v1/members")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
@@ -79,7 +87,7 @@ class MemberControllerTest {
     void testGetMemberByEmail() throws Exception {
         MemberResponse response = new MemberResponse(
                 1L,
-               role,
+               "ROLE_MEMBER",
                 "김미성",
                 "test@example.com",
                 "010-1234-5678"
@@ -89,8 +97,8 @@ class MemberControllerTest {
 
         mockMvc.perform(get("/api/v1/members/email/test@example.com"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.mbName").value("김미성"))
-                .andExpect(jsonPath("$.mbEmail").value("test@example.com"));
+                .andExpect(jsonPath("$.name").value("김미성"))
+                .andExpect(jsonPath("$.email").value("test@example.com"));
 
         verify(memberService).getMemberByEmail("test@example.com");
     }
@@ -101,17 +109,15 @@ class MemberControllerTest {
         long mbNo = 1L;
 
         MemberUpdateRequest updateRequest = new MemberUpdateRequest(
-                role,
+                mockRole,
                 "김미성",
                 "update@example.com",
-                "newpassword",
-                "newpassword",
                 "010-0000-0000"
         );
 
         MemberResponse stubResponse = new MemberResponse(
                 1L,
-                role,
+                "ROLE_MEMBER",
                 "김미성",
                 "update@example.com",
                 "010-0000-0000"
@@ -125,7 +131,7 @@ class MemberControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateRequest)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.mbEmail").value("update@example.com"))
+                .andExpect(jsonPath("$.email").value("update@example.com"))
                 .andExpect(jsonPath("$.phoneNumber").value("010-0000-0000"));
 
         verify(memberService).updateMember(eq(mbNo), any(MemberUpdateRequest.class));

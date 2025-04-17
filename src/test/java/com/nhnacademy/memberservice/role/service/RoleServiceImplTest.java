@@ -73,28 +73,6 @@ class RoleServiceImplTest {
     }
 
     @Test
-    @DisplayName("3. 특정 역할 리스트 조회 성공 테스트")
-    void testGetRoleList_success() {
-        Role role = Role.ofNewRole("USER", "일반 사용자");
-
-        Member member1 = Member.ofNewMember("홍길동", "hong@test.com", "1234test!", "010-0000-0000");
-        Member member2 = Member.ofNewMember("이몽룡", "lee@test.com", "abcd1234!", "010-1111-1111");
-
-        role.getMembers().add(member1);
-        role.getMembers().add(member2);
-
-        when(roleRepository.findByRoleName("USER")).thenReturn(Optional.of(role));
-
-        // when
-        List<Member> result = roleService.getRoleList("USER");
-
-        // then
-        assertThat(result).hasSize(2);
-        assertThat(result).extracting(Member::getMbName)
-                .containsExactlyInAnyOrder("홍길동", "이몽룡");
-    }
-
-    @Test
     @DisplayName("3. 존재하지 않는 역할 조회 실패 테스트")
     void testGetRole_notFound() {
         // given

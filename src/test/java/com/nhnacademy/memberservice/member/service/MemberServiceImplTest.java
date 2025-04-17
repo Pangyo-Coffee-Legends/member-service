@@ -91,8 +91,8 @@ class MemberServiceImplTest {
         assertNotNull(response);
         assertAll(
                 () -> {
-                    assertThat(response.getMbName()).isEqualTo("marco");
-                    assertThat(response.getMbEmail()).isEqualTo("test@example.com");
+                    assertThat(response.getName()).isEqualTo("marco");
+                    assertThat(response.getEmail()).isEqualTo("test@example.com");
                     assertEquals(request.getPassword(), request.getConfirmPassword());
                     verify(memberRepository).save(any(Member.class));
                 }
@@ -135,7 +135,7 @@ class MemberServiceImplTest {
         verify(memberRepository, Mockito.times(1)).findById(Mockito.anyLong());
 
         assertNotNull(response);
-        assertThat(response.getMbName()).isEqualTo("이름바꿈");
+        assertThat(response.getName()).isEqualTo("이름바꿈");
 
     }
 
