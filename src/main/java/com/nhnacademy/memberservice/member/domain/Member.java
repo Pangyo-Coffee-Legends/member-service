@@ -167,7 +167,7 @@ public class Member {
      */
     public boolean isWithdrawn() {
         return this.withdrawnAt != null;
-    }
+    }//
 
 
 

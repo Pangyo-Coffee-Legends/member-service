@@ -6,8 +6,10 @@ import com.nhnacademy.memberservice.role.dto.RoleRegisterRequest;
 import com.nhnacademy.memberservice.role.dto.RoleUpdateRequest;
 import com.nhnacademy.memberservice.role.repository.RoleRepository;
 import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,18 +24,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
-@ActiveProfiles("integration")
 class RoleControllerIntegrationTest {
 
-    @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
     private ObjectMapper objectMapper;
 
-    @Autowired
     private RoleRepository roleRepository;
 
+    private RoleController roleController;
+
+    @BeforeEach
+    void setUp() {
+
+    }
     @Test
     @DisplayName("1. 역할 등록 성공")
     void testRegisterRole() throws Exception {

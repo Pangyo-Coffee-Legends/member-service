@@ -19,7 +19,6 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode
 public class MemberUpdateRequest {
 
-    private Role role;
 
     @NotBlank
     @Size(max = 50)
@@ -34,16 +33,12 @@ public class MemberUpdateRequest {
     @Size(max = 15)
     private String phoneNumber;
 
-    public MemberUpdateRequest(Role role, String name, String email, String phoneNumber) {
-        this.role = role;
+    public MemberUpdateRequest( String name, String email, String password, String confirmPassword, String phoneNumber) {
         this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;
     }
 
-    public Role getRole() {
-        return role;
-    }
 
     public String getName() {
         return name;

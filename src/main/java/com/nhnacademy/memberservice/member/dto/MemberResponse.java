@@ -25,16 +25,18 @@ public class MemberResponse {
 
     private String phoneNumber;
 
-    public MemberResponse(Long no,String roleName, String name, String email, String phoneNumber) {
+    public MemberResponse(Long no, String roleName, String name, String email, String phoneNumber) {
         this.no = no;
         this.roleName = roleName;
         this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;
     }
+
     public Long getMbNo() {
         return no;
-}
+    }
+
     public String getRoleName() {
         return roleName;
     }
