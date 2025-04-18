@@ -5,6 +5,7 @@ import com.nhnacademy.memberservice.member.dto.MemberRegisterRequest;
 import com.nhnacademy.memberservice.member.dto.MemberUpdatePasswordRequest;
 import com.nhnacademy.memberservice.member.dto.MemberUpdateRequest;
 import com.nhnacademy.memberservice.member.service.MemberService;
+import com.nhnacademy.memberservice.role.domain.Role;
 import com.nhnacademy.memberservice.role.repository.RoleRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -92,8 +93,8 @@ class MemberControllerIntegrationTest {
         MemberUpdateRequest updateRequest = new MemberUpdateRequest(
                 "김미성",
                 "update@example.com",
-                "newpassword",
-                "newpassword",
+                "Newpassword!",
+                "Newpassword!",
                 "010-0000-0000"
         );
 
