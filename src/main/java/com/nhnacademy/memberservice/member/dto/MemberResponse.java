@@ -1,6 +1,5 @@
 package com.nhnacademy.memberservice.member.dto;
 
-import com.nhnacademy.memberservice.role.domain.Role;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -16,40 +15,38 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 public class MemberResponse {
+    private Long no;
 
-    private Role role;
+    private String roleName;
 
-    private String mbName;
+    private String name;
 
-    private String mbEmail;
-
-    @ToString.Exclude
-    private String mbPassword;
+    private String email;
 
     private String phoneNumber;
 
-    public MemberResponse(Role role, String mbName, String mbEmail, String mbPassword, String phoneNumber) {
-        this.role = role;
-        this.mbName = mbName;
-        this.mbEmail = mbEmail;
-        this.mbPassword = mbPassword;
+    public MemberResponse(Long no, String roleName, String name, String email, String phoneNumber) {
+        this.no = no;
+        this.roleName = roleName;
+        this.name = name;
+        this.email = email;
         this.phoneNumber = phoneNumber;
     }
 
-    public Role getRole() {
-        return role;
+    public Long getMbNo() {
+        return no;
     }
 
-    public String getMbName() {
-        return mbName;
+    public String getRoleName() {
+        return roleName;
     }
 
-    public String getMbEmail() {
-        return mbEmail;
+    public String getName() {
+        return name;
     }
 
-    public String getMbPassword() {
-        return mbPassword;
+    public String getEmail() {
+        return email;
     }
 
     public String getPhoneNumber() {

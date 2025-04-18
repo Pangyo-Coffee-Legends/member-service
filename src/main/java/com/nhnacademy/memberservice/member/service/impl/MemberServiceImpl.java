@@ -22,10 +22,11 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * 회원 관련 비즈니스 로직을 담당하는 구현 클래스입니다.
+ * 회원(Member) 관련 비즈니스 로직을 구현한 서비스 클래스입니다.
  * <p>
- * 회원 등록, 조회, 수정, 삭제 기능을 제공합니다.
- * 모든 메서드는 트랜잭션을 고려하여 설계되어 데이터 정합성을 보장합니다.
+ * 회원 등록, 조회, 수정, 탈퇴, 비밀번호 변경 등 주요 기능을 제공합니다.
+ * 각 기능은 데이터 정합성을 고려하여 트랜잭션을 적용하였으며,
+ * 예외 상황에 따른 도메인별 커스텀 예외 처리를 포함하고 있습니다.
  * </p>
  */
 @Service
@@ -37,41 +38,74 @@ public class MemberServiceImpl implements MemberService {
     private final RoleRepository roleRepository;
 
     /**
-     * {@inheritDoc}
+     * 신규 회원을 등록합니다.
+     * <p>
+     * 요청받은 회원 정보를 기반으로 회원 엔티티를 생성한 뒤 저장하고,
+     * 저장된 정보를 응답 객체로 반환합니다.
+     * </p>
      *
-     * @throws RoleNotFoundException 기본 역할(USER)을 찾을 수 없습니다.
+     * @param request 회원 등록 요청 DTO
+     * @return 등록된 회원 정보를 담은 응답 DTO
+     * @throws PasswordNotMatchException 비밀번호와 비밀번호 확인이 일치하지 않을 경우
+     * @throws RoleNotFoundException 요청한 권한명이 존재하지 않을 경우
      */
     @Override
     public MemberResponse registerMember(MemberRegisterRequest request) {
-        Role role = Optional.ofNullable(request.getRole()).orElseGet(() -> roleRepository.findByRoleName("USER")
-                .orElseThrow(() -> new RoleNotFoundException("USER")));
-
-        Member member = Member.ofNewMember(request.getName(), request.getEmail(), request.getPassword(), request.getPhoneNumber());
-
-        member.assignRole(role);
-
-        Member saved = memberRepository.save(member);
-
         if (!request.isPasswordValid()) {
             throw new PasswordNotMatchException();
         }
 
-        return new MemberResponse(saved.getRole(), saved.getMbName(), saved.getMbEmail(), saved.getMbPassword(), saved.getPhoneNumber());
+        Role role = roleRepository.findByRoleName(request.getRoleName())
+                .orElseThrow(() -> new RoleNotFoundException(request.getRoleName()));
 
+        //TODO:멤버 중복 확인 필요(이메일로)!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+        Member member = Member.ofNewMember(
+                role,
+                request.getName(),
+                request.getEmail(),
+                request.getPassword(),
+                request.getPhoneNumber()
+        );
+
+        Member savedMember = memberRepository.save(member);
+
+        return new MemberResponse(
+                savedMember.getMbNo(),
+                role.getRoleName(),
+                savedMember.getMbName(),
+                savedMember.getMbEmail(),
+                savedMember.getPhoneNumber()
+        );
     }
 
+    /**
+     * 회원 번호로 회원 정보를 조회합니다.
+     *
+     * @param mbNo 조회할 회원 고유 번호
+     * @return 회원 정보 응답 DTO
+     * @throws MemberNotFoundException 해당 회원 번호로 등록된 회원이 존재하지 않는 경우
+     */
     @Override
     public MemberResponse getMemberByMbNo(Long mbNo) {
         Member member = memberRepository.findById(mbNo)
                 .orElseThrow(() -> new MemberNotFoundException(mbNo));
 
-        return new MemberResponse(member.getRole(), member.getMbName(), member.getMbEmail(), member.getMbPassword(), member.getPhoneNumber());
+        return new MemberResponse(
+                member.getMbNo(),
+                member.getRole().getRoleName(),
+                member.getMbName(),
+                member.getMbEmail(),
+                member.getPhoneNumber()
+        );
     }
 
     /**
-     * {@inheritDoc}
+     * 이메일로 회원 정보를 조회합니다.
      *
-     * @throws MemberNotFoundException 회원이 존재하지 않을 경우 예외 발생
+     * @param mbEmail 회원 이메일
+     * @return 회원 정보 응답 DTO
+     * @throws MemberEmailNotFoundException 해당 이메일로 등록된 회원이 없는 경우
      */
     @Override
     @Transactional(readOnly = true)
@@ -79,40 +113,53 @@ public class MemberServiceImpl implements MemberService {
         Member member = memberRepository.findByMbEmail(mbEmail)
                 .orElseThrow(() -> new MemberEmailNotFoundException(mbEmail));
 
-        return new MemberResponse(member.getRole(), member.getMbName(), member.getMbEmail(), member.getMbPassword(), member.getPhoneNumber());
-
+        return new MemberResponse(
+                member.getMbNo(),
+                member.getRole().getRoleName(),
+                member.getMbName(),
+                member.getMbEmail(),
+                member.getPhoneNumber()
+        );
     }
 
     /**
-     * {@inheritDoc}
+     * 회원의 이름, 전화번호 등 정보를 수정합니다.
+     * <p>
+     * 이메일, 비밀번호, 권한 등은 수정 대상이 아닙니다.
+     * </p>
      *
-     * @throws MemberNotFoundException  회원이 존재하지 않음
-     * @throws IllegalArgumentException 역할이 존재하지 않을 경우
+     * @param mbNo    수정할 회원 번호
+     * @param request 수정 요청 DTO
+     * @return 수정된 회원 정보 응답 DTO
+     * @throws MemberNotFoundException 해당 회원 번호로 등록된 회원이 존재하지 않는 경우
      */
     @Override
-    public MemberResponse updateMember(MemberUpdateRequest request) {
-        Member member = memberRepository.findById(request.getMbNo())
-                .orElseThrow(() -> new MemberNotFoundException(request.getMbNo()));
+    public MemberResponse updateMember(Long mbNo, MemberUpdateRequest request) {
+        Member member = memberRepository.findById(mbNo)
+                .orElseThrow(() -> new MemberNotFoundException(mbNo));
 
-        Role role = Optional.ofNullable(request.getRole())
-                .orElseGet(() -> roleRepository.findByRoleName("USER")
-                        .orElseThrow(() -> new RoleNotFoundException(request.getName())));
+        member.update(
+                request.getName(),
+                request.getPhoneNumber()
+        );
 
-        member.assignRole(role);
-
-        // 필드 직접 설정
-        member = Member.ofNewMember(request.getName(), request.getEmail(), request.getPassword(), request.getPhoneNumber());
-        member.assignRole(role);
-
-        Member updated = memberRepository.save(member);
-
-        return new MemberResponse(updated.getRole(), updated.getMbName(), updated.getMbEmail(), updated.getMbPassword(), updated.getPhoneNumber());
+        return new MemberResponse(
+                member.getMbNo(),
+                member.getRole().getRoleName(),
+                member.getMbName(),
+                member.getMbEmail(),
+                member.getPhoneNumber()
+        );
     }
 
     /**
-     * {@inheritDoc}
+     * 회원 탈퇴(Soft Delete)를 수행합니다.
+     * <p>
+     * 실제 DB 삭제는 수행하지 않으며, 탈퇴 일시 필드를 갱신하여 탈퇴 상태로 처리합니다.
+     * </p>
      *
-     * @throws MemberNotFoundException 회원이 존재하지 않는 경우 예외 발생
+     * @param mbNo 탈퇴할 회원 번호
+     * @throws MemberNotFoundException 해당 회원이 존재하지 않을 경우
      */
     @Override
     public void deleteMember(Long mbNo) {
@@ -122,6 +169,15 @@ public class MemberServiceImpl implements MemberService {
         member.withdraw();
     }
 
+    /**
+     * 회원 비밀번호를 변경합니다.
+     *
+     * @param mbNo    대상 회원 번호
+     * @param request 비밀번호 변경 요청 DTO
+     * @throws MemberNotFoundException     회원이 존재하지 않을 경우
+     * @throws PasswordNotMatchException   기존 비밀번호가 일치하지 않을 경우
+     * @throws NewPasswordNotMatchException 새 비밀번호와 재확인 값이 일치하지 않을 경우
+     */
     @Override
     public void updatePassword(Long mbNo, MemberUpdatePasswordRequest request) {
         Member member = memberRepository.findById(mbNo)
@@ -136,7 +192,5 @@ public class MemberServiceImpl implements MemberService {
         }
 
         member.updatePassword(request.getNewPassword());
-
     }
-
 }

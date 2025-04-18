@@ -55,21 +55,6 @@ public class RoleController {
         return ResponseEntity.ok(role);
     }
 
-    /**
-     * 역할 이름(roleName)을 기준으로 해당 역할을 가진 회원 목록을 조회합니다.
-     * <p>
-     * 예를 들어, "USER"라는 역할 이름을 입력하면 "USER" 역할을 가진 모든 회원 정보를 반환합니다.
-     * </p>
-     *
-     * @param roleName 조회할 역할 이름 (예: "USER")
-     * @return 해당 역할을 가진 회원들의 목록이 담긴 응답 객체
-     */
-    @GetMapping("/name/{roleName}")
-    public ResponseEntity<List<Member>> getMemberList(@PathVariable String roleName){
-        List<Member> roleList = roleService.getRoleList(roleName);
-
-        return ResponseEntity.ok(roleList);
-    }
 
     /**
      * 역할 정보를 수정합니다.

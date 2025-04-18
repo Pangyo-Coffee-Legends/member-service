@@ -1,0 +1,23 @@
+### member 등록
+POST http://localhost:10255/api/v1/members
+Content-Type: application/json
+Accept: application/json
+
+{
+  "roleName": "ROLE_MEMBER",
+  "name": "asdf",
+  "email": "asdfasdfasdf@testbbb.com",
+  "password" : "123Asd!@#",
+  "confirmPassword": "123Asd!@#",
+  "phoneNumber": "010-1111-2222"
+}
+
+### role 등록
+POST http://localhost:10255/api/v1/roles
+Content-Type: application/json
+Accept: application/json
+
+{
+  "roleName": "ROLE_MEMBER",
+  "roleDescription": "일반 사용자"
+}

@@ -56,4 +56,5 @@ public class MemberUpdatePasswordRequest {
     public String getNewConfirmPassword() {
         return newConfirmPassword;
     }
+
 }

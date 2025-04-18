@@ -31,9 +31,10 @@ public class MemberController {
      * @param request 회원 등록 요청 정보를 담은 DTO
      * @return 등록된 회원의 상세 정보가 담긴 ResponseEntity (HTTP 201 Created)
      */
-    @PostMapping("/register")
+    @PostMapping
     public ResponseEntity<MemberResponse> registerMember(@RequestBody @Valid MemberRegisterRequest request) {
         MemberResponse response = memberService.registerMember(request);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -43,9 +44,10 @@ public class MemberController {
      * @param mbEmail 조회할 회원의 고유 번호 (PathVariable)
      * @return 해당 회원의 정보가 담긴 ResponseEntity (HTTP 200 OK)
      */
-    @GetMapping("/{mbEmail}")
+    @GetMapping("/email/{mbEmail}")
     public ResponseEntity<MemberResponse> getMemberByEmail(@PathVariable String mbEmail) {
         MemberResponse response = memberService.getMemberByEmail(mbEmail);
+
         return ResponseEntity.ok(response);
     }
 
@@ -58,9 +60,10 @@ public class MemberController {
      * @param request 수정할 회원 정보를 담은 DTO
      * @return 수정된 회원 정보가 담긴 ResponseEntity (HTTP 200 OK)
      */
-    @PutMapping
-    public ResponseEntity<MemberResponse> updateMember(@RequestBody @Valid MemberUpdateRequest request) {
-        MemberResponse response = memberService.updateMember(request);
+    @PutMapping("/{mbNo}")
+    public ResponseEntity<MemberResponse> updateMember(@PathVariable Long mbNo,@RequestBody @Valid MemberUpdateRequest request) {
+        MemberResponse response = memberService.updateMember(mbNo,request);
+
         return ResponseEntity.ok(response);
     }
 
@@ -90,8 +93,10 @@ public class MemberController {
      * @param request 비밀번호 업데이트에 필요한 정보 (새로운 비밀번호, 기존 비밀번호 등)
      * @return 내용 없는 응답 ResponseEntity (HTTP 204 No Content)
      */
-    @PutMapping("/{mbNo}")
-    public ResponseEntity<Void> updatePassword(@PathVariable Long mbNo, @RequestBody @Valid MemberUpdatePasswordRequest request){
+    @PutMapping("/{mbNo}/password")
+    public ResponseEntity<Void> updatePassword(
+            @PathVariable Long mbNo,
+            @RequestBody @Valid MemberUpdatePasswordRequest request){
         memberService.updatePassword(mbNo, request);
 
         return ResponseEntity.noContent().build();

@@ -39,4 +39,12 @@ public class RoleUpdateRequest {
     public String getRoleDescription() {
         return roleDescription;
     }
+
+    public void setRoleNo(Long roleNo) {
+        this.roleNo = roleNo;
+    }
+
+    public void setRoleDescription(String roleDescription) {
+        this.roleDescription = roleDescription;
+    }
 }
