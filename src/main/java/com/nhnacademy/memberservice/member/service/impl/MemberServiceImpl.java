@@ -58,6 +58,8 @@ public class MemberServiceImpl implements MemberService {
         Role role = roleRepository.findByRoleName(request.getRoleName())
                 .orElseThrow(() -> new RoleNotFoundException(request.getRoleName()));
 
+        //TODO:멤버 중복 확인 필요(이메일로)!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+
         Member member = Member.ofNewMember(
                 role,
                 request.getName(),
