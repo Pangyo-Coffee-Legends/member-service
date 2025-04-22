@@ -5,16 +5,14 @@ import com.nhnacademy.memberservice.member.dto.MemberRegisterRequest;
 import com.nhnacademy.memberservice.member.dto.MemberResponse;
 import com.nhnacademy.memberservice.member.dto.MemberUpdatePasswordRequest;
 import com.nhnacademy.memberservice.member.dto.MemberUpdateRequest;
-import com.nhnacademy.memberservice.member.exception.MemberEmailNotFoundException;
-import com.nhnacademy.memberservice.member.exception.MemberNotFoundException;
-import com.nhnacademy.memberservice.member.exception.NewPasswordNotMatchException;
-import com.nhnacademy.memberservice.member.exception.PasswordNotMatchException;
+import com.nhnacademy.memberservice.member.exception.*;
 import com.nhnacademy.memberservice.member.repository.MemberRepository;
 import com.nhnacademy.memberservice.member.service.MemberService;
 import com.nhnacademy.memberservice.role.domain.Role;
 import com.nhnacademy.memberservice.role.exception.RoleNotFoundException;
 import com.nhnacademy.memberservice.role.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +34,7 @@ public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
     private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
 
     /**
      * 신규 회원을 등록합니다.
@@ -58,13 +57,16 @@ public class MemberServiceImpl implements MemberService {
         Role role = roleRepository.findByRoleName(request.getRoleName())
                 .orElseThrow(() -> new RoleNotFoundException(request.getRoleName()));
 
-        //TODO:멤버 중복 확인 필요(이메일로)!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+        if (memberRepository.existsMemberByMbEmail(request.getEmail())) {
+            throw new MemberAlreadyExistsException(request.getEmail());
+        }
 
         Member member = Member.ofNewMember(
                 role,
                 request.getName(),
                 request.getEmail(),
-                request.getPassword(),
+                passwordEncoder.encode(request.getPassword()),
                 request.getPhoneNumber()
         );
 
@@ -183,7 +185,7 @@ public class MemberServiceImpl implements MemberService {
         Member member = memberRepository.findById(mbNo)
                 .orElseThrow(() -> new MemberNotFoundException(mbNo));
 
-        if (!Objects.equals(member.getMbPassword(), request.getOldPassword())) {
+        if (!Objects.equals(passwordEncoder.encode(member.getMbPassword()), passwordEncoder.encode(request.getOldPassword()))) {
             throw new PasswordNotMatchException();
         }
 
@@ -191,6 +193,7 @@ public class MemberServiceImpl implements MemberService {
             throw new NewPasswordNotMatchException();
         }
 
-        member.updatePassword(request.getNewPassword());
+        member.updatePassword(passwordEncoder.encode(request.getNewPassword()));
     }
+
 }

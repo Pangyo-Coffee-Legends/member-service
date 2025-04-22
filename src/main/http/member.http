@@ -4,7 +4,7 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "roleName": "ROLE_MEMBER",
+  "roleName": "ROLE_USER",
   "name": "asdf",
   "email": "asdfasdfasdf@testbbb.com",
   "password" : "123Asd!@#",
@@ -18,6 +18,6 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "roleName": "ROLE_MEMBER",
+  "roleName": "ROLE_USER",
   "roleDescription": "일반 사용자"
 }

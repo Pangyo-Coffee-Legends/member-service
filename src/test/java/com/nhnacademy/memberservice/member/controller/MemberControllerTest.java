@@ -42,7 +42,7 @@ class MemberControllerTest {
     void setUp() {
         objectMapper = new ObjectMapper();
 
-        mockRole = Role.ofNewRole("ROLE_MEMBER", "일반 회원 권한");
+        mockRole = Role.ofNewRole("ROLE_USER", "일반 회원 권한");
         ReflectionTestUtils.setField(mockRole, "roleNo", 1L);
 
 
@@ -61,7 +61,7 @@ class MemberControllerTest {
     void testRegisterMember() throws Exception {
         MemberResponse mockResponse = new MemberResponse(
                 1L,
-                "ROLE_MEMBER",
+                "ROLE_USER",
                 "김미성",
                 "test@example.com",
                 "010-1234-5678"
@@ -119,7 +119,7 @@ class MemberControllerTest {
 //
 //        MemberResponse stubResponse = new MemberResponse(
 //                1L,
-//                "ROLE_MEMBER",
+//                "ROLE_USER",
 //                "김미성",
 //                "update@example.com",
 //                "010-0000-0000"
