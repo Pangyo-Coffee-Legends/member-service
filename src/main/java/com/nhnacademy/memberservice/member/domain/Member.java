@@ -52,15 +52,16 @@ public class Member {
     private String mbPassword;
 
 
-    @Column(nullable = false, length = 15)
+    @Column(name="phone_number", nullable = false, length = 15)
     @Comment("전화번호")
     private String phoneNumber;
 
 
+    @Column(name="created_at", nullable = false)
     @Comment("생성일자")
     private LocalDateTime createdAt;
 
-
+    @Column(name="withdrawn_at")
     @Comment("탈퇴일자")
     private LocalDateTime withdrawnAt;
 

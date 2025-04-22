@@ -49,7 +49,7 @@ class MemberServiceImplTest {
 
     @BeforeEach
     void setUp(){
-        mockRole = Role.ofNewRole("ROLE_MEMBER", "일반 회원 권한");
+        mockRole = Role.ofNewRole("ROLE_USER", "일반 회원 권한");
         ReflectionTestUtils.setField(mockRole, "roleNo", 1L);
 
         member = Member.ofNewMember(mockRole,  "김미성", "test@example.com",  "password", "010-0000-0000");
@@ -60,10 +60,10 @@ class MemberServiceImplTest {
     @DisplayName("1. 회원 등록 성공 테스트")
     void testRegisterMember() {
 
-        when(roleRepository.findByRoleName("ROLE_MEMBER")).thenReturn(Optional.of(mockRole));
+        when(roleRepository.findByRoleName("ROLE_USER")).thenReturn(Optional.of(mockRole));
 
         MemberRegisterRequest request = new MemberRegisterRequest(
-                "ROLE_MEMBER",
+                "ROLE_USER",
                 "marco",
                 "test@example.com",
                 "123Asd!@#",

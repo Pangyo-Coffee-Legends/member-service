@@ -1,6 +1,6 @@
 CREATE TABLE roles (
                        role_no BIGINT PRIMARY KEY AUTO_INCREMENT,
-                       role_name VARCHAR(50) NOT NULL COMMENT 'ROLE_ADMIN, ROLE_MEMBER',
+                       role_name VARCHAR(50) NOT NULL COMMENT 'ROLE_ADMIN, ROLE_USER',
                        role_description VARCHAR(200) NOT NULL COMMENT '권한 설명'
 );
 
