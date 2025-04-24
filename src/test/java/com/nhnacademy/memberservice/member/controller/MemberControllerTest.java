@@ -64,6 +64,7 @@ class MemberControllerTest {
                 "ROLE_USER",
                 "김미성",
                 "test@example.com",
+                "Test123!",
                 "010-1234-5678"
         );
 
@@ -90,6 +91,7 @@ class MemberControllerTest {
                "role",
                 "김미성",
                 "test@example.com",
+                "Test123!",
                 "010-1234-5678"
         );
 
