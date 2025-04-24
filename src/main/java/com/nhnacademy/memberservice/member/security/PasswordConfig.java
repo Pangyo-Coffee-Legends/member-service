@@ -3,6 +3,7 @@ package com.nhnacademy.memberservice.member.security;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
@@ -23,16 +24,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class PasswordConfig {
 
     /**
-     * {@link PasswordEncoder} 구현체로서 {@link BCryptPasswordEncoder}를 반환합니다.
+     * {@link PasswordEncoder} 구현체로서 {@link org.springframework.security.crypto.password.DelegatingPasswordEncoder}를 반환합니다.
      * <p>
      * BCrypt는 보안성이 검증된 해시 방식
      * 동일한 비밀번호라도 매번 다른 결과를 생성합니다.
      * </p>
      *
-     * @return {@code BCryptPasswordEncoder} 인스턴스
+     * @return {@code DelegatingPasswordEncoder}
      */
+
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 }

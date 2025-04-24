@@ -23,17 +23,20 @@ public class MemberResponse {
 
     private String email;
 
+    private String password;
+
     private String phoneNumber;
 
-    public MemberResponse(Long no, String roleName, String name, String email, String phoneNumber) {
+    public MemberResponse(Long no, String roleName, String name, String email, String password, String phoneNumber) {
         this.no = no;
         this.roleName = roleName;
         this.name = name;
         this.email = email;
+        this.password = password;
         this.phoneNumber = phoneNumber;
     }
 
-    public Long getMbNo() {
+    public Long getNo() {
         return no;
     }
 
@@ -47,6 +50,10 @@ public class MemberResponse {
 
     public String getEmail() {
         return email;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public String getPhoneNumber() {

@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
-import java.util.Optional;
 
 /**
  * 회원(Member) 관련 비즈니스 로직을 구현한 서비스 클래스입니다.
@@ -72,13 +71,7 @@ public class MemberServiceImpl implements MemberService {
 
         Member savedMember = memberRepository.save(member);
 
-        return new MemberResponse(
-                savedMember.getMbNo(),
-                role.getRoleName(),
-                savedMember.getMbName(),
-                savedMember.getMbEmail(),
-                savedMember.getPhoneNumber()
-        );
+        return getMemberResponse(savedMember);
     }
 
     /**
@@ -93,13 +86,7 @@ public class MemberServiceImpl implements MemberService {
         Member member = memberRepository.findById(mbNo)
                 .orElseThrow(() -> new MemberNotFoundException(mbNo));
 
-        return new MemberResponse(
-                member.getMbNo(),
-                member.getRole().getRoleName(),
-                member.getMbName(),
-                member.getMbEmail(),
-                member.getPhoneNumber()
-        );
+        return getMemberResponse(member);
     }
 
     /**
@@ -115,13 +102,7 @@ public class MemberServiceImpl implements MemberService {
         Member member = memberRepository.findByMbEmail(mbEmail)
                 .orElseThrow(() -> new MemberEmailNotFoundException(mbEmail));
 
-        return new MemberResponse(
-                member.getMbNo(),
-                member.getRole().getRoleName(),
-                member.getMbName(),
-                member.getMbEmail(),
-                member.getPhoneNumber()
-        );
+        return getMemberResponse(member);
     }
 
     /**
@@ -145,13 +126,7 @@ public class MemberServiceImpl implements MemberService {
                 request.getPhoneNumber()
         );
 
-        return new MemberResponse(
-                member.getMbNo(),
-                member.getRole().getRoleName(),
-                member.getMbName(),
-                member.getMbEmail(),
-                member.getPhoneNumber()
-        );
+        return getMemberResponse(member);
     }
 
     /**
@@ -194,6 +169,17 @@ public class MemberServiceImpl implements MemberService {
         }
 
         member.updatePassword(passwordEncoder.encode(request.getNewPassword()));
+    }
+
+    private MemberResponse getMemberResponse(Member member) {
+        return new MemberResponse(
+                member.getMbNo(),
+                member.getRole().getRoleName(),
+                member.getMbName(),
+                member.getMbEmail(),
+                member.getMbPassword(),
+                member.getPhoneNumber()
+        );
     }
 
 }
