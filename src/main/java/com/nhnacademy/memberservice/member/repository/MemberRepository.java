@@ -2,7 +2,9 @@ package com.nhnacademy.memberservice.member.repository;
 
 import com.nhnacademy.memberservice.member.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -16,6 +18,10 @@ import java.util.Optional;
  */
 public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByMbEmail(String mbEmail);
+
+    // 모든 사원번호(mbNo)만 가져오는 메소드
+    @Query("SELECT m.mbNo FROM Member m")
+    List<Long> findAllMbNo();
 
     boolean existsMemberByMbEmail(String mbEmail);
 }
