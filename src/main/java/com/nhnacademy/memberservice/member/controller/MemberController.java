@@ -1,9 +1,6 @@
 package com.nhnacademy.memberservice.member.controller;
 
-import com.nhnacademy.memberservice.member.dto.MemberRegisterRequest;
-import com.nhnacademy.memberservice.member.dto.MemberResponse;
-import com.nhnacademy.memberservice.member.dto.MemberUpdatePasswordRequest;
-import com.nhnacademy.memberservice.member.dto.MemberUpdateRequest;
+import com.nhnacademy.memberservice.member.dto.*;
 import com.nhnacademy.memberservice.member.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 회원(Member)에 대한 HTTP 요청을 처리하는 컨트롤러 클래스입니다.
@@ -103,5 +102,11 @@ public class MemberController {
         memberService.updatePassword(mbNo, request);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/info-list")
+    ResponseEntity<List<MemberInfoResponse>> getMemberInfoList() {
+        List<MemberInfoResponse> memberInfoList = memberService.getMemberInfoList();
+        return ResponseEntity.ok(memberInfoList);
     }
 }
