@@ -1,10 +1,7 @@
 package com.nhnacademy.memberservice.member.service.impl;
 
 import com.nhnacademy.memberservice.member.domain.Member;
-import com.nhnacademy.memberservice.member.dto.MemberRegisterRequest;
-import com.nhnacademy.memberservice.member.dto.MemberResponse;
-import com.nhnacademy.memberservice.member.dto.MemberUpdatePasswordRequest;
-import com.nhnacademy.memberservice.member.dto.MemberUpdateRequest;
+import com.nhnacademy.memberservice.member.dto.*;
 import com.nhnacademy.memberservice.member.exception.*;
 import com.nhnacademy.memberservice.member.repository.MemberRepository;
 import com.nhnacademy.memberservice.member.service.MemberService;
@@ -16,6 +13,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -182,4 +181,26 @@ public class MemberServiceImpl implements MemberService {
         );
     }
 
+    @Override
+    public List<MemberInfoResponse> getMemberInfoList() {
+        List<Long> members = memberRepository.findAllMbNo();
+        List<MemberInfoResponse> memberInfoResponses = new ArrayList<>();
+
+        if (members.isEmpty()) {
+            throw new NullPointerException("맴버를 찾을 수 없습니다!!!!");
+        }
+
+        for (Long mbNo : members){
+            Member member = memberRepository.findById(mbNo)
+                    .orElseThrow(() -> new MemberNotFoundException(mbNo));
+            memberInfoResponses.add(
+                    new MemberInfoResponse(
+                            member.getMbNo(),
+                            member.getMbName(),
+                            member.getMbEmail(),
+                            member.getPhoneNumber()
+                    ));
+        }
+        return memberInfoResponses;
+    }
 }
