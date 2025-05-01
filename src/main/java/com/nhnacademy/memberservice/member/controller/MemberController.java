@@ -104,6 +104,13 @@ public class MemberController {
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * 기본 회원 정보 목록을 조회합니다.
+     * 이 메서드는 각 회원의 ID, 이름, 이메일, 전화번호 등의 최소한의 정보를 담은 {@link MemberInfoResponse} 객체 목록을 반환합니다.
+     *
+     * @return 회원 기본 정보 {@link MemberInfoResponse} 객체 리스트를 담은 ResponseEntity (HTTP 200 OK)
+     */
+
     @GetMapping("/info-list")
     ResponseEntity<List<MemberInfoResponse>> getMemberInfoList() {
         List<MemberInfoResponse> memberInfoList = memberService.getMemberInfoList();
