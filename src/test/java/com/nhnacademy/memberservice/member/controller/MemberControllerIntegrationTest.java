@@ -56,7 +56,7 @@ class MemberControllerIntegrationTest {
                 "010-1234-5678",
                 password
         );
-        mbNo = memberService.registerMember(request).getMbNo();
+        mbNo = memberService.registerMember(request).getNo();
     }
 
     @Test
