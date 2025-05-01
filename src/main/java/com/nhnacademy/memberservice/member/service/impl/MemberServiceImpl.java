@@ -36,15 +36,12 @@ public class MemberServiceImpl implements MemberService {
 
     /**
      * 신규 회원을 등록합니다.
-     * <p>
-     * 요청받은 회원 정보를 기반으로 회원 엔티티를 생성한 뒤 저장하고,
-     * 저장된 정보를 응답 객체로 반환합니다.
-     * </p>
      *
      * @param request 회원 등록 요청 DTO
      * @return 등록된 회원 정보를 담은 응답 DTO
      * @throws PasswordNotMatchException 비밀번호와 비밀번호 확인이 일치하지 않을 경우
      * @throws RoleNotFoundException 요청한 권한명이 존재하지 않을 경우
+     * @throws MemberAlreadyExistsException 이미 해당 이메일로 등록된 회원이 존재할 경우
      */
     @Override
     public MemberResponse registerMember(MemberRegisterRequest request) {
@@ -54,7 +51,6 @@ public class MemberServiceImpl implements MemberService {
 
         Role role = roleRepository.findByRoleName(request.getRoleName())
                 .orElseThrow(() -> new RoleNotFoundException(request.getRoleName()));
-
 
         if (memberRepository.existsMemberByMbEmail(request.getEmail())) {
             throw new MemberAlreadyExistsException(request.getEmail());
@@ -110,7 +106,7 @@ public class MemberServiceImpl implements MemberService {
      * 이메일, 비밀번호, 권한 등은 수정 대상이 아닙니다.
      * </p>
      *
-     * @param mbNo    수정할 회원 번호
+     * @param mbNo 수정할 회원 번호
      * @param request 수정 요청 DTO
      * @return 수정된 회원 정보 응답 DTO
      * @throws MemberNotFoundException 해당 회원 번호로 등록된 회원이 존재하지 않는 경우
@@ -148,10 +144,10 @@ public class MemberServiceImpl implements MemberService {
     /**
      * 회원 비밀번호를 변경합니다.
      *
-     * @param mbNo    대상 회원 번호
+     * @param mbNo 대상 회원 번호
      * @param request 비밀번호 변경 요청 DTO
-     * @throws MemberNotFoundException     회원이 존재하지 않을 경우
-     * @throws PasswordNotMatchException   기존 비밀번호가 일치하지 않을 경우
+     * @throws MemberNotFoundException 회원이 존재하지 않을 경우
+     * @throws PasswordNotMatchException 기존 비밀번호가 일치하지 않을 경우
      * @throws NewPasswordNotMatchException 새 비밀번호와 재확인 값이 일치하지 않을 경우
      */
     @Override
@@ -170,6 +166,12 @@ public class MemberServiceImpl implements MemberService {
         member.updatePassword(passwordEncoder.encode(request.getNewPassword()));
     }
 
+    /**
+     * 회원 도메인 객체를 응답 DTO로 변환합니다.
+     *
+     * @param member 변환할 회원 객체
+     * @return 응답 DTO
+     */
     private MemberResponse getMemberResponse(Member member) {
         return new MemberResponse(
                 member.getMbNo(),
@@ -181,6 +183,12 @@ public class MemberServiceImpl implements MemberService {
         );
     }
 
+    /**
+     * 전체 회원의 요약 정보를 조회합니다.
+     *
+     * @return 회원 요약 정보 리스트
+     * @throws MemberNotFoundException 회원이 존재하지 않을 경우
+     */
     @Override
     public List<MemberInfoResponse> getMemberInfoList() {
         List<Long> members = memberRepository.findAllMbNo();
