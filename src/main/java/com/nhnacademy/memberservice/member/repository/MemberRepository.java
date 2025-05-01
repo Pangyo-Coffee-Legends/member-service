@@ -19,7 +19,12 @@ import java.util.Optional;
 public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByMbEmail(String mbEmail);
 
-    // 모든 사원번호(mbNo)만 가져오는 메소드
+    /**
+     * Member 엔티티에서 모든 회원 ID(mbNo) 목록을 조회합니다.
+     *
+     * @return 회원 ID(Long 타입) 목록
+     */
+
     @Query("SELECT m.mbNo FROM Member m")
     List<Long> findAllMbNo();
 
