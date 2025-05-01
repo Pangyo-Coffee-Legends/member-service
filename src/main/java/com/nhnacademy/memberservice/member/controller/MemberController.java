@@ -57,7 +57,7 @@ public class MemberController {
      * @param mbEmail 조회할 회원의 이메일 (PathVariable)
      * @return 해당 회원의 번호와 이름이 담긴 ResponseEntity (HTTP 200 OK)
      */
-    @GetMapping("/info/{mbEmail}")
+    @GetMapping("/email/{mbEmail}/info")
     public ResponseEntity<MemberSimpleResponse> getMemberInfo(@PathVariable("mbEmail") String mbEmail) {
         MemberSimpleResponse response = memberService.getMemberSimple(mbEmail);
 
