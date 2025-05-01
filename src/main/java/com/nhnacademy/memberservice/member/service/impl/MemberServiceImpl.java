@@ -1,10 +1,7 @@
 package com.nhnacademy.memberservice.member.service.impl;
 
 import com.nhnacademy.memberservice.member.domain.Member;
-import com.nhnacademy.memberservice.member.dto.MemberRegisterRequest;
-import com.nhnacademy.memberservice.member.dto.MemberResponse;
-import com.nhnacademy.memberservice.member.dto.MemberUpdatePasswordRequest;
-import com.nhnacademy.memberservice.member.dto.MemberUpdateRequest;
+import com.nhnacademy.memberservice.member.dto.*;
 import com.nhnacademy.memberservice.member.exception.*;
 import com.nhnacademy.memberservice.member.repository.MemberRepository;
 import com.nhnacademy.memberservice.member.service.MemberService;
@@ -103,6 +100,17 @@ public class MemberServiceImpl implements MemberService {
                 .orElseThrow(() -> new MemberEmailNotFoundException(mbEmail));
 
         return getMemberResponse(member);
+    }
+
+    @Override
+    public MemberSimpleResponse getMemberSimple(String mbEmail) {
+        Member member = memberRepository.findByMbEmail(mbEmail)
+                .orElseThrow(() -> new MemberEmailNotFoundException(mbEmail));
+
+        return new MemberSimpleResponse(
+                member.getMbNo(),
+                member.getMbName()
+        );
     }
 
     /**

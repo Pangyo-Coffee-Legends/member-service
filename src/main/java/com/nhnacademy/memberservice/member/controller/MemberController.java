@@ -1,9 +1,6 @@
 package com.nhnacademy.memberservice.member.controller;
 
-import com.nhnacademy.memberservice.member.dto.MemberRegisterRequest;
-import com.nhnacademy.memberservice.member.dto.MemberResponse;
-import com.nhnacademy.memberservice.member.dto.MemberUpdatePasswordRequest;
-import com.nhnacademy.memberservice.member.dto.MemberUpdateRequest;
+import com.nhnacademy.memberservice.member.dto.*;
 import com.nhnacademy.memberservice.member.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -44,6 +41,31 @@ public class MemberController {
     /**
      * 회원 고유 번호로 특정 회원의 정보를 조회합니다.
      *
+     * @param mbNo 조회할 회원의 고유 번호 (PathVariable)
+     * @return 해당 회원의 정보가 담긴 ResponseEntity (HTTP 200 OK)
+     */
+    @GetMapping("{mbNo}")
+    public ResponseEntity<MemberResponse> getMember(@PathVariable("mbNo") Long mbNo){
+        MemberResponse response = memberService.getMemberByMbNo(mbNo);
+
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * 회원 이메일로 특정 회원의 정보를 조회합니다.
+     *
+     * @param mbEmail 조회할 회원의 이메일 (PathVariable)
+     * @return 해당 회원의 번호와 이름이 담긴 ResponseEntity (HTTP 200 OK)
+     */
+    @GetMapping("/info/{mbEmail}")
+    public ResponseEntity<MemberSimpleResponse> getMemberInfo(@PathVariable("mbEmail") String mbEmail) {
+        MemberSimpleResponse response = memberService.getMemberSimple(mbEmail);
+
+        return ResponseEntity.ok(response);
+    }
+    /**
+     * 회원 고유 번호로 특정 회원의 정보를 조회합니다.
+     *
      * @param mbEmail 조회할 회원의 고유 번호 (PathVariable)
      * @return 해당 회원의 정보가 담긴 ResponseEntity (HTTP 200 OK)
      */
@@ -53,7 +75,6 @@ public class MemberController {
 
         return ResponseEntity.ok(response);
     }
-
     /**
      * 회원 정보를 수정합니다.
      * <p>

@@ -1,9 +1,6 @@
 package com.nhnacademy.memberservice.member.service;
 
-import com.nhnacademy.memberservice.member.dto.MemberRegisterRequest;
-import com.nhnacademy.memberservice.member.dto.MemberResponse;
-import com.nhnacademy.memberservice.member.dto.MemberUpdatePasswordRequest;
-import com.nhnacademy.memberservice.member.dto.MemberUpdateRequest;
+import com.nhnacademy.memberservice.member.dto.*;
 
 /**
  * 회원 관련 서비스를 제공하는 인터페이스입니다.
@@ -47,7 +44,17 @@ public interface MemberService {
      */
     MemberResponse getMemberByEmail(String mbEmail);
 
-
+    /**
+     * 회원 정보를 조회하는 메서드입니다.
+     * <p>
+     * 이 메서드는 회원의 이메일인 {@code mbEmail}를 받아 해당 회원의 정보를 조회하고
+     * 조회된 회원의 정보를 {@link MemberSimpleResponse} 형태로 반환합니다.
+     * </p>
+     *
+     * @param mbEmail 조회할 회원의 이메일
+     * @return 조회된 회원의 정보가 담긴 {@link MemberSimpleResponse} 객체
+     */
+    MemberSimpleResponse getMemberSimple(String mbEmail);
 
     /**
      * 회원 정보를 수정하는 메서드입니다.
