@@ -194,10 +194,6 @@ public class MemberServiceImpl implements MemberService {
         List<Long> members = memberRepository.findAllMbNo();
         List<MemberInfoResponse> memberInfoResponses = new ArrayList<>();
 
-        if (members.isEmpty()) {
-            throw new NullPointerException("맴버를 찾을 수 없습니다!!!!");
-        }
-
         for (Long mbNo : members){
             Member member = memberRepository.findById(mbNo)
                     .orElseThrow(() -> new MemberNotFoundException(mbNo));

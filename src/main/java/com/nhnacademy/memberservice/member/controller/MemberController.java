@@ -111,7 +111,7 @@ public class MemberController {
      * @return 회원 기본 정보 {@link MemberInfoResponse} 객체 리스트를 담은 ResponseEntity (HTTP 200 OK)
      */
 
-    @GetMapping("/info-list")
+    @GetMapping
     ResponseEntity<List<MemberInfoResponse>> getMemberInfoList() {
         List<MemberInfoResponse> memberInfoList = memberService.getMemberInfoList();
         return ResponseEntity.ok(memberInfoList);
