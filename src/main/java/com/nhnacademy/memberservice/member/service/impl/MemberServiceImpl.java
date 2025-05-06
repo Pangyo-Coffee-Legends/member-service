@@ -113,6 +113,17 @@ public class MemberServiceImpl implements MemberService {
         );
     }
 
+    @Override
+    public MemberSimpleResponse getMemberSimple(Long mbNo) {
+        Member member = memberRepository.findById(mbNo)
+                .orElseThrow(() -> new MemberNotFoundException(mbNo));
+
+        return new MemberSimpleResponse(
+                member.getMbNo(),
+                member.getMbName()
+        );
+    }
+
     /**
      * 회원의 이름, 전화번호 등 정보를 수정합니다.
      * <p>
@@ -177,6 +188,13 @@ public class MemberServiceImpl implements MemberService {
         }
 
         member.updatePassword(passwordEncoder.encode(request.getNewPassword()));
+    }
+
+    @Override
+    public boolean verify(Long mbNo, MemberConfirmPasswordRequest request) {
+        Member member = memberRepository.findById(mbNo)
+                .orElseThrow(() -> new MemberNotFoundException(mbNo));
+        return passwordEncoder.matches(request.getPassword(), member.getMbPassword());
     }
 
     private MemberResponse getMemberResponse(Member member) {

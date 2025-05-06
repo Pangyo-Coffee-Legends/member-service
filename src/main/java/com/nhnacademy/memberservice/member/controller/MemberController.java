@@ -44,7 +44,7 @@ public class MemberController {
      * @param mbNo 조회할 회원의 고유 번호 (PathVariable)
      * @return 해당 회원의 정보가 담긴 ResponseEntity (HTTP 200 OK)
      */
-    @GetMapping("{mbNo}")
+    @GetMapping("/{mbNo}")
     public ResponseEntity<MemberResponse> getMember(@PathVariable("mbNo") Long mbNo){
         MemberResponse response = memberService.getMemberByMbNo(mbNo);
 
@@ -60,6 +60,19 @@ public class MemberController {
     @GetMapping("/email/{mbEmail}/info")
     public ResponseEntity<MemberSimpleResponse> getMemberInfo(@PathVariable("mbEmail") String mbEmail) {
         MemberSimpleResponse response = memberService.getMemberSimple(mbEmail);
+
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * 회원 번호로 특정 회원의 정보를 조회합니다.
+     *
+     * @param mbNo 조회할 회원의 번호 (PathVariable)
+     * @return 해당 회원의 번호와 이름이 담긴 ResponseEntity (HTTP 200 OK)
+     */
+    @GetMapping("/{mbNo}/info")
+    public ResponseEntity<MemberSimpleResponse> getMemberInfo(@PathVariable("mbNo") Long mbNo) {
+        MemberSimpleResponse response = memberService.getMemberSimple(mbNo);
 
         return ResponseEntity.ok(response);
     }
@@ -124,5 +137,14 @@ public class MemberController {
         memberService.updatePassword(mbNo, request);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{mbNo}/password")
+    public ResponseEntity<Boolean> verify(
+            @PathVariable("mbNo") Long mbNo,
+            @RequestBody @Valid MemberConfirmPasswordRequest request){
+        boolean isValid =  memberService.verify(mbNo, request);
+
+        return ResponseEntity.ok(isValid);
     }
 }
