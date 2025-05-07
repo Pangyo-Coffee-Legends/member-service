@@ -1,6 +1,6 @@
 package com.nhnacademy.memberservice.member.service.impl;
 
-import com.nhnacademy.memberservice.member.domain.Member;
+import com.nhnacademy.memberservice.member.entity.Member;
 import com.nhnacademy.memberservice.member.dto.*;
 import com.nhnacademy.memberservice.member.exception.*;
 import com.nhnacademy.memberservice.member.repository.MemberRepository;
@@ -191,20 +191,6 @@ public class MemberServiceImpl implements MemberService {
      */
     @Override
     public List<MemberInfoResponse> getMemberInfoList() {
-        List<Long> members = memberRepository.findAllMbNo();
-        List<MemberInfoResponse> memberInfoResponses = new ArrayList<>();
-
-        for (Long mbNo : members){
-            Member member = memberRepository.findById(mbNo)
-                    .orElseThrow(() -> new MemberNotFoundException(mbNo));
-            memberInfoResponses.add(
-                    new MemberInfoResponse(
-                            member.getMbNo(),
-                            member.getMbName(),
-                            member.getMbEmail(),
-                            member.getPhoneNumber()
-                    ));
-        }
-        return memberInfoResponses;
+      return memberRepository.findAllMemberInfo();
     }
 }

@@ -3,7 +3,6 @@ package com.nhnacademy.memberservice.common.advice;
 import com.nhnacademy.memberservice.common.error.BusinessException;
 import com.nhnacademy.memberservice.common.error.ErrorCode;
 import com.nhnacademy.memberservice.common.error.ErrorResponse;
-import com.nhnacademy.memberservice.member.exception.MemberNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +26,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  * 응답 메시지 구조의 일관성과 API 오류 응답의 표준화를 위해 사용됩니다.
  * </p>
  *
- * @author
+ *
  */
 @Slf4j
 @RestControllerAdvice

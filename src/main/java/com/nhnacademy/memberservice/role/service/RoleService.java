@@ -1,11 +1,8 @@
 package com.nhnacademy.memberservice.role.service;
 
-import com.nhnacademy.memberservice.member.domain.Member;
 import com.nhnacademy.memberservice.role.dto.RoleRegisterRequest;
 import com.nhnacademy.memberservice.role.dto.RoleResponse;
 import com.nhnacademy.memberservice.role.dto.RoleUpdateRequest;
-
-import java.util.List;
 
 /**
  * 역할(Role)과 관련된 비즈니스 로직을 처리하는 서비스 인터페이스입니다.

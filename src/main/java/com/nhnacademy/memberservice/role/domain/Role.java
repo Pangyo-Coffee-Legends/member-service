@@ -1,16 +1,11 @@
 package com.nhnacademy.memberservice.role.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.nhnacademy.memberservice.member.domain.Member;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.Comment;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 권한 정보를 저장하는 JPA 엔티티입니다.

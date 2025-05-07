@@ -1,10 +1,9 @@
 package com.nhnacademy.memberservice.member.service;
 
-import com.nhnacademy.memberservice.member.domain.Member;
+import com.nhnacademy.memberservice.member.entity.Member;
 import com.nhnacademy.memberservice.member.dto.MemberRegisterRequest;
 import com.nhnacademy.memberservice.member.dto.MemberResponse;
 import com.nhnacademy.memberservice.member.dto.MemberUpdatePasswordRequest;
-import com.nhnacademy.memberservice.member.dto.MemberUpdateRequest;
 import com.nhnacademy.memberservice.member.exception.MemberEmailNotFoundException;
 import com.nhnacademy.memberservice.member.exception.MemberNotFoundException;
 import com.nhnacademy.memberservice.member.repository.MemberRepository;
