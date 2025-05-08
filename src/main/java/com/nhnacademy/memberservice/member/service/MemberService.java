@@ -48,15 +48,15 @@ public interface MemberService {
      * 회원 정보를 조회하는 메서드입니다.
      * <p>
      * 이 메서드는 회원의 이메일인 {@code mbEmail}를 받아 해당 회원의 정보를 조회하고
-     * 조회된 회원의 정보를 {@link MemberSimpleResponse} 형태로 반환합니다.
+     * 조회된 회원의 정보를 {@link MemberInfoResponse} 형태로 반환합니다.
      * </p>
      *
      * @param mbEmail 조회할 회원의 이메일
-     * @return 조회된 회원의 정보가 담긴 {@link MemberSimpleResponse} 객체
+     * @return 조회된 회원의 정보가 담긴 {@link MemberInfoResponse} 객체
      */
-    MemberSimpleResponse getMemberSimple(String mbEmail);
+    MemberInfoResponse getMemberInfo(String mbEmail);
 
-    MemberSimpleResponse getMemberSimple(Long mbNo);
+    MemberInfoResponse getMemberInfo(Long mbNo);
 
     /**
      * 회원 정보를 수정하는 메서드입니다.

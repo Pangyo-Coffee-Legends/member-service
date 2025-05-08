@@ -102,25 +102,45 @@ public class MemberServiceImpl implements MemberService {
         return getMemberResponse(member);
     }
 
+    /**
+     * 이메일로 회원 정보를 조회합니다.
+     *
+     * @param mbEmail 회원 이메일
+     * @return 회원 정보 응답 DTO
+     * @throws MemberEmailNotFoundException 해당 이메일로 등록된 회원이 없는 경우
+     */
     @Override
-    public MemberSimpleResponse getMemberSimple(String mbEmail) {
+    public MemberInfoResponse getMemberInfo(String mbEmail) {
         Member member = memberRepository.findByMbEmail(mbEmail)
                 .orElseThrow(() -> new MemberEmailNotFoundException(mbEmail));
 
-        return new MemberSimpleResponse(
+        return new MemberInfoResponse(
                 member.getMbNo(),
-                member.getMbName()
+                member.getMbName(),
+                member.getMbEmail(),
+                member.getPhoneNumber(),
+                member.getRole().getRoleName()
         );
     }
 
+    /**
+     * 회원 번호로 회원 정보를 조회합니다.
+     *
+     * @param mbNo 회원 이메일
+     * @return 회원 정보 응답 DTO
+     * @throws MemberEmailNotFoundException 해당 이메일로 등록된 회원이 없는 경우
+     */
     @Override
-    public MemberSimpleResponse getMemberSimple(Long mbNo) {
+    public MemberInfoResponse getMemberInfo(Long mbNo) {
         Member member = memberRepository.findById(mbNo)
                 .orElseThrow(() -> new MemberNotFoundException(mbNo));
 
-        return new MemberSimpleResponse(
+        return new MemberInfoResponse(
                 member.getMbNo(),
-                member.getMbName()
+                member.getMbName(),
+                member.getMbEmail(),
+                member.getPhoneNumber(),
+                member.getRole().getRoleName()
         );
     }
 

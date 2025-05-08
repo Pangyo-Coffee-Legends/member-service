@@ -58,8 +58,8 @@ public class MemberController {
      * @return 해당 회원의 번호와 이름이 담긴 ResponseEntity (HTTP 200 OK)
      */
     @GetMapping("/email/{mbEmail}/info")
-    public ResponseEntity<MemberSimpleResponse> getMemberInfo(@PathVariable("mbEmail") String mbEmail) {
-        MemberSimpleResponse response = memberService.getMemberSimple(mbEmail);
+    public ResponseEntity<MemberInfoResponse> getMemberInfo(@PathVariable("mbEmail") String mbEmail) {
+        MemberInfoResponse response = memberService.getMemberInfo(mbEmail);
 
         return ResponseEntity.ok(response);
     }
@@ -71,8 +71,8 @@ public class MemberController {
      * @return 해당 회원의 번호와 이름이 담긴 ResponseEntity (HTTP 200 OK)
      */
     @GetMapping("/{mbNo}/info")
-    public ResponseEntity<MemberSimpleResponse> getMemberInfo(@PathVariable("mbNo") Long mbNo) {
-        MemberSimpleResponse response = memberService.getMemberSimple(mbNo);
+    public ResponseEntity<MemberInfoResponse> getMemberInfo(@PathVariable("mbNo") Long mbNo) {
+        MemberInfoResponse response = memberService.getMemberInfo(mbNo);
 
         return ResponseEntity.ok(response);
     }
