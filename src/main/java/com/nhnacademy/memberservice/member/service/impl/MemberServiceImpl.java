@@ -187,10 +187,19 @@ public class MemberServiceImpl implements MemberService {
      * 전체 회원의 요약 정보를 조회합니다.
      *
      * @return 회원 요약 정보 리스트
-     * @throws MemberNotFoundException 회원이 존재하지 않을 경우
      */
     @Override
     public List<MemberInfoResponse> getMemberInfoList() {
       return memberRepository.findAllMemberInfo();
+    }
+
+    /**
+     * 전체 회원의 고유 번호를 조회합니다.
+     *
+     * @return 회원 고유 번호 리스트
+     */
+    @Override
+    public List<Long> getAllMemberIds() {
+        return memberRepository.findAllMbNos();
     }
 }

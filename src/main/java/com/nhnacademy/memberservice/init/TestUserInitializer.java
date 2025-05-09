@@ -1,25 +1,25 @@
-//package com.nhnacademy.memberservice.init;
-//
-//import com.nhnacademy.memberservice.member.domain.Member;
-//import com.nhnacademy.memberservice.member.repository.MemberRepository;
-//import com.nhnacademy.memberservice.role.domain.Role;
-//import com.nhnacademy.memberservice.role.repository.RoleRepository;
-//import lombok.RequiredArgsConstructor;
-//import org.springframework.boot.CommandLineRunner;
-//import org.springframework.security.crypto.password.PasswordEncoder;
-//import org.springframework.stereotype.Component;
-//
-//@Component
-//@RequiredArgsConstructor
-//public class TestUserInitializer implements CommandLineRunner {
-//
-//    private final MemberRepository memberRepository;
-//    private final RoleRepository roleRepository;
-//    private final PasswordEncoder passwordEncoder;
-//
-//    @Override
-//    public void run(String... args) throws Exception {
-//
+package com.nhnacademy.memberservice.init;
+
+import com.nhnacademy.memberservice.member.entity.Member;
+import com.nhnacademy.memberservice.member.repository.MemberRepository;
+import com.nhnacademy.memberservice.role.domain.Role;
+import com.nhnacademy.memberservice.role.repository.RoleRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
+
+@Component
+@RequiredArgsConstructor
+public class TestUserInitializer implements CommandLineRunner {
+
+    private final MemberRepository memberRepository;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    @Override
+    public void run(String... args) throws Exception {
+
 //        Role role1 = new Role();
 //        Role role2 = new Role();
 //
@@ -56,4 +56,5 @@
 //        memberRepository.save(testMember);
 //        memberRepository.save(testAdminMember);
 //    }
-//}
+    }
+}

@@ -116,4 +116,16 @@ public class MemberController {
         List<MemberInfoResponse> memberInfoList = memberService.getMemberInfoList();
         return ResponseEntity.ok(memberInfoList);
     }
+
+    /**
+     * 기본 회원 정보 목록을 조회합니다.
+     * 이 메서드는 각 회원의 고유 번호를 리스트에 담아 반환합니다.
+     *
+     * @return 회원 고유 번호 리스트를 담은 ResponseEntity (HTTP 200 OK)
+     */
+    @GetMapping("/ids")
+    ResponseEntity<List<Long>> getAllMemberIds() {
+        List<Long> memberNoList = memberService.getAllMemberIds();
+        return ResponseEntity.ok(memberNoList);
+    }
 }

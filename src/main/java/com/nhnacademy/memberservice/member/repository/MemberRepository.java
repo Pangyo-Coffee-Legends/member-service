@@ -32,4 +32,6 @@ public interface MemberRepository extends JpaRepository<Member, Long>, MemberRep
 
 
     boolean existsMemberByMbEmail(String mbEmail);
+
+    List<Long> findAllMbNos();
 }

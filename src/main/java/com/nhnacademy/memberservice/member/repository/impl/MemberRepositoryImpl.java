@@ -3,6 +3,7 @@ package com.nhnacademy.memberservice.member.repository.impl;
 import com.nhnacademy.memberservice.member.dto.MemberInfoResponse;
 import com.nhnacademy.memberservice.member.entity.QMember;
 import com.nhnacademy.memberservice.member.repository.MemberRepositoryCustom;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
@@ -33,13 +34,28 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
         QMember member = QMember.member;
 
         return queryFactory
-                .select(com.querydsl.core.types.Projections.constructor(
+                .select(Projections.constructor(
                         MemberInfoResponse.class,
                         member.mbNo,
                         member.mbName,
                         member.mbEmail,
                         member.phoneNumber
                 ))
+                .from(member)
+                .fetch();
+    }
+
+    /**
+     * 회원 고유 번호(MbNo)를 조회합니다.
+     * 여기 채워야 함----
+     * @return 회원 정보 리스트
+     */
+    @Override
+    public List<Long> findAllMbNos(){
+        QMember member = QMember.member;
+
+        return queryFactory
+                .select(member.mbNo) // Projections 없이 필드 직접 선택
                 .from(member)
                 .fetch();
     }

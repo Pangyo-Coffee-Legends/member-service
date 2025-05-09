@@ -14,4 +14,11 @@ public interface MemberRepositoryCustom {
      */
     List<MemberInfoResponse> findAllMemberInfo();
 
+    /**
+     * 회원 고유 번호(MbNo)를 한번의 쿼리로 조회합니다.
+     *
+     * @return 회원 정보 리스트
+     */
+    List<Long> findAllMbNos();
+
 }

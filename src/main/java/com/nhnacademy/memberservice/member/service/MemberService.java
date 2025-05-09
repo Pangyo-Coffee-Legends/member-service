@@ -81,4 +81,6 @@ public interface MemberService {
     void updatePassword(Long mbNo, MemberUpdatePasswordRequest request);
 
     List<MemberInfoResponse> getMemberInfoList();
+
+    List<Long> getAllMemberIds();
 }
