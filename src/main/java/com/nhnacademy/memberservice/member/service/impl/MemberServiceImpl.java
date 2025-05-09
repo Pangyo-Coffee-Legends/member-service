@@ -9,12 +9,12 @@ import com.nhnacademy.memberservice.role.domain.Role;
 import com.nhnacademy.memberservice.role.exception.RoleNotFoundException;
 import com.nhnacademy.memberservice.role.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -190,7 +190,7 @@ public class MemberServiceImpl implements MemberService {
      * @throws MemberNotFoundException 회원이 존재하지 않을 경우
      */
     @Override
-    public List<MemberInfoResponse> getMemberInfoList() {
-      return memberRepository.findAllMemberInfo();
+    public Page<MemberInfoResponse> getMemberInfoList(Pageable pageable) {
+      return memberRepository.findAllMemberInfo(pageable);
     }
 }

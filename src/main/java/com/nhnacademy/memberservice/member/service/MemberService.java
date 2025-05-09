@@ -1,8 +1,8 @@
 package com.nhnacademy.memberservice.member.service;
 
 import com.nhnacademy.memberservice.member.dto.*;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 /**
  * 회원 관련 서비스를 제공하는 인터페이스입니다.
@@ -80,5 +80,5 @@ public interface MemberService {
      */
     void updatePassword(Long mbNo, MemberUpdatePasswordRequest request);
 
-    List<MemberInfoResponse> getMemberInfoList();
+    Page<MemberInfoResponse> getMemberInfoList(Pageable pageable);
 }

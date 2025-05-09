@@ -194,6 +194,7 @@ buildNumber.properties
 # application.properties 무시
 src/main/resources/application.properties
 src/main/resources/application-prod.properties
+src/main/resources/application-dev.properties
 src/test/java/com/nhnacademy/memberservice/resources/application-test.properties
 .env
 # End of https://www.toptal.com/developers/gitignore/api/java,maven,intellij,macos
