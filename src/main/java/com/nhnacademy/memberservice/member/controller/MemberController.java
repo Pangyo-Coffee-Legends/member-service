@@ -1,17 +1,19 @@
 package com.nhnacademy.memberservice.member.controller;
 
-import com.nhnacademy.memberservice.member.dto.MemberRegisterRequest;
-import com.nhnacademy.memberservice.member.dto.MemberResponse;
-import com.nhnacademy.memberservice.member.dto.MemberUpdatePasswordRequest;
-import com.nhnacademy.memberservice.member.dto.MemberUpdateRequest;
+import com.nhnacademy.memberservice.member.dto.*;
 import com.nhnacademy.memberservice.member.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+//
 /**
  * 회원(Member)에 대한 HTTP 요청을 처리하는 컨트롤러 클래스입니다.
  * <p>
@@ -104,4 +106,29 @@ public class MemberController {
 
         return ResponseEntity.noContent().build();
     }
+
+    /**
+     * 기본 회원 정보 목록을 페이징하여 조회합니다.
+     * <p>
+     * 이 메서드는 {@link MemberInfoResponse} DTO의 리스트와 함께 총 페이지 수, 전체 개수, 현재 페이지 번호를 포함하는
+     * 커스텀 응답 객체 {@link MemberPageResponse}를 반환합니다.
+     * </p>
+     *
+     * @param pageable 요청된 페이지 번호, 페이지 크기, 정렬 조건이 포함된 {@link Pageable} 객체
+     * @return 페이징된 회원 기본 정보와 메타데이터를 포함한 {@link MemberPageResponse} 응답
+     */
+    @GetMapping
+    ResponseEntity<MemberPageResponse> getMemberInfoList(@PageableDefault(size = 10) Pageable pageable) {
+        Page<MemberInfoResponse> page = memberService.getMemberInfoList(pageable);
+        return ResponseEntity.ok(
+                new MemberPageResponse(
+                        page.getContent(),
+                        page.getTotalPages(),
+                        page.getTotalElements(),
+                        page.getNumber()
+                )
+        );
+    }
+
+
 }

@@ -1,9 +1,8 @@
 package com.nhnacademy.memberservice.member.service;
 
-import com.nhnacademy.memberservice.member.dto.MemberRegisterRequest;
-import com.nhnacademy.memberservice.member.dto.MemberResponse;
-import com.nhnacademy.memberservice.member.dto.MemberUpdatePasswordRequest;
-import com.nhnacademy.memberservice.member.dto.MemberUpdateRequest;
+import com.nhnacademy.memberservice.member.dto.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 /**
  * 회원 관련 서비스를 제공하는 인터페이스입니다.
@@ -81,4 +80,5 @@ public interface MemberService {
      */
     void updatePassword(Long mbNo, MemberUpdatePasswordRequest request);
 
+    Page<MemberInfoResponse> getMemberInfoList(Pageable pageable);
 }

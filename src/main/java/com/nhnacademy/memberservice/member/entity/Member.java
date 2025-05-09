@@ -1,11 +1,8 @@
-package com.nhnacademy.memberservice.member.domain;
+package com.nhnacademy.memberservice.member.entity;
 
 import com.nhnacademy.memberservice.role.domain.Role;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Pattern;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.Comment;
 
 import java.time.LocalDateTime;
@@ -20,7 +17,9 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "members")
 @NoArgsConstructor
+@AllArgsConstructor
 @ToString
+@Builder
 @EqualsAndHashCode
 public class Member {
 

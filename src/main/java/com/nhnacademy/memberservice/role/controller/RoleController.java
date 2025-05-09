@@ -1,6 +1,5 @@
 package com.nhnacademy.memberservice.role.controller;
 
-import com.nhnacademy.memberservice.member.domain.Member;
 import com.nhnacademy.memberservice.role.dto.RoleRegisterRequest;
 import com.nhnacademy.memberservice.role.dto.RoleResponse;
 import com.nhnacademy.memberservice.role.dto.RoleUpdateRequest;
@@ -11,8 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
-
-import java.util.List;
 
 /**
  * 역할(Role) 관련 요청을 처리하는 REST 컨트롤러입니다.
