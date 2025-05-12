@@ -1,6 +1,8 @@
 package com.nhnacademy.memberservice.member.service;
 
 import com.nhnacademy.memberservice.member.dto.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -80,7 +82,7 @@ public interface MemberService {
      */
     void updatePassword(Long mbNo, MemberUpdatePasswordRequest request);
 
-    List<MemberInfoResponse> getMemberInfoList();
+    Page<MemberInfoResponse> getMemberInfoList(Pageable pageable);
 
     List<Long> getAllMemberIds();
 }

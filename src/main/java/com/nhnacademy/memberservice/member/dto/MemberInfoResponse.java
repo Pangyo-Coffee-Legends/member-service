@@ -1,7 +1,6 @@
 package com.nhnacademy.memberservice.member.dto;
 
-import com.querydsl.core.annotations.QueryProjection;
-import lombok.Getter;
+import lombok.Value;
 
 /**
  * 회원 기본 정보 응답 DTO입니다.
@@ -14,19 +13,13 @@ import lombok.Getter;
  * 이 DTO는 불변(immutable) 객체로 설계되어 있어, 응답 데이터의 안정성과 신뢰성을 높이는 데 기여합니다.
  * </p>
  */
-@Getter
+@Value
 public class MemberInfoResponse {
 
-    private final Long no;
-    private final String name;
-    private final String email;
-    private final String phoneNumber;
+     Long no;
+     String name;
+     String email;
+     String phoneNumber;
 
-    @QueryProjection
-    public MemberInfoResponse(Long no, String name, String email, String phoneNumber) {
-        this.no = no;
-        this.name = name;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-    }
+
 }

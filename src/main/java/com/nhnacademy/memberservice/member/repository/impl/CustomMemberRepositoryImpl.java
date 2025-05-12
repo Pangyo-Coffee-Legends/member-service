@@ -6,13 +6,17 @@ import com.nhnacademy.memberservice.member.repository.CustomMemberRepository;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 
 import java.util.List;
 
 /**
- * 회원 리포지토리 사용자 정의 구현 클래스입니다.
+ * 회원 리포지토리의 사용자 정의 구현체입니다.
  * <p>
- * QueryDSL을 이용하여 복잡한 쿼리를 구현합니다.
+ * QueryDSL을 활용하여 페이징된 회원 요약 정보를 조회합니다.
  * </p>
  */
 @RequiredArgsConstructor
@@ -21,19 +25,21 @@ public class CustomMemberRepositoryImpl implements CustomMemberRepository {
     private final JPAQueryFactory queryFactory;
 
     /**
-     * 전체 회원의 요약 정보를 조회합니다.
+     * 전체 회원 요약 정보를 페이징하여 조회합니다.
      * <p>
-     * 회원 번호, 이름, 이메일, 전화번호를 포함한 회원 요약 정보를 리스트로 반환합니다.
-     * QueryDSL을 활용하여 한 번의 쿼리로 효율적으로 데이터를 조회합니다.
+     * 회원 번호, 이름, 이메일, 전화번호를 포함하는 DTO 리스트를 반환하며,
+     * 전체 회원 수를 함께 조회하여 {@link PageImpl}로 감싸 반환합니다.
      * </p>
      *
-     * @return {@code MemberInfoResponse} 객체 리스트, 모든 회원의 요약 정보
+     * @param pageable 페이지 번호, 크기, 정렬 조건 등이 포함된 Spring Data {@link Pageable} 객체
+     * @return {@link MemberInfoResponse} 객체를 담은 페이징 결과 {@link Page}
      */
     @Override
-    public List<MemberInfoResponse> findAllMemberInfo() {
+    public Page<MemberInfoResponse> findAllMemberInfo(Pageable pageable) {
         QMember member = QMember.member;
 
-        return queryFactory
+        // 실제 데이터 조회
+        List<MemberInfoResponse> content = queryFactory
                 .select(Projections.constructor(
                         MemberInfoResponse.class,
                         member.mbNo,
@@ -42,9 +48,18 @@ public class CustomMemberRepositoryImpl implements CustomMemberRepository {
                         member.phoneNumber
                 ))
                 .from(member)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
-    }
 
+        // 전체 회원 수 조회 (null 처리 포함)
+        Long total = queryFactory
+                .select(member.count())
+                .from(member)
+                .fetchOne();
+
+        return PageableExecutionUtils.getPage(content, pageable, () -> total);
+    }
     /**
      * 회원 고유 번호(MbNo)를 조회합니다.
      * 여기 채워야 함----

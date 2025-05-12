@@ -2,6 +2,8 @@ package com.nhnacademy.memberservice.member.repository;
 
 import com.nhnacademy.memberservice.member.dto.MemberInfoResponse;
 import com.nhnacademy.memberservice.member.entity.Member;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -26,7 +28,7 @@ public interface MemberRepository extends JpaRepository<Member, Long>, CustomMem
      *
      */
 
-    List<MemberInfoResponse> findAllMemberInfo();
+    Page<MemberInfoResponse> findAllMemberInfo(Pageable pageable);
 
 
     boolean existsMemberByMbEmail(String mbEmail);
