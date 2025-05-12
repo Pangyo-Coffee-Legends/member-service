@@ -2,7 +2,7 @@ package com.nhnacademy.memberservice.member.repository.impl;
 
 import com.nhnacademy.memberservice.member.dto.MemberInfoResponse;
 import com.nhnacademy.memberservice.member.entity.QMember;
-import com.nhnacademy.memberservice.member.repository.MemberRepositoryCustom;
+import com.nhnacademy.memberservice.member.repository.CustomMemberRepository;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ import java.util.List;
  * </p>
  */
 @RequiredArgsConstructor
-public class MemberRepositoryImpl implements MemberRepositoryCustom {
+public class CustomMemberRepositoryImpl implements CustomMemberRepository {
 
     private final JPAQueryFactory queryFactory;
 
