@@ -1,6 +1,6 @@
 package com.nhnacademy.memberservice.member.service.impl;
 
-import com.nhnacademy.memberservice.member.entity.Member;
+import com.nhnacademy.memberservice.member.domain.Member;
 import com.nhnacademy.memberservice.member.dto.*;
 import com.nhnacademy.memberservice.member.exception.*;
 import com.nhnacademy.memberservice.member.repository.MemberRepository;
@@ -200,7 +200,7 @@ public class MemberServiceImpl implements MemberService {
      * @return 회원 고유 번호 리스트
      */
     @Override
-    public List<Long> getAllMemberIds() {
+    public List<MemberNoResponse> getAllMemberIds() {
         return memberRepository.findAllMbNos();
     }
 }

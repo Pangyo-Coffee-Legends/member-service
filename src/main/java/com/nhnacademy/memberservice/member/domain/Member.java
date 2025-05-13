@@ -1,4 +1,4 @@
-package com.nhnacademy.memberservice.member.entity;
+package com.nhnacademy.memberservice.member.domain;
 
 import com.nhnacademy.memberservice.role.domain.Role;
 import jakarta.persistence.*;

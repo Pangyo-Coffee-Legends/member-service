@@ -84,5 +84,5 @@ public interface MemberService {
 
     Page<MemberInfoResponse> getMemberInfoList(Pageable pageable);
 
-    List<Long> getAllMemberIds();
+    List<MemberNoResponse> getAllMemberIds();
 }

@@ -1,10 +1,7 @@
 package com.nhnacademy.memberservice.member.service;
 
-import com.nhnacademy.memberservice.member.dto.MemberInfoResponse;
-import com.nhnacademy.memberservice.member.entity.Member;
-import com.nhnacademy.memberservice.member.dto.MemberRegisterRequest;
-import com.nhnacademy.memberservice.member.dto.MemberResponse;
-import com.nhnacademy.memberservice.member.dto.MemberUpdatePasswordRequest;
+import com.nhnacademy.memberservice.member.dto.*;
+import com.nhnacademy.memberservice.member.domain.Member;
 import com.nhnacademy.memberservice.member.exception.MemberEmailNotFoundException;
 import com.nhnacademy.memberservice.member.exception.MemberNotFoundException;
 import com.nhnacademy.memberservice.member.repository.MemberRepository;
@@ -176,5 +173,19 @@ class MemberServiceImplTest {
 
         assertEquals(2, result.getContent().size());
         assertEquals("김미성", result.getContent().get(0).getName());
+    }
+
+    @Test
+    @DisplayName("8. 모든 회원 no 추출 테스트")
+    void getAllMemberIds() {
+        List<MemberNoResponse> noResponse = List.of(
+                new MemberNoResponse(1L), new MemberNoResponse(2L)
+        );
+
+        when(memberRepository.findAllMbNos()).thenReturn(noResponse);
+
+        List<MemberNoResponse> result = memberService.getAllMemberIds();
+
+        assertThat(result).hasSize(2);
     }
 }

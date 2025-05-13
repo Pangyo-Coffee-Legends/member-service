@@ -1,7 +1,8 @@
 package com.nhnacademy.memberservice.member.repository.impl;
 
 import com.nhnacademy.memberservice.member.dto.MemberInfoResponse;
-import com.nhnacademy.memberservice.member.entity.QMember;
+import com.nhnacademy.memberservice.member.dto.MemberNoResponse;
+import com.nhnacademy.memberservice.member.domain.QMember;
 import com.nhnacademy.memberservice.member.repository.CustomMemberRepository;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -66,11 +67,13 @@ public class CustomMemberRepositoryImpl implements CustomMemberRepository {
      * @return 회원 정보 리스트
      */
     @Override
-    public List<Long> findAllMbNos(){
+    public List<MemberNoResponse> findAllMbNos(){
         QMember member = QMember.member;
 
         return queryFactory
-                .select(member.mbNo) // Projections 없이 필드 직접 선택
+                .select(Projections.constructor(
+                    MemberNoResponse.class, member.mbNo)
+                )
                 .from(member)
                 .fetch();
     }

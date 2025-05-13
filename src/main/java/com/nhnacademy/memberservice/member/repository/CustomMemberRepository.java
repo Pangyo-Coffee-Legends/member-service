@@ -1,6 +1,7 @@
 package com.nhnacademy.memberservice.member.repository;
 
 import com.nhnacademy.memberservice.member.dto.MemberInfoResponse;
+import com.nhnacademy.memberservice.member.dto.MemberNoResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -23,6 +24,6 @@ public interface CustomMemberRepository {
      *
      * @return 회원 정보 리스트
      */
-    List<Long> findAllMbNos();
+    List<MemberNoResponse> findAllMbNos();
 
 }

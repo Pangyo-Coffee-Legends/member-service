@@ -137,8 +137,8 @@ public class MemberController {
      * @return 회원 고유 번호 리스트를 담은 ResponseEntity (HTTP 200 OK)
      */
     @GetMapping("/ids")
-    ResponseEntity<List<Long>> getAllMemberIds() {
-        List<Long> memberNoList = memberService.getAllMemberIds();
+    ResponseEntity<List<MemberNoResponse>> getAllMemberIds() {
+        List<MemberNoResponse> memberNoList = memberService.getAllMemberIds();
         return ResponseEntity.ok(memberNoList);
     }
 }
