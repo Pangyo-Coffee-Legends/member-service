@@ -1,6 +1,6 @@
 package com.nhnacademy.memberservice.member.service.impl;
 
-import com.nhnacademy.memberservice.member.entity.Member;
+import com.nhnacademy.memberservice.member.domain.Member;
 import com.nhnacademy.memberservice.member.dto.*;
 import com.nhnacademy.memberservice.member.exception.*;
 import com.nhnacademy.memberservice.member.repository.MemberRepository;
@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -187,10 +188,19 @@ public class MemberServiceImpl implements MemberService {
      * 전체 회원의 요약 정보를 조회합니다.
      *
      * @return 회원 요약 정보 리스트
-     * @throws MemberNotFoundException 회원이 존재하지 않을 경우
      */
     @Override
     public Page<MemberInfoResponse> getMemberInfoList(Pageable pageable) {
       return memberRepository.findAllMemberInfo(pageable);
+    }
+
+    /**
+     * 전체 회원의 고유 번호를 조회합니다.
+     *
+     * @return 회원 고유 번호 리스트
+     */
+    @Override
+    public List<MemberNoResponse> getAllMemberIds() {
+        return memberRepository.findAllMbNos();
     }
 }

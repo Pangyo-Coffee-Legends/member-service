@@ -4,6 +4,8 @@ import com.nhnacademy.memberservice.member.dto.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 /**
  * 회원 관련 서비스를 제공하는 인터페이스입니다.
  * 이 인터페이스는 회원의 등록, 조회, 수정, 삭제와 같은 기본적인 회원 관리 작업을 정의합니다.
@@ -81,4 +83,6 @@ public interface MemberService {
     void updatePassword(Long mbNo, MemberUpdatePasswordRequest request);
 
     Page<MemberInfoResponse> getMemberInfoList(Pageable pageable);
+
+    List<MemberNoResponse> getAllMemberIds();
 }

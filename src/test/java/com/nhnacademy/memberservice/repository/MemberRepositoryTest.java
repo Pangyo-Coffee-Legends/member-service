@@ -2,7 +2,7 @@ package com.nhnacademy.memberservice.repository;
 
 import com.nhnacademy.memberservice.config.QuerydslConfig;
 import com.nhnacademy.memberservice.member.dto.MemberInfoResponse;
-import com.nhnacademy.memberservice.member.entity.Member;
+import com.nhnacademy.memberservice.member.domain.Member;
 import com.nhnacademy.memberservice.member.repository.MemberRepository;
 import com.nhnacademy.memberservice.role.domain.Role;
 import com.nhnacademy.memberservice.role.repository.RoleRepository;

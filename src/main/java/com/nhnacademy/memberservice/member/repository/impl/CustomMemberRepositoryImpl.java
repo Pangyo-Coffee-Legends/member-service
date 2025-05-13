@@ -1,7 +1,8 @@
 package com.nhnacademy.memberservice.member.repository.impl;
 
 import com.nhnacademy.memberservice.member.dto.MemberInfoResponse;
-import com.nhnacademy.memberservice.member.entity.QMember;
+import com.nhnacademy.memberservice.member.dto.MemberNoResponse;
+import com.nhnacademy.memberservice.member.domain.QMember;
 import com.nhnacademy.memberservice.member.repository.CustomMemberRepository;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -59,5 +60,21 @@ public class CustomMemberRepositoryImpl implements CustomMemberRepository {
                 .fetchOne();
 
         return PageableExecutionUtils.getPage(content, pageable, () -> total);
+    }
+    /**
+     * 회원 고유 번호(MbNo)를 조회합니다.
+     * 여기 채워야 함----
+     * @return 회원 정보 리스트
+     */
+    @Override
+    public List<MemberNoResponse> findAllMbNos(){
+        QMember member = QMember.member;
+
+        return queryFactory
+                .select(Projections.constructor(
+                    MemberNoResponse.class, member.mbNo)
+                )
+                .from(member)
+                .fetch();
     }
 }

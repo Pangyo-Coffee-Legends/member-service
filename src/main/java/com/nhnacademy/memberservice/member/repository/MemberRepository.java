@@ -1,12 +1,8 @@
 package com.nhnacademy.memberservice.member.repository;
 
-import com.nhnacademy.memberservice.member.dto.MemberInfoResponse;
-import com.nhnacademy.memberservice.member.entity.Member;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import com.nhnacademy.memberservice.member.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
 import java.util.Optional;
 
 
@@ -21,15 +17,6 @@ import java.util.Optional;
 public interface MemberRepository extends JpaRepository<Member, Long>, CustomMemberRepository {
     Optional<Member> findByMbEmail(String mbEmail);
 
-    /**
-     * Member 엔티티에서 모든 회원 중 memberInfoResponse 관련 목록을 조회합니다.
-     *
-     * @return 회원 목록(no, name, email, phoneNumber)
-     *
-     */
-
-    Page<MemberInfoResponse> findAllMemberInfo(Pageable pageable);
-
-
     boolean existsMemberByMbEmail(String mbEmail);
+
 }
