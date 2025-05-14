@@ -58,9 +58,9 @@ public interface MemberService {
      * @param mbEmail 조회할 회원의 이메일
      * @return 조회된 회원의 정보가 담긴 {@link MemberInfoResponse} 객체
      */
-    MemberInfoResponse getMemberInfo(String mbEmail);
+    MemberInfoResponse getMemberInfoByEmail(String mbEmail);
 
-    MemberInfoResponse getMemberInfo(Long mbNo);
+    MemberInfoResponse getMemberInfoByEmail(Long mbNo);
 
     /**
      * 회원 정보를 수정하는 메서드입니다.

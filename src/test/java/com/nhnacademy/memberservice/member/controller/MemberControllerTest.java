@@ -221,7 +221,7 @@ class MemberControllerTest {
     @DisplayName("회원정보 조회 - email")
     void getMemberInfo_email() throws Exception {
         MemberInfoResponse response = new MemberInfoResponse(1L, "홍길동", "test@test.com", "010-1111-2222", "ROLE_USER");
-        when(memberService.getMemberInfo(Mockito.anyString())).thenReturn(response);
+        when(memberService.getMemberInfoByEmail(Mockito.anyString())).thenReturn(response);
         mockMvc.perform(get("/api/v1/members/email/{mbEmail}/info", "test@test.com"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.no").value(1))
@@ -235,7 +235,7 @@ class MemberControllerTest {
     @DisplayName("회원정보 조회 - 회원번호")
     void getMemberInfo_no() throws Exception {
         MemberInfoResponse response = new MemberInfoResponse(1L, "홍길동", "test@test.com", "010-1111-2222", "ROLE_USER");
-        when(memberService.getMemberInfo(Mockito.anyLong())).thenReturn(response);
+        when(memberService.getMemberInfoByEmail(Mockito.anyLong())).thenReturn(response);
         mockMvc.perform(get("/api/v1/members/{no}/info", 1L))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("홍길동"))

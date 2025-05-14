@@ -160,7 +160,7 @@ class MemberServiceImplTest {
      */
     @Test
     @DisplayName("7. 회원 요약 정보 페이징 조회 성공 테스트")
-    void testGetMemberInfoList() {
+    void testGetMemberInfoByEmailList() {
         Pageable pageable = PageRequest.of(0, 10);
         List<MemberInfoResponse> memberList = List.of(
                 new MemberInfoResponse(1L, "김미성", "test1@example.com", "010-1111-1111", "ROLE_USER"),
@@ -195,7 +195,7 @@ class MemberServiceImplTest {
     void getMemberInfo_email() {
         when(memberRepository.findByMbEmail(Mockito.anyString())).thenReturn(Optional.of(member));
 
-        MemberInfoResponse response = memberService.getMemberInfo("test@example.com");
+        MemberInfoResponse response = memberService.getMemberInfoByEmail("test@example.com");
 
         Mockito.verify(memberRepository, Mockito.times(1)).findByMbEmail(Mockito.anyString());
 
@@ -212,7 +212,7 @@ class MemberServiceImplTest {
     void getMemberInfo_no() {
         when(memberRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(member));
 
-        MemberInfoResponse response = memberService.getMemberInfo(1L);
+        MemberInfoResponse response = memberService.getMemberInfoByEmail(1L);
 
         Mockito.verify(memberRepository, Mockito.times(1)).findById(Mockito.anyLong());
 
