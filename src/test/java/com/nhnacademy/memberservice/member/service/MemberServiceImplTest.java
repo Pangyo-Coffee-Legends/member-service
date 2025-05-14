@@ -212,7 +212,7 @@ class MemberServiceImplTest {
     void getMemberInfo_no() {
         when(memberRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(member));
 
-        MemberInfoResponse response = memberService.getMemberInfoByEmail(1L);
+        MemberInfoResponse response = memberService.getMemberInfo(1L);
 
         Mockito.verify(memberRepository, Mockito.times(1)).findById(Mockito.anyLong());
 

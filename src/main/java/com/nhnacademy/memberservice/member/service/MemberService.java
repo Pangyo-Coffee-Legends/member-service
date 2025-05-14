@@ -60,7 +60,7 @@ public interface MemberService {
      */
     MemberInfoResponse getMemberInfoByEmail(String mbEmail);
 
-    MemberInfoResponse getMemberInfoByEmail(Long mbNo);
+    MemberInfoResponse getMemberInfo(Long mbNo);
 
     /**
      * 회원 정보를 수정하는 메서드입니다.

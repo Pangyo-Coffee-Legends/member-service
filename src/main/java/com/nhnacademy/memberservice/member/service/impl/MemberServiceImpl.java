@@ -135,7 +135,7 @@ public class MemberServiceImpl implements MemberService {
      * @throws MemberEmailNotFoundException 해당 이메일로 등록된 회원이 없는 경우
      */
     @Override
-    public MemberInfoResponse getMemberInfoByEmail(Long mbNo) {
+    public MemberInfoResponse getMemberInfo(Long mbNo) {
         Member member = memberRepository.findById(mbNo)
                 .orElseThrow(() -> new MemberNotFoundException(mbNo));
 

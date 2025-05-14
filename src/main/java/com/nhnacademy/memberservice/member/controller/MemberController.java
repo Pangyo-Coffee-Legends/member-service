@@ -77,7 +77,7 @@ public class MemberController {
      */
     @GetMapping("/{mbNo}/info")
     public ResponseEntity<MemberInfoResponse> getMemberInfo(@PathVariable("mbNo") Long mbNo) {
-        MemberInfoResponse response = memberService.getMemberInfoByEmail(mbNo);
+        MemberInfoResponse response = memberService.getMemberInfo(mbNo);
 
         return ResponseEntity.ok(response);
     }
