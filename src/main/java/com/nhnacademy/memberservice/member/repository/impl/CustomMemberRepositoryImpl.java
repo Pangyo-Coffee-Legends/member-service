@@ -3,6 +3,7 @@ package com.nhnacademy.memberservice.member.repository.impl;
 import com.nhnacademy.memberservice.member.dto.MemberInfoResponse;
 import com.nhnacademy.memberservice.member.dto.MemberNoResponse;
 import com.nhnacademy.memberservice.member.domain.QMember;
+import com.nhnacademy.memberservice.member.dto.QMemberInfoResponse;
 import com.nhnacademy.memberservice.member.repository.CustomMemberRepository;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -41,8 +42,8 @@ public class CustomMemberRepositoryImpl implements CustomMemberRepository {
 
         // 실제 데이터 조회
         List<MemberInfoResponse> content = queryFactory
-                .select(Projections.constructor(
-                        MemberInfoResponse.class,
+                .select(
+                        new QMemberInfoResponse(
                         member.mbNo,
                         member.mbName,
                         member.mbEmail,
