@@ -37,6 +37,10 @@ public class MemberServiceImpl implements MemberService {
 
     /**
      * 신규 회원을 등록합니다.
+     * <p>
+     * 요청받은 회원 정보를 기반으로 회원 엔티티를 생성한 뒤 저장하고,
+     * 저장된 정보를 응답 객체로 반환합니다.
+     * </p>
      *
      * @param request 회원 등록 요청 DTO
      * @return 등록된 회원 정보를 담은 응답 DTO
@@ -52,6 +56,7 @@ public class MemberServiceImpl implements MemberService {
 
         Role role = roleRepository.findByRoleName(request.getRoleName())
                 .orElseThrow(() -> new RoleNotFoundException(request.getRoleName()));
+
 
         if (memberRepository.existsMemberByMbEmail(request.getEmail())) {
             throw new MemberAlreadyExistsException(request.getEmail());
@@ -99,6 +104,48 @@ public class MemberServiceImpl implements MemberService {
                 .orElseThrow(() -> new MemberEmailNotFoundException(mbEmail));
 
         return getMemberResponse(member);
+    }
+
+    /**
+     * 이메일로 회원 정보를 조회합니다.
+     *
+     * @param mbEmail 회원 이메일
+     * @return 회원 정보 응답 DTO
+     * @throws MemberEmailNotFoundException 해당 이메일로 등록된 회원이 없는 경우
+     */
+    @Override
+    public MemberInfoResponse getMemberInfoByEmail(String mbEmail) {
+        Member member = memberRepository.findByMbEmail(mbEmail)
+                .orElseThrow(() -> new MemberEmailNotFoundException(mbEmail));
+
+        return new MemberInfoResponse(
+                member.getMbNo(),
+                member.getMbName(),
+                member.getMbEmail(),
+                member.getPhoneNumber(),
+                member.getRole().getRoleName()
+        );
+    }
+
+    /**
+     * 회원 번호로 회원 정보를 조회합니다.
+     *
+     * @param mbNo 회원 이메일
+     * @return 회원 정보 응답 DTO
+     * @throws MemberEmailNotFoundException 해당 이메일로 등록된 회원이 없는 경우
+     */
+    @Override
+    public MemberInfoResponse getMemberInfo(Long mbNo) {
+        Member member = memberRepository.findById(mbNo)
+                .orElseThrow(() -> new MemberNotFoundException(mbNo));
+
+        return new MemberInfoResponse(
+                member.getMbNo(),
+                member.getMbName(),
+                member.getMbEmail(),
+                member.getPhoneNumber(),
+                member.getRole().getRoleName()
+        );
     }
 
     /**
@@ -165,6 +212,13 @@ public class MemberServiceImpl implements MemberService {
         }
 
         member.updatePassword(passwordEncoder.encode(request.getNewPassword()));
+    }
+
+    @Override
+    public boolean verify(Long mbNo, MemberConfirmPasswordRequest request) {
+        Member member = memberRepository.findById(mbNo)
+                .orElseThrow(() -> new MemberNotFoundException(mbNo));
+        return passwordEncoder.matches(request.getPassword(), member.getMbPassword());
     }
 
     /**

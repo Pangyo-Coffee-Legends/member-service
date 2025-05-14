@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -159,11 +160,11 @@ class MemberServiceImplTest {
      */
     @Test
     @DisplayName("7. 회원 요약 정보 페이징 조회 성공 테스트")
-    void testGetMemberInfoList() {
+    void testGetMemberInfoByEmailList() {
         Pageable pageable = PageRequest.of(0, 10);
         List<MemberInfoResponse> memberList = List.of(
-                new MemberInfoResponse(1L, "김미성", "test1@example.com", "010-1111-1111"),
-                new MemberInfoResponse(2L, "홍길동", "test2@example.com", "010-2222-2222")
+                new MemberInfoResponse(1L, "김미성", "test1@example.com", "010-1111-1111", "ROLE_USER"),
+                new MemberInfoResponse(2L, "홍길동", "test2@example.com", "010-2222-2222", "ROLE_USER")
         );
         Page<MemberInfoResponse> page = new PageImpl<>(memberList, pageable, 2);
 
@@ -187,5 +188,53 @@ class MemberServiceImplTest {
         List<MemberNoResponse> result = memberService.getAllMemberIds();
 
         assertThat(result).hasSize(2);
+    }
+
+    @Test
+    @DisplayName("회원정보 조회 - email")
+    void getMemberInfo_email() {
+        when(memberRepository.findByMbEmail(Mockito.anyString())).thenReturn(Optional.of(member));
+
+        MemberInfoResponse response = memberService.getMemberInfoByEmail("test@example.com");
+
+        Mockito.verify(memberRepository, Mockito.times(1)).findByMbEmail(Mockito.anyString());
+
+        assertAll(() -> {
+            assertEquals(1L, response.getNo());
+            assertEquals("김미성", response.getName());
+            assertEquals("010-0000-0000", response.getPhoneNumber());
+            assertEquals("ROLE_USER", response.getRoleName());
+        });
+    }
+
+    @Test
+    @DisplayName("회원정보 조회 - 회원번호")
+    void getMemberInfo_no() {
+        when(memberRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(member));
+
+        MemberInfoResponse response = memberService.getMemberInfo(1L);
+
+        Mockito.verify(memberRepository, Mockito.times(1)).findById(Mockito.anyLong());
+
+        assertNotNull(response);
+        assertAll(() -> {
+            assertEquals("김미성", response.getName());
+            assertEquals("test@example.com", response.getEmail());
+            assertEquals("010-0000-0000", response.getPhoneNumber());
+            assertEquals("ROLE_USER", response.getRoleName());
+        });
+    }
+
+    @Test
+    @DisplayName("비밀번호 확인")
+    void verify() {
+        MemberConfirmPasswordRequest request = new MemberConfirmPasswordRequest("password");
+        when(memberRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(member));
+        when(passwordEncoder.matches(request.getPassword(), member.getMbPassword())).thenReturn(true);
+
+        boolean actual = memberService.verify(1L, request);
+
+
+        assertTrue(actual);
     }
 }

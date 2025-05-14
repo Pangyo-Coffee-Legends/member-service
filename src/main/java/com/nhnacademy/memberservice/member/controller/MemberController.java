@@ -46,6 +46,44 @@ public class MemberController {
     /**
      * 회원 고유 번호로 특정 회원의 정보를 조회합니다.
      *
+     * @param mbNo 조회할 회원의 고유 번호 (PathVariable)
+     * @return 해당 회원의 정보가 담긴 ResponseEntity (HTTP 200 OK)
+     */
+    @GetMapping("/{mbNo}")
+    public ResponseEntity<MemberResponse> getMember(@PathVariable("mbNo") Long mbNo){
+        MemberResponse response = memberService.getMemberByMbNo(mbNo);
+
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * 회원 이메일로 특정 회원의 정보를 조회합니다.
+     *
+     * @param mbEmail 조회할 회원의 이메일 (PathVariable)
+     * @return 해당 회원의 번호와 이름이 담긴 ResponseEntity (HTTP 200 OK)
+     */
+    @GetMapping("/email/{mbEmail}/info")
+    public ResponseEntity<MemberInfoResponse> getMemberInfoByEmail(@PathVariable("mbEmail") String mbEmail) {
+        MemberInfoResponse response = memberService.getMemberInfoByEmail(mbEmail);
+
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * 회원 번호로 특정 회원의 정보를 조회합니다.
+     *
+     * @param mbNo 조회할 회원의 번호 (PathVariable)
+     * @return 해당 회원의 번호와 이름이 담긴 ResponseEntity (HTTP 200 OK)
+     */
+    @GetMapping("/{mbNo}/info")
+    public ResponseEntity<MemberInfoResponse> getMemberInfo(@PathVariable("mbNo") Long mbNo) {
+        MemberInfoResponse response = memberService.getMemberInfo(mbNo);
+
+        return ResponseEntity.ok(response);
+    }
+    /**
+     * 회원 고유 번호로 특정 회원의 정보를 조회합니다.
+     *
      * @param mbEmail 조회할 회원의 고유 번호 (PathVariable)
      * @return 해당 회원의 정보가 담긴 ResponseEntity (HTTP 200 OK)
      */
@@ -140,5 +178,24 @@ public class MemberController {
     ResponseEntity<List<MemberNoResponse>> getAllMemberIds() {
         List<MemberNoResponse> memberNoList = memberService.getAllMemberIds();
         return ResponseEntity.ok(memberNoList);
+    }
+
+    /**
+     * 회원 비밀번호 인증을 수행하는 메서드.
+     *
+     * @param mbNo 회원 번호
+     * @param request 비밀번호 확인을 위한 요청 객체. 해당 객체에는 비밀번호가 포함되어 있음.
+     * @return {@link ResponseEntity} - 인증 결과를 포함하는 HTTP 응답.
+     *         {@code true}일 경우 비밀번호가 맞고, {@code false}일 경우 비밀번호가 틀림.
+     *
+     * @throws IllegalArgumentException 만약 비밀번호가 유효하지 않은 경우
+     */
+    @PostMapping("/{mbNo}/password")
+    public ResponseEntity<Boolean> verify(
+            @PathVariable("mbNo") Long mbNo,
+            @RequestBody @Valid MemberConfirmPasswordRequest request){
+        boolean isValid =  memberService.verify(mbNo, request);
+
+        return ResponseEntity.ok(isValid);
     }
 }

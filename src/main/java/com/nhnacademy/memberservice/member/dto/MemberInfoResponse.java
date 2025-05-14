@@ -1,5 +1,6 @@
 package com.nhnacademy.memberservice.member.dto;
 
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.Value;
 
 /**
@@ -20,6 +21,14 @@ public class MemberInfoResponse {
      String name;
      String email;
      String phoneNumber;
+     String roleName;
 
-
+     @QueryProjection
+     public MemberInfoResponse(Long no, String name, String email, String phoneNumber, String roleName) {
+          this.no = no;
+          this.name = name;
+          this.email = email;
+          this.phoneNumber = phoneNumber;
+          this.roleName = roleName;
+     }
 }

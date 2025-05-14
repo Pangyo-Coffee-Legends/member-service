@@ -3,6 +3,9 @@ package com.nhnacademy.memberservice.common.advice;
 import com.nhnacademy.memberservice.common.error.BusinessException;
 import com.nhnacademy.memberservice.common.error.ErrorCode;
 import com.nhnacademy.memberservice.common.error.ErrorResponse;
+import com.nhnacademy.memberservice.member.exception.MemberAlreadyExistsException;
+import com.nhnacademy.memberservice.member.exception.MemberEmailNotFoundException;
+import com.nhnacademy.memberservice.member.exception.MemberNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,6 +51,54 @@ public class CommonAdvice {
         ErrorResponse error = new ErrorResponse(ex.getErrorCode(), ex.getMessage());
         return ResponseEntity.badRequest().body(error);
     }
+    /**
+     * {@code @Valid} 회원 정보가 중복 됐을 시 발생하는 {@link MemberAlreadyExistsException}을 처리합니다.
+     * <p>
+     * 입력값 바인딩 도중 발생한 필드 오류 중 첫 번째 오류 메시지를 반환합니다.
+     * </p>
+     *
+     * @param ex 발생한 {@code MemberAlreadyExistsException}
+     * @return {@code 409 Conflict}와 {@link ErrorResponse} 본문
+     */
+
+    @ExceptionHandler(MemberAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleMemberAlreadyExistsException(MemberAlreadyExistsException ex) {
+        ErrorResponse error = new ErrorResponse(ErrorCode.MEMBER_CONFLICT, ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
+    /**
+     * {@code @Valid} 회원의 이메일을 찾을 수 없을 경우 발생하는 {@link MemberEmailNotFoundException}을 처리합니다.
+     * <p>
+     * 입력값 바인딩 도중 발생한 필드 오류 중 첫 번째 오류 메시지를 반환합니다.
+     * </p>
+     *
+     * @param ex 발생한 {@code MemberEmailNotFoundException}
+     * @return {@code 404 Not Found}와 {@link ErrorResponse} 본문
+     */
+
+    @ExceptionHandler(MemberEmailNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleMemberEmailNotFoundException(MemberEmailNotFoundException ex) {
+        ErrorResponse error = new ErrorResponse(ErrorCode.MEMBER_EMAIL_NOT_FOUND, ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    /**
+     * {@code @Valid} 회원 정보를 찾을 수 없는 경우 발생하는 {@link MemberNotFoundException}을 처리합니다.
+     * <p>
+     * 입력값 바인딩 도중 발생한 필드 오류 중 첫 번째 오류 메시지를 반환합니다.
+     * </p>
+     *
+     * @param ex 발생한 {@code MemberNotFoundException}
+     * @return {@code 404 Not Found}와 {@link ErrorResponse} 본문
+     */
+
+    @ExceptionHandler(MemberNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleMemberNotFoundException(MemberNotFoundException ex) {
+        ErrorResponse error = new ErrorResponse(ErrorCode.MEMBER_NOT_FOUND, ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
 
     /**
      * {@code @Valid} 유효성 검사 실패 시 발생하는 {@link MethodArgumentNotValidException}을 처리합니다.

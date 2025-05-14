@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.data.domain.Page;
@@ -23,6 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
@@ -36,7 +38,7 @@ class MemberControllerTest {
     private MockMvc mockMvc;
 
     @MockitoBean
-    private MemberService memberService;
+    MemberService memberService;
 
     private ObjectMapper objectMapper;
     private MemberRegisterRequest registerRequest;
@@ -195,8 +197,8 @@ class MemberControllerTest {
     @DisplayName("6. 회원 목록 페이징 조회 성공")
     void testGetMemberInfoList() throws Exception {
         List<MemberInfoResponse> memberList = List.of(
-                new MemberInfoResponse(1L, "김미성", "test1@example.com", "010-1234-5678"),
-                new MemberInfoResponse(2L, "홍길동", "test2@example.com", "010-0000-0000")
+                new MemberInfoResponse(1L, "김미성", "test1@example.com", "010-1234-5678", "ROLE_USER"),
+                new MemberInfoResponse(2L, "홍길동", "test2@example.com", "010-0000-0000", "ROLE_USER")
         );
 
         Page<MemberInfoResponse> mockPage = new PageImpl<>(memberList, PageRequest.of(0, 10), 2);
@@ -215,4 +217,47 @@ class MemberControllerTest {
         verify(memberService).getMemberInfoList(any(Pageable.class));
     }
 
+    @Test
+    @DisplayName("회원정보 조회 - email")
+    void getMemberInfo_email() throws Exception {
+        MemberInfoResponse response = new MemberInfoResponse(1L, "홍길동", "test@test.com", "010-1111-2222", "ROLE_USER");
+        when(memberService.getMemberInfoByEmail(Mockito.anyString())).thenReturn(response);
+        mockMvc.perform(get("/api/v1/members/email/{mbEmail}/info", "test@test.com"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.no").value(1))
+                .andExpect(jsonPath("$.name").value("홍길동"))
+                .andExpect(jsonPath("$.phoneNumber").value("010-1111-2222"))
+                .andExpect(jsonPath("$.roleName").value("ROLE_USER"))
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("회원정보 조회 - 회원번호")
+    void getMemberInfo_no() throws Exception {
+        MemberInfoResponse response = new MemberInfoResponse(1L, "홍길동", "test@test.com", "010-1111-2222", "ROLE_USER");
+        when(memberService.getMemberInfo(Mockito.anyLong())).thenReturn(response);
+        mockMvc.perform(get("/api/v1/members/{no}/info", 1L))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("홍길동"))
+                .andExpect(jsonPath("$.email").value("test@test.com"))
+                .andExpect(jsonPath("$.phoneNumber").value("010-1111-2222"))
+                .andExpect(jsonPath("$.roleName").value("ROLE_USER"))
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("비밀번호 확인")
+    void verify() throws Exception {
+        MemberConfirmPasswordRequest request = new MemberConfirmPasswordRequest("Test123!");
+        String body = objectMapper.writeValueAsString(request);
+        when(memberService.verify(1L, request)).thenReturn(true);
+
+        mockMvc.perform(
+                post("/api/v1/members/{no}/password", 1L)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body)
+        )
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
 }
