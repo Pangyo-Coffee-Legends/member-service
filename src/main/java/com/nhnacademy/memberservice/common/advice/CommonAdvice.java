@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  * 응답 메시지 구조의 일관성과 API 오류 응답의 표준화를 위해 사용됩니다.
  * </p>
  *
- * @author
+ *
  */
 @Slf4j
 @RestControllerAdvice

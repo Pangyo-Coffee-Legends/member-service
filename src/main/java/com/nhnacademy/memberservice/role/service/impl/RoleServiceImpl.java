@@ -1,6 +1,5 @@
 package com.nhnacademy.memberservice.role.service.impl;
 
-import com.nhnacademy.memberservice.member.domain.Member;
 import com.nhnacademy.memberservice.role.domain.Role;
 import com.nhnacademy.memberservice.role.dto.RoleRegisterRequest;
 import com.nhnacademy.memberservice.role.dto.RoleResponse;
@@ -12,8 +11,6 @@ import com.nhnacademy.memberservice.role.service.RoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 /**
  * 역할(Role)에 대한 비즈니스 로직을 처리하는 서비스 구현 클래스입니다.

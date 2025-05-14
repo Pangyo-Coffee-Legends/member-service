@@ -1,6 +1,10 @@
 package com.nhnacademy.memberservice.member.service;
 
+import org.springframework.data.domain.Pageable;
 import com.nhnacademy.memberservice.member.dto.*;
+import org.springframework.data.domain.Page;
+
+import java.util.List;
 
 /**
  * 회원 관련 서비스를 제공하는 인터페이스입니다.
@@ -89,6 +93,7 @@ public interface MemberService {
      *                현재 비밀번호, 새로운 비밀번호, 비밀번호 확인 등의 정보가 포함됩니다.
      */
     void updatePassword(Long mbNo, MemberUpdatePasswordRequest request);
+
     /**
      * 지정된 회원 번호에 해당하는 사용자의 비밀번호를 확인합니다.
      *
@@ -98,4 +103,7 @@ public interface MemberService {
      */
     boolean verify(Long mbNo, MemberConfirmPasswordRequest request);
 
+    Page<MemberInfoResponse> getMemberInfoList(Pageable pageable);
+
+    List<MemberNoResponse> getAllMemberIds();
 }
