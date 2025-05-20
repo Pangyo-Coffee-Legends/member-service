@@ -83,7 +83,7 @@ class MemberControllerTest {
                 .andExpect(jsonPath("$.email").value("test@example.com"))
                 .andExpect(jsonPath("$.phoneNumber").value("010-1234-5678"));
 
-        verify(memberService).registerMember(any());
+        Mockito.verify(memberService).registerMember(any());
     }
 
     /**
@@ -108,7 +108,7 @@ class MemberControllerTest {
                 .andExpect(jsonPath("$.name").value("김미성"))
                 .andExpect(jsonPath("$.email").value("test@example.com"));
 
-        verify(memberService).getMemberByEmail("test@example.com");
+        Mockito.verify(memberService).getMemberByEmail("test@example.com");
     }
 
     /**
@@ -145,7 +145,7 @@ class MemberControllerTest {
                 .andExpect(jsonPath("$.email").value("update@example.com"))
                 .andExpect(jsonPath("$.phoneNumber").value("010-0000-0000"));
 
-        verify(memberService).updateMember(eq(mbNo), any(MemberUpdateRequest.class));
+        Mockito.verify(memberService).updateMember(eq(mbNo), any(MemberUpdateRequest.class));
     }
 
     /**
@@ -157,7 +157,7 @@ class MemberControllerTest {
         mockMvc.perform(delete("/api/v1/members/1"))
                 .andExpect(status().isNoContent());
 
-        verify(memberService).deleteMember(1L);
+        Mockito.verify(memberService).deleteMember(1L);
     }
 
     /**
@@ -183,7 +183,7 @@ class MemberControllerTest {
                 .andExpect(status().isNoContent());
 
         ArgumentCaptor<MemberUpdatePasswordRequest> captor = ArgumentCaptor.forClass(MemberUpdatePasswordRequest.class);
-        verify(memberService).updatePassword(eq(mbNo), captor.capture());
+        Mockito.verify(memberService).updatePassword(eq(mbNo), captor.capture());
 
         MemberUpdatePasswordRequest capturedRequest = captor.getValue();
         assertThat(capturedRequest.getOldPassword()).isEqualTo("12345678");
@@ -214,7 +214,7 @@ class MemberControllerTest {
                 .andExpect(jsonPath("$.totalElements").value(2))
                 .andExpect(jsonPath("$.currentPage").value(0));
 
-        verify(memberService).getMemberInfoList(any(Pageable.class));
+        Mockito.verify(memberService).getMemberInfoList(any(Pageable.class));
     }
 
     @Test
