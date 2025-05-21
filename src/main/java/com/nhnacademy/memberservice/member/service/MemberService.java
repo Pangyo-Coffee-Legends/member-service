@@ -18,7 +18,7 @@ public interface MemberService {
      * </p>
      *
      * @param request 회원 등록 요청을 담은 {@link MemberRegisterRequest} 객체
-     * @return 등록된 회원의 정보가 담긴 {@link MemberResponse} 객체
+     * @return 등록된 회원의 정보가 담긴 {@link MemberResponse} 객체.
      */
     MemberResponse registerMember(MemberRegisterRequest request);
 
