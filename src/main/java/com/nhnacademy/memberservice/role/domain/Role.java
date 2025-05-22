@@ -2,6 +2,7 @@ package com.nhnacademy.memberservice.role.domain;
 
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -17,9 +18,9 @@ import org.hibernate.annotations.Comment;
  */
 @Entity
 @Table(name = "roles")
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode
 public class Role {
 
     @Id
@@ -28,7 +29,6 @@ public class Role {
     @Comment("권한번호")
     private Long roleNo;
 
-    @EqualsAndHashCode.Include
     @Column(name = "role_name", nullable = false, length = 50, unique = true)
     @Comment("권한명")
     private String roleName;

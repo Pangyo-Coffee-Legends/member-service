@@ -7,6 +7,7 @@ import com.nhnacademy.memberservice.role.service.RoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
@@ -46,8 +47,8 @@ public class RoleController {
      * @return 해당 역할의 정보가 담긴 응답 객체
      *         (예: 역할 이름: "USER", 설명: "일반 사용자")
      */
-    @GetMapping("/id/{roleNo}")
-    public ResponseEntity<RoleResponse> getRole(@PathVariable Long roleNo) {
+    @GetMapping("/{roleNo}")
+    public ResponseEntity<RoleResponse> getRole(@PathVariable("roleNo") Long roleNo) {
         RoleResponse role = roleService.getRole(roleNo);
         return ResponseEntity.ok(role);
     }
@@ -59,14 +60,15 @@ public class RoleController {
      * 역할 이름은 수정되지 않으며, 설명만 변경됩니다.
      * </p>
      *
+     * @param roleNo 역할 번호
      * @param request 수정할 역할 설명이 포함된 요청 객체
      *                (예: roleNo: 1, roleDescription: "시스템 관리자")
      * @return 수정된 역할 정보 응답 객체
      *         (예: 역할 이름: "ADMIN", 설명: "시스템 관리자")
      */
-    @PutMapping
-    public ResponseEntity<RoleResponse> updateRole(@RequestBody RoleUpdateRequest request) {
-        RoleResponse role = roleService.updateRole(request);
+    @PutMapping("/{roleNo}")
+    public ResponseEntity<RoleResponse> updateRole(@PathVariable("roleNo") Long roleNo, @Validated @RequestBody RoleUpdateRequest request) {
+        RoleResponse role = roleService.updateRole(roleNo, request);
         return ResponseEntity.ok(role);
     }
 }

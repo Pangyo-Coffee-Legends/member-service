@@ -16,10 +16,8 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(name = "members")
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
-@Builder
 @EqualsAndHashCode
 public class Member {
 
@@ -169,8 +167,8 @@ public class Member {
         return this.withdrawnAt != null;
     }//
 
-
-
-
+    public void withdrawn() {
+        this.withdrawnAt = LocalDateTime.now();
+    }
 }
 
