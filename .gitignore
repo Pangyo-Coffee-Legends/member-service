@@ -192,9 +192,22 @@ buildNumber.properties
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
 # application.properties 무시
-src/main/resources/application.properties
-src/main/resources/application-prod.properties
-src/main/resources/application-dev.properties
-src/test/java/com/nhnacademy/memberservice/resources/application-test.properties
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+# properties setting ignore
+*.properties
 .env
-# End of https://www.toptal.com/developers/gitignore/api/java,maven,intellij,macos
