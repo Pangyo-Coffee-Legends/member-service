@@ -28,8 +28,8 @@ public class Member {
     private Long mbNo;
 
 
-    @ManyToOne
-    @JoinColumn(name = "role_no", nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "role_no", referencedColumnName = "role_no")
     private Role role;
 
 
