@@ -1,6 +1,6 @@
 package com.nhnacademy.memberservice.role.dto;
 
-import lombok.AllArgsConstructor;
+import jakarta.validation.constraints.NotBlank;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -16,21 +16,16 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class RoleUpdateRequest {
 
-    private Long roleNo;
-
+    @NotBlank
     private String roleName;
 
     private String roleDescription;
 
-    public RoleUpdateRequest(Long roleNo, String roleName, String roleDescription) {
-        this.roleNo = roleNo;
+    public RoleUpdateRequest(String roleName, String roleDescription) {
         this.roleName = roleName;
         this.roleDescription = roleDescription;
     }
 
-    public Long getRoleNo() {
-        return roleNo;
-    }
 
     public String getRoleName() {
         return roleName;
@@ -38,13 +33,5 @@ public class RoleUpdateRequest {
 
     public String getRoleDescription() {
         return roleDescription;
-    }
-
-    public void setRoleNo(Long roleNo) {
-        this.roleNo = roleNo;
-    }
-
-    public void setRoleDescription(String roleDescription) {
-        this.roleDescription = roleDescription;
     }
 }

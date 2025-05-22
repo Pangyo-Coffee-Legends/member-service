@@ -6,12 +6,12 @@ import com.nhnacademy.memberservice.member.domain.Member;
 import com.nhnacademy.memberservice.member.repository.MemberRepository;
 import com.nhnacademy.memberservice.role.domain.Role;
 import com.nhnacademy.memberservice.role.repository.RoleRepository;
-import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -32,7 +32,7 @@ class MemberRepositoryTest {
     RoleRepository roleRepository;
 
     @Autowired
-    private EntityManager entityManager;
+    private TestEntityManager entityManager;
 
     /**
      * 테스트용 회원 데이터를 미리 저장합니다.
@@ -40,18 +40,13 @@ class MemberRepositoryTest {
     @BeforeEach
     void setup() {
         Role role = Role.ofNewRole("USER","유저");
-        roleRepository.save(role);
+        entityManager.persistAndFlush(role);
 
         IntStream.rangeClosed(1, 30)
                 .forEach(i -> {
-                    Member member = Member.builder()
-                            .mbName("사용자" + i)
-                            .mbEmail("user" + i + "@test.com")
-                            .mbPassword("1234!Abcd")
-                            .phoneNumber("010-0000-0000" + i)
-                            .role(role)
-                            .build();
-                    memberRepository.save(member);
+                    Member member = Member.ofNewMember(role, "사용자" + i, "user" + i + "@test.com", "1234!Abcd", "010-0000-000" + i);
+
+                    entityManager.persist(member);
                 });
         entityManager.flush();
         entityManager.clear();
