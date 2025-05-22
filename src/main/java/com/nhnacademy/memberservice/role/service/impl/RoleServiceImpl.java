@@ -56,6 +56,7 @@ public class RoleServiceImpl implements RoleService {
      * @return 조회된 역할 정보를 담은 응답 DTO
      * @throws RoleNotFoundException 해당 번호의 역할이 존재하지 않는 경우
      */
+    @Transactional(readOnly = true)
     @Override
     public RoleResponse getRole(Long roleNo) {
         Role role = roleRepository.findById(roleNo)
@@ -77,9 +78,10 @@ public class RoleServiceImpl implements RoleService {
      * @return 수정된 역할 정보를 담은 응답 DTO
      * @throws RoleNotFoundException 요청한 roleNo가 존재하지 않는 경우
      */
+    @Transactional(readOnly = true)
     @Override
-    public RoleResponse updateRole(RoleUpdateRequest request) {
-        Role role = roleRepository.findById(request.getRoleNo())
+    public RoleResponse updateRole(Long roleNo, RoleUpdateRequest request) {
+        Role role = roleRepository.findById(roleNo)
                 .orElseThrow(() -> new RoleNotFoundException(request.getRoleName()));
 
         role.update(role.getRoleName(), request.getRoleDescription());

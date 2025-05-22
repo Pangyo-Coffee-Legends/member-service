@@ -83,6 +83,7 @@ public class MemberServiceImpl implements MemberService {
      * @throws MemberNotFoundException 해당 회원 번호로 등록된 회원이 존재하지 않는 경우
      */
     @Override
+    @Transactional(readOnly = true)
     public MemberResponse getMemberByMbNo(Long mbNo) {
         Member member = memberRepository.findById(mbNo)
                 .orElseThrow(() -> new MemberNotFoundException(mbNo));
@@ -114,6 +115,7 @@ public class MemberServiceImpl implements MemberService {
      * @throws MemberEmailNotFoundException 해당 이메일로 등록된 회원이 없는 경우
      */
     @Override
+    @Transactional(readOnly = true)
     public MemberInfoResponse getMemberInfoByEmail(String mbEmail) {
         Member member = memberRepository.findByMbEmail(mbEmail)
                 .orElseThrow(() -> new MemberEmailNotFoundException(mbEmail));
@@ -135,6 +137,7 @@ public class MemberServiceImpl implements MemberService {
      * @throws MemberEmailNotFoundException 해당 이메일로 등록된 회원이 없는 경우
      */
     @Override
+    @Transactional(readOnly = true)
     public MemberInfoResponse getMemberInfo(Long mbNo) {
         Member member = memberRepository.findById(mbNo)
                 .orElseThrow(() -> new MemberNotFoundException(mbNo));
@@ -244,6 +247,7 @@ public class MemberServiceImpl implements MemberService {
      * @return 회원 요약 정보 리스트
      */
     @Override
+    @Transactional(readOnly = true)
     public Page<MemberInfoResponse> getMemberInfoList(Pageable pageable) {
       return memberRepository.findAllMemberInfo(pageable);
     }
@@ -254,6 +258,7 @@ public class MemberServiceImpl implements MemberService {
      * @return 회원 고유 번호 리스트
      */
     @Override
+    @Transactional(readOnly = true)
     public List<MemberNoResponse> getAllMemberIds() {
         return memberRepository.findAllMbNos();
     }
