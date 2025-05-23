@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * 회원(Member) 관련 비즈니스 로직을 구현한 서비스 클래스입니다.
@@ -206,7 +205,7 @@ public class MemberServiceImpl implements MemberService {
         Member member = memberRepository.findById(mbNo)
                 .orElseThrow(() -> new MemberNotFoundException(mbNo));
 
-        if (!Objects.equals(passwordEncoder.encode(member.getMbPassword()), passwordEncoder.encode(request.getOldPassword()))) {
+        if (!passwordEncoder.matches(request.getOldPassword(), member.getMbPassword())) {
             throw new PasswordNotMatchException();
         }
 

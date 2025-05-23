@@ -4,6 +4,7 @@ import com.nhnacademy.memberservice.member.dto.*;
 import com.nhnacademy.memberservice.member.domain.Member;
 import com.nhnacademy.memberservice.member.exception.MemberEmailNotFoundException;
 import com.nhnacademy.memberservice.member.exception.MemberNotFoundException;
+import com.nhnacademy.memberservice.member.exception.PasswordNotMatchException;
 import com.nhnacademy.memberservice.member.repository.MemberRepository;
 import com.nhnacademy.memberservice.member.service.impl.MemberServiceImpl;
 import com.nhnacademy.memberservice.role.domain.Role;
@@ -60,7 +61,7 @@ class MemberServiceImplTest {
         mockRole = Role.ofNewRole("ROLE_USER", "일반 회원 권한");
         ReflectionTestUtils.setField(mockRole, "roleNo", 1L);
 
-        member = Member.ofNewMember(mockRole, "김미성", "test@example.com", "password", "010-0000-0000");
+        member = Member.ofNewMember(mockRole, "김미성", "test@example.com", passwordEncoder.encode("password"), "010-0000-0000");
         ReflectionTestUtils.setField(member, "mbNo", 1L);
     }
 
@@ -146,8 +147,8 @@ class MemberServiceImplTest {
         MemberUpdatePasswordRequest request = new MemberUpdatePasswordRequest("password", "newPass123!", "newPass123!");
 
         when(memberRepository.findById(1L)).thenReturn(Optional.of(member));
-        when(passwordEncoder.encode("password")).thenReturn("encodedOldPassword");
         when(passwordEncoder.encode("newPass123!")).thenReturn("encodedNewPassword");
+        when(passwordEncoder.matches(request.getOldPassword(), member.getMbPassword())).thenReturn(true);
 
         // 기존 비밀번호 비교가 password.equals(password)로 되어 있으므로 테스트 간단화를 위해 수동 설정
         memberService.updatePassword(1L, request);
@@ -155,11 +156,23 @@ class MemberServiceImplTest {
         assertEquals("encodedNewPassword", member.getMbPassword());
     }
 
+    @Test
+    @DisplayName("비밀번호 변경 실패 테스트")
+    void testUpdatePassword_fail() {
+        MemberUpdatePasswordRequest request = new MemberUpdatePasswordRequest("password", "newPass123!", "newPass123!");
+
+        when(memberRepository.findById(1L)).thenReturn(Optional.of(member));
+        when(passwordEncoder.matches(request.getOldPassword(), member.getMbPassword())).thenReturn(false);
+
+        assertThrows(PasswordNotMatchException.class, () -> memberService.updatePassword(1L, request));
+
+    }
+
     /**
      * 회원 요약 정보 페이징 조회 테스트
      */
     @Test
-    @DisplayName("7. 회원 요약 정보 페이징 조회 성공 테스트")
+    @DisplayName("회원 요약 정보 페이징 조회 성공 테스트")
     void testGetMemberInfoByEmailList() {
         Pageable pageable = PageRequest.of(0, 10);
         List<MemberInfoResponse> memberList = List.of(
@@ -177,7 +190,7 @@ class MemberServiceImplTest {
     }
 
     @Test
-    @DisplayName("8. 모든 회원 no 추출 테스트")
+    @DisplayName("모든 회원 no 추출 테스트")
     void getAllMemberIds() {
         List<MemberNoResponse> noResponse = List.of(
                 new MemberNoResponse(1L), new MemberNoResponse(2L)
