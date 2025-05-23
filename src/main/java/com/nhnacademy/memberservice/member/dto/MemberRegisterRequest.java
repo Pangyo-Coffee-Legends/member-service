@@ -4,10 +4,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 /**
  * 회원 가입 요청을 담는 DTO 클래스입니다.
@@ -20,6 +17,7 @@ import lombok.ToString;
  */
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 @ToString
 @EqualsAndHashCode
 public class MemberRegisterRequest {
@@ -58,22 +56,6 @@ public class MemberRegisterRequest {
     )
     @Size(max = 15)
     private String phoneNumber;
-
-    public MemberRegisterRequest(
-            String roleName,
-            String name,
-            String email,
-            String password,
-            String confirmPassword,
-            String phoneNumber
-    ) {
-        this.roleName = roleName;
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.confirmPassword = confirmPassword;
-        this.phoneNumber = phoneNumber;
-    }
 
     /**
      * 비밀번호와 비밀번호 재확인이 일치하는지를 검증합니다.
