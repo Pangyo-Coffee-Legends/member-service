@@ -51,6 +51,7 @@ public class CommonAdvice {
         ErrorResponse error = new ErrorResponse(ex.getErrorCode(), ex.getMessage());
         return ResponseEntity.badRequest().body(error);
     }
+
     /**
      * {@code @Valid} 회원 정보가 중복 됐을 시 발생하는 {@link MemberAlreadyExistsException}을 처리합니다.
      * <p>
@@ -60,7 +61,6 @@ public class CommonAdvice {
      * @param ex 발생한 {@code MemberAlreadyExistsException}
      * @return {@code 409 Conflict}와 {@link ErrorResponse} 본문
      */
-
     @ExceptionHandler(MemberAlreadyExistsException.class)
     public ResponseEntity<ErrorResponse> handleMemberAlreadyExistsException(MemberAlreadyExistsException ex) {
         ErrorResponse error = new ErrorResponse(ErrorCode.MEMBER_CONFLICT, ex.getMessage());
@@ -76,7 +76,6 @@ public class CommonAdvice {
      * @param ex 발생한 {@code MemberEmailNotFoundException}
      * @return {@code 404 Not Found}와 {@link ErrorResponse} 본문
      */
-
     @ExceptionHandler(MemberEmailNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleMemberEmailNotFoundException(MemberEmailNotFoundException ex) {
         ErrorResponse error = new ErrorResponse(ErrorCode.MEMBER_EMAIL_NOT_FOUND, ex.getMessage());
@@ -92,13 +91,11 @@ public class CommonAdvice {
      * @param ex 발생한 {@code MemberNotFoundException}
      * @return {@code 404 Not Found}와 {@link ErrorResponse} 본문
      */
-
     @ExceptionHandler(MemberNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleMemberNotFoundException(MemberNotFoundException ex) {
         ErrorResponse error = new ErrorResponse(ErrorCode.MEMBER_NOT_FOUND, ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
-
 
     /**
      * {@code @Valid} 유효성 검사 실패 시 발생하는 {@link MethodArgumentNotValidException}을 처리합니다.
@@ -109,7 +106,6 @@ public class CommonAdvice {
      * @param ex 발생한 {@code MethodArgumentNotValidException}
      * @return {@code 400 Bad Request}와 {@link ErrorResponse} 본문
      */
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationErrors(MethodArgumentNotValidException ex) {
         String errorMessage = ex.getBindingResult().getAllErrors().getFirst().getDefaultMessage();
@@ -127,7 +123,6 @@ public class CommonAdvice {
      * @param ex 처리되지 않은 {@code Exception}
      * @return {@code 500 Internal Server Error}와 {@link ErrorResponse} 본문
      */
-
     @ExceptionHandler(Throwable.class)
     public ResponseEntity<ErrorResponse> handleGeneralException(Exception ex) {
         ErrorResponse error = new ErrorResponse(ErrorCode.INTERNAL_ERROR, "서버 내부 오류가 발생하였습니다.");
