@@ -33,7 +33,7 @@ public class Role {
     @Comment("권한명")
     private String roleName;
 
-    @Column(name = "role_description", nullable = false, length = 200, unique = true)
+    @Column(name = "role_description", nullable = false, length = 200)
     @Comment("권한설명")
     private String roleDescription;
 

@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class RoleServiceImpl implements RoleService {
 
     private final RoleRepository roleRepository;
@@ -33,6 +33,7 @@ public class RoleServiceImpl implements RoleService {
      * @return 등록된 역할 정보를 담은 응답 DTO
      * @throws RoleConflictException 동일한 이름의 역할이 이미 존재하는 경우
      */
+    @Transactional
     @Override
     public RoleResponse registerRole(RoleRegisterRequest request) {
         roleRepository.findByRoleName(request.getRoleName())
@@ -56,7 +57,6 @@ public class RoleServiceImpl implements RoleService {
      * @return 조회된 역할 정보를 담은 응답 DTO
      * @throws RoleNotFoundException 해당 번호의 역할이 존재하지 않는 경우
      */
-    @Transactional(readOnly = true)
     @Override
     public RoleResponse getRole(Long roleNo) {
         Role role = roleRepository.findById(roleNo)
@@ -78,7 +78,6 @@ public class RoleServiceImpl implements RoleService {
      * @return 수정된 역할 정보를 담은 응답 DTO
      * @throws RoleNotFoundException 요청한 roleNo가 존재하지 않는 경우
      */
-    @Transactional(readOnly = true)
     @Override
     public RoleResponse updateRole(Long roleNo, RoleUpdateRequest request) {
         Role role = roleRepository.findById(roleNo)
