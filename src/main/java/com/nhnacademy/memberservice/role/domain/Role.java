@@ -2,10 +2,7 @@ package com.nhnacademy.memberservice.role.domain;
 
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
-import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.Comment;
 
 /**
@@ -20,6 +17,7 @@ import org.hibernate.annotations.Comment;
 @Table(name = "roles")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
+@Getter
 @EqualsAndHashCode
 public class Role {
 
@@ -56,18 +54,6 @@ public class Role {
     public void update(String roleName, String roleDescription) {
         this.roleName = roleName;
         this.roleDescription = roleDescription;
-    }
-
-    public Long getRoleNo() {
-        return roleNo;
-    }
-
-    public String getRoleName() {
-        return roleName;
-    }
-
-    public String getRoleDescription() {
-        return roleDescription;
     }
 
 }
