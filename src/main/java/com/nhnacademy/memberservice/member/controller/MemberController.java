@@ -50,48 +50,61 @@ public class MemberController {
      * @return 해당 회원의 정보가 담긴 ResponseEntity (HTTP 200 OK)
      */
     @GetMapping("/{mbNo}")
-    public ResponseEntity<MemberResponse> getMember(@PathVariable("mbNo") Long mbNo){
-        MemberResponse response = memberService.getMemberByMbNo(mbNo);
+    public ResponseEntity<?> getMember(@PathVariable Long mbNo, @RequestParam(defaultValue = "detailed") String view) {
 
-        return ResponseEntity.ok(response);
+        MemberViewType viewType = parseViewType(view);
+
+        return switch (viewType) {
+            case SUMMARY -> {
+                MemberInfoResponse summary = memberService.getMemberInfo(mbNo);
+                yield ResponseEntity.ok(summary);
+            }
+            case DETAILED -> {
+                MemberResponse detailed = memberService.getMemberByMbNo(mbNo);
+                yield ResponseEntity.ok(detailed);
+            }
+        };
     }
 
     /**
-     * 회원 이메일로 특정 회원의 정보를 조회합니다.
-     *
-     * @param mbEmail 조회할 회원의 이메일 (PathVariable)
-     * @return 해당 회원의 번호와 이름이 담긴 ResponseEntity (HTTP 200 OK)
-     */
-    @GetMapping("/email/{mbEmail}/info")
-    public ResponseEntity<MemberInfoResponse> getMemberInfoByEmail(@PathVariable("mbEmail") String mbEmail) {
-        MemberInfoResponse response = memberService.getMemberInfoByEmail(mbEmail);
-
-        return ResponseEntity.ok(response);
-    }
-
-    /**
-     * 회원 번호로 특정 회원의 정보를 조회합니다.
-     *
-     * @param mbNo 조회할 회원의 번호 (PathVariable)
-     * @return 해당 회원의 번호와 이름이 담긴 ResponseEntity (HTTP 200 OK)
-     */
-    @GetMapping("/{mbNo}/info")
-    public ResponseEntity<MemberInfoResponse> getMemberInfo(@PathVariable("mbNo") Long mbNo) {
-        MemberInfoResponse response = memberService.getMemberInfo(mbNo);
-
-        return ResponseEntity.ok(response);
-    }
-    /**
-     * 회원 고유 번호로 특정 회원의 정보를 조회합니다.
+     * 회원 고유 이메일로 특정 회원의 정보를 조회합니다.
      *
      * @param mbEmail 조회할 회원의 고유 번호 (PathVariable)
      * @return 해당 회원의 정보가 담긴 ResponseEntity (HTTP 200 OK)
      */
     @GetMapping("/email/{mbEmail}")
-    public ResponseEntity<MemberResponse> getMemberByEmail(@PathVariable String mbEmail) {
-        MemberResponse response = memberService.getMemberByEmail(mbEmail);
+    public ResponseEntity<?> getMemberByEmail(@PathVariable String mbEmail, @RequestParam(defaultValue = "detailed") String view) {
 
-        return ResponseEntity.ok(response);
+        MemberViewType viewType = parseViewType(view);
+
+        return switch (viewType) {
+                case SUMMARY -> {
+                    MemberInfoResponse summary = memberService.getMemberInfoByEmail(mbEmail);
+                    yield ResponseEntity.ok(summary);
+                }
+                case DETAILED -> {
+                    MemberResponse detailed = memberService.getMemberByEmail(mbEmail);
+                    yield ResponseEntity.ok(detailed);
+                }
+            };
+    }
+
+    /**
+     * 주어진 문자열을 {@link MemberViewType} enum 타입으로 변환합니다.
+     *
+     * <p>입력된 문자열이 "summary" 또는 "detailed"와 일치하지 않을 경우
+     * {@link IllegalArgumentException}을 발생시키며, 메시지에는 허용되는 값에 대한 안내가 포함됩니다.</p>
+     *
+     * @param view 변환할 문자열 (예: "summary", "detailed")
+     * @return 변환된 {@link MemberViewType} enum 값
+     * @throws IllegalArgumentException view 값이 유효하지 않을 경우 발생
+     */
+    private MemberViewType parseViewType(String view) {
+        try {
+            return MemberViewType.from(view);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("view 파라미터 값이 올바르지 않습니다. 'summary' 또는 'detailed' 중 하나를 사용해 주세요.");
+        }
     }
 
     /**
@@ -120,7 +133,7 @@ public class MemberController {
      * @return 내용 없는 응답 ResponseEntity (HTTP 204 No Content)
      */
     @DeleteMapping("/{mbNo}")
-    public ResponseEntity<Void> deleteMember(@PathVariable Long mbNo) {
+    public ResponseEntity<Void> deleteMember(@PathVariable("mbNo") Long mbNo) {
         memberService.deleteMember(mbNo);
 
         return ResponseEntity.noContent().build();
@@ -138,7 +151,7 @@ public class MemberController {
      */
     @PutMapping("/{mbNo}/password")
     public ResponseEntity<Void> updatePassword(
-            @PathVariable Long mbNo,
+            @PathVariable("mbNo") Long mbNo,
             @RequestBody @Valid MemberUpdatePasswordRequest request){
         memberService.updatePassword(mbNo, request);
 
