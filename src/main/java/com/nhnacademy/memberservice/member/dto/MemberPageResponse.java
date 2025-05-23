@@ -1,14 +1,18 @@
 package com.nhnacademy.memberservice.member.dto;
 
-import lombok.Value;
+import lombok.*;
 
 import java.util.List;
 
-@Value
+@Getter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class MemberPageResponse {
-        List<MemberInfoResponse> content;
-        int totalPages;
-        long totalElements;
-        int currentPage;
+        private List<MemberInfoResponse> content;
+        private int totalPages;
+        private long totalElements;
+        private int currentPage;
 }
 

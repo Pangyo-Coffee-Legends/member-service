@@ -121,8 +121,6 @@ class MemberControllerTest {
         MemberUpdateRequest updateRequest = new MemberUpdateRequest(
                 "김미성",
                 "update@example.com",
-                "newpassword",
-                "newpassword",
                 "010-0000-0000"
         );
 

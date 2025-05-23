@@ -1,8 +1,12 @@
 package com.nhnacademy.memberservice.member.dto;
 
-import lombok.Value;
+import lombok.*;
 
-@Value
+@Getter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class MemberNoResponse {
-      Long no;
+      private Long no;
 }

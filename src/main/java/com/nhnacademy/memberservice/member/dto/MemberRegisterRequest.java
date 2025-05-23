@@ -1,11 +1,11 @@
 package com.nhnacademy.memberservice.member.dto;
 
-import com.nhnacademy.memberservice.role.domain.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
@@ -18,6 +18,7 @@ import lombok.ToString;
  * 또한, 비밀번호 재확인 기능을 통해 클라이언트 측에서 일치 여부를 사전에 검증할 수 있도록 지원합니다.
  * </p>
  */
+@Getter
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode
@@ -81,30 +82,6 @@ public class MemberRegisterRequest {
      */
     public boolean isPasswordValid() {
         return password.equals(confirmPassword);
-    }
-
-    public String getRoleName() {
-        return roleName;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getConfirmPassword() {
-        return confirmPassword;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
     }
 
 }

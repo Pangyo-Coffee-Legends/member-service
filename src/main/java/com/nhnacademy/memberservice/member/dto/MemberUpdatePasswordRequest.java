@@ -2,11 +2,11 @@ package com.nhnacademy.memberservice.member.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
+@Getter
 @NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode
 public class MemberUpdatePasswordRequest {
 
@@ -25,17 +25,6 @@ public class MemberUpdatePasswordRequest {
     @NotBlank
     @Size(min = 8, max = 200)
     private String newConfirmPassword;
-
-    public MemberUpdatePasswordRequest(
-            String oldPassword,
-            String newPassword,
-            String newConfirmPassword
-    ) {
-        this.oldPassword = oldPassword;
-        this.newPassword = newPassword;
-        this.newConfirmPassword = newConfirmPassword;
-    }
-
     /**
      * 비밀번호와 비밀번호 재확인이 일치하는지를 검증합니다.
      *
@@ -43,18 +32,6 @@ public class MemberUpdatePasswordRequest {
      */
     public boolean isPasswordValid() {
         return newPassword.equals(newConfirmPassword);
-    }
-
-    public String getOldPassword() {
-        return oldPassword;
-    }
-
-    public String getNewPassword() {
-        return newPassword;
-    }
-
-    public String getNewConfirmPassword() {
-        return newConfirmPassword;
     }
 
 }
