@@ -26,18 +26,15 @@ import lombok.*;
 @EqualsAndHashCode
 public class MemberUpdatePasswordRequest {
 
-    @ToString.Exclude
     @NotBlank
     @Size(min = 8, max = 200)
     private String oldPassword;
 
 
-    @ToString.Exclude
     @NotBlank
     @Size(min = 8, max = 200)
     private String newPassword;
 
-    @ToString.Exclude
     @NotBlank
     @Size(min = 8, max = 200)
     private String newConfirmPassword;
