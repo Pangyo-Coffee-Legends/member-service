@@ -66,7 +66,7 @@ public class RoleController {
      * @return 수정된 역할 정보 응답 객체
      *         (예: 역할 이름: "ADMIN", 설명: "시스템 관리자")
      */
-    @PutMapping("/{roleNo}")
+    @PatchMapping("/{roleNo}")
     public ResponseEntity<RoleResponse> updateRole(@PathVariable("roleNo") Long roleNo, @Validated @RequestBody RoleUpdateRequest request) {
         RoleResponse role = roleService.updateRole(roleNo, request);
         return ResponseEntity.ok(role);
