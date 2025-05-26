@@ -6,6 +6,7 @@ import com.nhnacademy.memberservice.member.domain.QMember;
 import com.nhnacademy.memberservice.member.dto.QMemberInfoResponse;
 import com.nhnacademy.memberservice.member.repository.CustomMemberRepository;
 import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -45,12 +46,11 @@ public class CustomMemberRepositoryImpl implements CustomMemberRepository {
                 .fetch();
 
         // 전체 회원 수 조회 (null 처리 포함)
-        Long total = queryFactory
+        JPAQuery<Long> total = queryFactory
                 .select(member.count())
-                .from(member)
-                .fetchOne();
+                .from(member);
 
-        return PageableExecutionUtils.getPage(content, pageable, () -> total);
+        return PageableExecutionUtils.getPage(content, pageable, total::fetchOne);
     }
 
     @Override
