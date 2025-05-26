@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
  * 생성일자 및 탈퇴일자와 같은 회원 정보를 포함합니다. 또한, 회원은 하나의 역할을 가질 수 있습니다.
  * </p>
  */
+@Getter
 @Entity
 @Table(name = "members")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -126,38 +127,6 @@ public class Member {
         this.withdrawnAt = LocalDateTime.now();
     }
 
-    public Long getMbNo() {
-        return mbNo;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public String getMbName() {
-        return mbName;
-    }
-
-    public String getMbEmail() {
-        return mbEmail;
-    }
-
-    public String getMbPassword() {
-        return mbPassword;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public LocalDateTime getWithdrawnAt() {
-        return withdrawnAt;
-    }
-
     /**
      * 해당 회원이 탈퇴 상태인지 확인합니다.
      *
@@ -165,10 +134,6 @@ public class Member {
      */
     public boolean isWithdrawn() {
         return this.withdrawnAt != null;
-    }//
-
-    public void withdrawn() {
-        this.withdrawnAt = LocalDateTime.now();
     }
 }
 
