@@ -101,7 +101,7 @@ public class MemberServiceImpl implements MemberService {
     @Transactional(readOnly = true)
     public MemberResponse getMemberByEmail(String mbEmail) {
         Member member = memberRepository.findByMbEmail(mbEmail)
-                .orElseThrow(() -> new MemberEmailNotFoundException(mbEmail));
+                .orElseThrow(() -> new MemberEmailNotFoundException("회원을 찾을 수 없습니다."));
 
         return getMemberResponse(member);
     }
@@ -117,7 +117,7 @@ public class MemberServiceImpl implements MemberService {
     @Transactional(readOnly = true)
     public MemberInfoResponse getMemberInfoByEmail(String mbEmail) {
         Member member = memberRepository.findByMbEmail(mbEmail)
-                .orElseThrow(() -> new MemberEmailNotFoundException(mbEmail));
+                .orElseThrow(() -> new MemberEmailNotFoundException("회원을 찾을 수 없습니다."));
 
         return new MemberInfoResponse(
                 member.getMbNo(),
