@@ -25,6 +25,7 @@
 
     <root level="INFO">
         <appender-ref ref="JSON_FILE"/>
+        <appender-ref ref="CONSOLE"/>
     </root>
 </configuration>
 
