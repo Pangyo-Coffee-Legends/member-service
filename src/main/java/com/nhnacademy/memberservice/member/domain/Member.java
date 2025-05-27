@@ -2,9 +2,7 @@ package com.nhnacademy.memberservice.member.domain;
 
 import com.nhnacademy.memberservice.role.domain.Role;
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.Comment;
 
 import java.time.LocalDateTime;
@@ -16,79 +14,101 @@ import java.time.LocalDateTime;
  * 생성일자 및 탈퇴일자와 같은 회원 정보를 포함합니다. 또한, 회원은 하나의 역할을 가질 수 있습니다.
  * </p>
  */
+@Getter
 @Entity
 @Table(name = "members")
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
 @EqualsAndHashCode
 public class Member {
 
-    /**
-     * 회원 고유 번호입니다.
-     * 이 필드는 각 회원을 고유하게 식별하며, 자동으로 생성됩니다.
-     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "mb_no")
-    @Comment("회원번호") // Hibernate 전용 어노테이션
+    @Comment("회원번호")
     private Long mbNo;
 
-    /**
-     * 회원의 역할을 나타냅니다.
-     * 회원은 하나의 역할을 가지며, 역할은 {@link Role} 엔티티와 다대일 관계입니다.
-     */
-    @ManyToOne
-    @JoinColumn(name = "role_no", nullable = false)
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "role_no", referencedColumnName = "role_no")
     private Role role;
 
-    /**
-     * 회원의 이름입니다.
-     * 회원의 이름은 50자 이내로 설정됩니다.
-     */
+
     @Column(name = "mb_name", nullable = false, length = 50)
     @Comment("회원명")
     private String mbName;
 
-    /**
-     * 회원의 이메일 주소입니다.
-     * 이메일은 중복을 허용하지 않으며, 회원을 식별하는 중요한 정보입니다.
-     */
-    @Column(name = "mb_email", nullable = false, length = 100)
+
+    @Column(name = "mb_email", nullable = false, length = 100, unique = true)
     @Comment("이메일")
     private String mbEmail;
 
-    /**
-     * 회원의 비밀번호입니다.
-     * <p>
-     * 비밀번호는 평문으로 저장되지 않으며, 해시 처리 후 저장됩니다. 보안을 위해 {@code toString()} 메서드에서 제외됩니다.
-     * </p>
-     */
+
     @ToString.Exclude
     @Column(name = "mb_password", nullable = false, length = 200)
     @Comment("비밀번호")
     private String mbPassword;
 
-    /**
-     * 회원의 전화번호입니다.
-     * 전화번호는 15자 이내로 설정됩니다.
-     */
-    @Column(nullable = false, length = 15)
+
+    @Column(name="phone_number", nullable = false, length = 15)
     @Comment("전화번호")
     private String phoneNumber;
 
-    /**
-     * 회원의 계정 생성일자입니다.
-     * 회원이 가입할 때 자동으로 생성되며, {@link PrePersist} 메서드에서 초기화됩니다.
-     */
+
+    @Column(name="created_at", nullable = false)
     @Comment("생성일자")
     private LocalDateTime createdAt;
 
-    /**
-     * 회원의 탈퇴일자입니다.
-     * 회원이 탈퇴하면 해당 필드가 현재 시각으로 설정됩니다. 실제 DB 삭제가 아닌 소프트 딜리트용으로 사용됩니다.
-     */
+    @Column(name="withdrawn_at")
     @Comment("탈퇴일자")
     private LocalDateTime withdrawnAt;
+
+
+    private Member(String mbName, String mbEmail, String mbPassword, String  phoneNumber) {
+        this.mbName = mbName;
+        this.mbEmail = mbEmail;
+        this.mbPassword = mbPassword;
+        this.phoneNumber = phoneNumber;
+    }
+
+    /**
+     * 회원 생성에 사용되는 정적 팩토리 메서드입니다.
+     * <p>
+     * 이 메서드는 새로운 회원을 생성하기 위한 간편한 방법을 제공합니다.
+     * </p>
+     * @param role
+     * @param mbName
+     * @param mbEmail
+     * @param mbPassword
+     * @param phoneNumber
+     * @return
+     */
+    public static Member ofNewMember(Role role, String mbName, String mbEmail, String mbPassword, String phoneNumber) {
+        Member member = new Member(mbName, mbEmail, mbPassword, phoneNumber);
+        member.role = role;
+        return member;
+    }
+
+    /**
+     * 사용자의 비밀번호를 새 비밀번호로 변경합니다.
+     *
+     * @param newPassword 새로 설정할 비밀번호
+     */
+    public void updatePassword(String newPassword) {
+        this.mbPassword = newPassword;
+    }
+
+    /**
+     * 사용자 정보를 수정합니다.
+     * 이름, 전화번호를 새 값으로 업데이트합니다.
+     *
+     * @param mbName       새 이름
+     * @param phoneNumber  새 전화번호
+     */
+    public void update(String mbName, String phoneNumber) {
+        this.mbName = mbName;
+        this.phoneNumber = phoneNumber;
+    }
 
     /**
      * 회원 정보가 데이터베이스에 저장되기 전에 호출되는 메서드입니다.
@@ -108,88 +128,12 @@ public class Member {
     }
 
     /**
-     * 회원에게 역할을 부여하는 메서드입니다.
-     * <p>
-     * 이 메서드는 {@link Role} 엔티티를 회원에게 할당합니다.
-     * </p>
+     * 해당 회원이 탈퇴 상태인지 확인합니다.
      *
-     * @param role 부여할 역할
+     * @return 탈퇴일자(withdrawnAt)가 null이 아니면 true, 그렇지 않으면 false
      */
-    public void assignRole(Role role) {
-        this.role = role;
-    }
-
-    /**
-     * 회원 객체를 생성하는 인자 생성자입니다.
-     * <p>
-     * 이 생성자는 {@link Member#ofNewMember(String, String, String, String)}와 같은
-     * 정적 팩토리 메서드에서만 호출 가능합니다.
-     * 외부에서 직접 호출할 수 없습니다.
-     * </p>
-     *
-     * @param mbName 회원명
-     * @param mbEmail 회원 이메일
-     * @param mbPassword 회원 비밀번호
-     * @param phoneNumber 회원 전화번호
-     */
-    private Member(String mbName, String mbEmail, String mbPassword, String phoneNumber) {
-        this.mbName = mbName;
-        this.mbEmail = mbEmail;
-        this.mbPassword = mbPassword;
-        this.phoneNumber = phoneNumber;
-    }
-
-    /**
-     * 회원 생성에 사용되는 정적 팩토리 메서드입니다.
-     * <p>
-     * 이 메서드는 새로운 회원을 생성하기 위한 간편한 방법을 제공합니다.
-     * </p>
-     *
-     * @param mbName 회원 이름
-     * @param mbEmail 회원 이메일
-     * @param mbPassword 회원 비밀번호
-     * @param phoneNumber 회원 전화번호
-     * @return 새로운 회원 객체
-     */
-    public static Member ofNewMember(String mbName, String mbEmail, String mbPassword, String phoneNumber) {
-        return new Member(
-                mbName,
-                mbEmail,
-                mbPassword,
-                phoneNumber
-        );
-    }
-
-    public Long getMbNo() {
-        return mbNo;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public String getMbName() {
-        return mbName;
-    }
-
-    public String getMbEmail() {
-        return mbEmail;
-    }
-
-    public String getMbPassword() {
-        return mbPassword;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public LocalDateTime getWithdrawnAt() {
-        return withdrawnAt;
+    public boolean isWithdrawn() {
+        return this.withdrawnAt != null;
     }
 }
 

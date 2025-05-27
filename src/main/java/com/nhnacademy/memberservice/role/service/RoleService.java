@@ -1,6 +1,5 @@
 package com.nhnacademy.memberservice.role.service;
 
-import com.nhnacademy.memberservice.role.domain.Role;
 import com.nhnacademy.memberservice.role.dto.RoleRegisterRequest;
 import com.nhnacademy.memberservice.role.dto.RoleResponse;
 import com.nhnacademy.memberservice.role.dto.RoleUpdateRequest;
@@ -39,8 +38,9 @@ public interface RoleService {
      * 역할 이름(`roleName`)은 변경되지 않습니다.
      * </p>
      *
+     * @param roleNo 역할 번호
      * @param request 수정할 역할 정보를 담은 요청 객체
      * @return 수정된 역할 정보를 담은 응답 객체
      */
-    RoleResponse updateRole(RoleUpdateRequest request);
+    RoleResponse updateRole(Long roleNo, RoleUpdateRequest request);
 }

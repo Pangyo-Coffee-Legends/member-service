@@ -32,6 +32,12 @@ build/
 ### VS Code ###
 .vscode/
 
-# properties setting ignore
+.gitattributes
+
+### Mac OS ###
+.DS_Store
+/.idea/
+
+### properties ###
 *.properties
-.env
+/logs
