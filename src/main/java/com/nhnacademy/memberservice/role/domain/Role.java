@@ -1,16 +1,9 @@
 package com.nhnacademy.memberservice.role.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.nhnacademy.memberservice.member.domain.Member;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.Comment;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 권한 정보를 저장하는 JPA 엔티티입니다.
@@ -22,9 +15,10 @@ import java.util.List;
  */
 @Entity
 @Table(name = "roles")
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Getter
+@EqualsAndHashCode
 public class Role {
 
     @Id
@@ -33,12 +27,11 @@ public class Role {
     @Comment("권한번호")
     private Long roleNo;
 
-    @EqualsAndHashCode.Include
     @Column(name = "role_name", nullable = false, length = 50, unique = true)
     @Comment("권한명")
     private String roleName;
 
-    @Column(name = "role_description", nullable = false, length = 200, unique = true)
+    @Column(name = "role_description", nullable = false, length = 200)
     @Comment("권한설명")
     private String roleDescription;
 
@@ -61,18 +54,6 @@ public class Role {
     public void update(String roleName, String roleDescription) {
         this.roleName = roleName;
         this.roleDescription = roleDescription;
-    }
-
-    public Long getRoleNo() {
-        return roleNo;
-    }
-
-    public String getRoleName() {
-        return roleName;
-    }
-
-    public String getRoleDescription() {
-        return roleDescription;
     }
 
 }

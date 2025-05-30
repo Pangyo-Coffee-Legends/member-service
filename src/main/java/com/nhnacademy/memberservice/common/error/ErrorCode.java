@@ -40,6 +40,11 @@ public enum ErrorCode {
     ROLE_CONFLICT,
 
     /**
+     * 회원 정보가 중복되었거나 충돌이 발생한 경우 사용됩니다.
+     */
+    MEMBER_CONFLICT,
+
+    /**
      * 입력한 비밀번호가 기존 비밀번호와 일치하지 않을 경우 사용됩니다.
      */
     PASSWORD_NOT_MATCH,

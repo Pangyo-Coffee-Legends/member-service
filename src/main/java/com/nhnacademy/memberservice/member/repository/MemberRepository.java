@@ -14,8 +14,9 @@ import java.util.Optional;
  * 추가적인 데이터베이스 쿼리를 정의할 수 있습니다.
  * </p>
  */
-public interface MemberRepository extends JpaRepository<Member, Long> {
+public interface MemberRepository extends JpaRepository<Member, Long>, CustomMemberRepository {
     Optional<Member> findByMbEmail(String mbEmail);
 
     boolean existsMemberByMbEmail(String mbEmail);
+
 }

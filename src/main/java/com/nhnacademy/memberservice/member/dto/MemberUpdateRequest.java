@@ -1,12 +1,10 @@
 package com.nhnacademy.memberservice.member.dto;
 
 
-import com.nhnacademy.memberservice.role.domain.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 /**
  * 회원 정보를 담는 DTO 클래스입니다.
@@ -15,7 +13,10 @@ import lombok.NoArgsConstructor;
  * 회원의 이름, 이메일, 역할 및 비밀번호 정보를 포함합니다.
  * </p>
  */
+@Getter
+@ToString
 @NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode
 public class MemberUpdateRequest {
 
@@ -32,24 +33,4 @@ public class MemberUpdateRequest {
     @NotBlank
     @Size(max = 15)
     private String phoneNumber;
-
-    public MemberUpdateRequest( String name, String email, String password, String confirmPassword, String phoneNumber) {
-        this.name = name;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-    }
-
-
-    public String getName() {
-        return name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
 }

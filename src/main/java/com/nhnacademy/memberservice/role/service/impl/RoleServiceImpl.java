@@ -1,6 +1,5 @@
 package com.nhnacademy.memberservice.role.service.impl;
 
-import com.nhnacademy.memberservice.member.domain.Member;
 import com.nhnacademy.memberservice.role.domain.Role;
 import com.nhnacademy.memberservice.role.dto.RoleRegisterRequest;
 import com.nhnacademy.memberservice.role.dto.RoleResponse;
@@ -12,8 +11,6 @@ import com.nhnacademy.memberservice.role.service.RoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 /**
  * 역할(Role)에 대한 비즈니스 로직을 처리하는 서비스 구현 클래스입니다.
@@ -59,6 +56,7 @@ public class RoleServiceImpl implements RoleService {
      * @return 조회된 역할 정보를 담은 응답 DTO
      * @throws RoleNotFoundException 해당 번호의 역할이 존재하지 않는 경우
      */
+    @Transactional(readOnly = true)
     @Override
     public RoleResponse getRole(Long roleNo) {
         Role role = roleRepository.findById(roleNo)
@@ -81,8 +79,8 @@ public class RoleServiceImpl implements RoleService {
      * @throws RoleNotFoundException 요청한 roleNo가 존재하지 않는 경우
      */
     @Override
-    public RoleResponse updateRole(RoleUpdateRequest request) {
-        Role role = roleRepository.findById(request.getRoleNo())
+    public RoleResponse updateRole(Long roleNo, RoleUpdateRequest request) {
+        Role role = roleRepository.findById(roleNo)
                 .orElseThrow(() -> new RoleNotFoundException(request.getRoleName()));
 
         role.update(role.getRoleName(), request.getRoleDescription());

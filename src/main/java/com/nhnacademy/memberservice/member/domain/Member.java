@@ -2,10 +2,7 @@ package com.nhnacademy.memberservice.member.domain;
 
 import com.nhnacademy.memberservice.role.domain.Role;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Pattern;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.Comment;
 
 import java.time.LocalDateTime;
@@ -17,9 +14,10 @@ import java.time.LocalDateTime;
  * 생성일자 및 탈퇴일자와 같은 회원 정보를 포함합니다. 또한, 회원은 하나의 역할을 가질 수 있습니다.
  * </p>
  */
+@Getter
 @Entity
 @Table(name = "members")
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
 @EqualsAndHashCode
 public class Member {
@@ -31,8 +29,8 @@ public class Member {
     private Long mbNo;
 
 
-    @ManyToOne
-    @JoinColumn(name = "role_no", nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "role_no", referencedColumnName = "role_no")
     private Role role;
 
 
@@ -129,38 +127,6 @@ public class Member {
         this.withdrawnAt = LocalDateTime.now();
     }
 
-    public Long getMbNo() {
-        return mbNo;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public String getMbName() {
-        return mbName;
-    }
-
-    public String getMbEmail() {
-        return mbEmail;
-    }
-
-    public String getMbPassword() {
-        return mbPassword;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public LocalDateTime getWithdrawnAt() {
-        return withdrawnAt;
-    }
-
     /**
      * 해당 회원이 탈퇴 상태인지 확인합니다.
      *
@@ -168,10 +134,6 @@ public class Member {
      */
     public boolean isWithdrawn() {
         return this.withdrawnAt != null;
-    }//
-
-
-
-
+    }
 }
 

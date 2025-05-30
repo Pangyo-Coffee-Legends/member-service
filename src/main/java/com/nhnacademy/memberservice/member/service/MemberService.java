@@ -1,9 +1,8 @@
 package com.nhnacademy.memberservice.member.service;
 
-import com.nhnacademy.memberservice.member.dto.MemberRegisterRequest;
-import com.nhnacademy.memberservice.member.dto.MemberResponse;
-import com.nhnacademy.memberservice.member.dto.MemberUpdatePasswordRequest;
-import com.nhnacademy.memberservice.member.dto.MemberUpdateRequest;
+import org.springframework.data.domain.Pageable;
+import com.nhnacademy.memberservice.member.dto.*;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -21,7 +20,7 @@ public interface MemberService {
      * </p>
      *
      * @param request 회원 등록 요청을 담은 {@link MemberRegisterRequest} 객체
-     * @return 등록된 회원의 정보가 담긴 {@link MemberResponse} 객체
+     * @return 등록된 회원의 정보가 담긴 {@link MemberResponse} 객체.
      */
     MemberResponse registerMember(MemberRegisterRequest request);
 
@@ -49,7 +48,19 @@ public interface MemberService {
      */
     MemberResponse getMemberByEmail(String mbEmail);
 
+    /**
+     * 회원 정보를 조회하는 메서드입니다.
+     * <p>
+     * 이 메서드는 회원의 이메일인 {@code mbEmail}를 받아 해당 회원의 정보를 조회하고
+     * 조회된 회원의 정보를 {@link MemberInfoResponse} 형태로 반환합니다.
+     * </p>
+     *
+     * @param mbEmail 조회할 회원의 이메일
+     * @return 조회된 회원의 정보가 담긴 {@link MemberInfoResponse} 객체
+     */
+    MemberInfoResponse getMemberInfoByEmail(String mbEmail);
 
+    MemberInfoResponse getMemberInfo(Long mbNo);
 
     /**
      * 회원 정보를 수정하는 메서드입니다.
@@ -83,6 +94,18 @@ public interface MemberService {
      */
     void updatePassword(Long mbNo, MemberUpdatePasswordRequest request);
 
+    /**
+     * 지정된 회원 번호에 해당하는 사용자의 비밀번호를 확인합니다.
+     *
+     * @param mbNo 비밀번호를 수정할 대상 회원의 고유 번호 (Primary Key)
+     * @param request 비밀번호 수정 요청 정보를 담은 DTO 객체.
+     *               비밀번호 정보가 포함됩니다.
+     */
+    boolean verify(Long mbNo, MemberConfirmPasswordRequest request);
+
+    Page<MemberInfoResponse> getMemberInfoList(Pageable pageable);
+
+    List<MemberNoResponse> getAllMemberIds();
     /**
      * 전체 회원 정보를 조회합니다.
      * <p>
