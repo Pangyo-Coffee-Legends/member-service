@@ -16,6 +16,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -180,6 +182,35 @@ public class MemberServiceImpl implements MemberService {
                 member.getMbPassword(),
                 member.getPhoneNumber()
         );
+    }
+
+    /**
+     * 데이터베이스에 저장된 모든 회원 정보를 조회하여 MemberResponse DTO 리스트로 반환합니다.
+     * <p>
+     * 각 회원 엔티티(Member)를 MemberResponse 객체로 변환하여 반환합니다.
+     * 주로 관리자 기능 등에서 전체 회원 목록이 필요할 때 사용됩니다.
+     * </p>
+     *
+     * @return 전체 회원 정보가 담긴 MemberResponse 리스트
+     *         - 각 MemberResponse에는 회원 번호, 역할, 이름, 이메일, 비밀번호, 전화번호가 포함됩니다.
+     */
+    public List<MemberResponse> getAllMembers(){
+        List<Member> members = memberRepository.findAll();
+        List<MemberResponse> memberListResDtos = new ArrayList<>();
+
+        for (Member m : members){
+            MemberResponse memberListResDto = new MemberResponse(
+                    m.getMbNo(),
+                    m.getRole().getRoleName(),
+                    m.getMbName(),
+                    m.getMbEmail(),
+                    m.getMbPassword(),
+                    m.getPhoneNumber()
+            );
+
+            memberListResDtos.add(memberListResDto);
+        }
+        return memberListResDtos;
     }
 
 }

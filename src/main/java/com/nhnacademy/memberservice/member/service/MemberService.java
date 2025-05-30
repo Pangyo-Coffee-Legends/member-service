@@ -5,6 +5,8 @@ import com.nhnacademy.memberservice.member.dto.MemberResponse;
 import com.nhnacademy.memberservice.member.dto.MemberUpdatePasswordRequest;
 import com.nhnacademy.memberservice.member.dto.MemberUpdateRequest;
 
+import java.util.List;
+
 /**
  * 회원 관련 서비스를 제공하는 인터페이스입니다.
  * 이 인터페이스는 회원의 등록, 조회, 수정, 삭제와 같은 기본적인 회원 관리 작업을 정의합니다.
@@ -81,4 +83,13 @@ public interface MemberService {
      */
     void updatePassword(Long mbNo, MemberUpdatePasswordRequest request);
 
+    /**
+     * 전체 회원 정보를 조회합니다.
+     * <p>
+     * 데이터베이스에 저장된 모든 회원 엔티티를 MemberResponse DTO 리스트로 변환하여 반환합니다.
+     * </p>
+     *
+     * @return 전체 회원 정보가 담긴 MemberResponse 객체의 리스트
+     */
+    List<MemberResponse> getAllMembers();
 }
