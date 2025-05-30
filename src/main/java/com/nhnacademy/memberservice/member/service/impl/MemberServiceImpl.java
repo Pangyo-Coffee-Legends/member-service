@@ -269,8 +269,6 @@ public class MemberServiceImpl implements MemberService {
         }
         return memberListResDtos;
     }
-
-}
     /**
      * 전체 회원의 요약 정보를 조회합니다.
      *
@@ -279,7 +277,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional(readOnly = true)
     public Page<MemberInfoResponse> getMemberInfoList(Pageable pageable) {
-      return memberRepository.findAllMemberInfo(pageable);
+        return memberRepository.findAllMemberInfo(pageable);
     }
 
     /**
