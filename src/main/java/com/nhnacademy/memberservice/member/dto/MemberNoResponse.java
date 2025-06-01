@@ -1,5 +1,6 @@
 package com.nhnacademy.memberservice.member.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 /**
@@ -19,5 +20,7 @@ import lombok.*;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class MemberNoResponse {
+
+      @JsonProperty("memberNo")
       private Long no;
 }
