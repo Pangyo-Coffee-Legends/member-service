@@ -114,5 +114,5 @@ public interface MemberService {
      *
      * @return 전체 회원 정보가 담긴 MemberResponse 객체의 리스트
      */
-    List<MemberResponse> getAllMembers();
+    List<MemberInfoResponse> getAllMembers();
 }

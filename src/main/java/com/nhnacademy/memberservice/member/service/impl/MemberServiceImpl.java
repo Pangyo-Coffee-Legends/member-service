@@ -251,17 +251,16 @@ public class MemberServiceImpl implements MemberService {
      * @return 전체 회원 정보가 담긴 MemberResponse 리스트
      *         - 각 MemberResponse에는 회원 번호, 역할, 이름, 이메일, 비밀번호, 전화번호가 포함됩니다.
      */
-    public List<MemberResponse> getAllMembers(){
+    public List<MemberInfoResponse> getAllMembers(){
         List<Member> members = memberRepository.findAll();
-        List<MemberResponse> memberListResDtos = new ArrayList<>();
+        List<MemberInfoResponse> memberListResDtos = new ArrayList<>();
 
         for (Member m : members){
-            MemberResponse memberListResDto = new MemberResponse(
+            MemberInfoResponse memberListResDto = new MemberInfoResponse(
                     m.getMbNo(),
-                    m.getRole().getRoleName(),
                     m.getMbName(),
                     m.getMbEmail(),
-                    m.getMbPassword(),
+                    m.getRole().getRoleName(),
                     m.getPhoneNumber()
             );
 

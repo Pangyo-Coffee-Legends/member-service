@@ -224,7 +224,7 @@ public class MemberController {
      */
     @GetMapping("/list")
     public ResponseEntity<?> getAllMembers() {
-        List<MemberResponse> memberList = memberService.getAllMembers();
+        List<MemberInfoResponse> memberList = memberService.getAllMembers();
         return ResponseEntity.ok(memberList);
     }
 }
