@@ -102,10 +102,10 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional(readOnly = true)
     public MemberResponse getMemberByEmail(String mbEmail) {
-        log.trace("email: {}", mbEmail );
+        log.debug("email: {}", mbEmail );
         Member member = memberRepository.findByMbEmail(mbEmail)
                 .orElseThrow(() -> new MemberEmailNotFoundException("회원을 찾을 수 없습니다."));
-        log.trace("member: {}", member);
+        log.debug("member: {}", member);
         return getMemberResponse(member);
     }
 

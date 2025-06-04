@@ -74,17 +74,17 @@ public class MemberController {
      */
     @GetMapping("/email/{mbEmail}")
     public ResponseEntity<?> getMemberByEmail(@PathVariable String mbEmail, @RequestParam(defaultValue = "detailed") String view) {
-        log.trace("조회 시작 : {}", view);
+        log.debug("조회 시작 : {}", view);
         MemberViewType viewType = parseViewType(view);
 
-        log.trace("viewType: {}, service: {}", viewType, memberService);
+        log.debug("viewType: {}, service: {}", viewType, memberService);
         return switch (viewType) {
                 case SUMMARY -> {
                     MemberInfoResponse summary = memberService.getMemberInfoByEmail(mbEmail);
                     yield ResponseEntity.ok(summary);
                 }
                 case DETAILED -> {
-                    log.trace("view detailed 들어옴");
+                    log.debug("view detailed 들어옴");
                     MemberResponse detailed = memberService.getMemberByEmail(mbEmail);
                     yield ResponseEntity.ok(detailed);
                 }
@@ -105,7 +105,7 @@ public class MemberController {
         try {
             return MemberViewType.from(view);
         } catch (IllegalArgumentException e) {
-            log.trace("error : {}", e.getStackTrace());
+            log.error("error : {}", e.getStackTrace());
             throw new IllegalArgumentException("view 파라미터 값이 올바르지 않습니다. 'summary' 또는 'detailed' 중 하나를 사용해 주세요.");
         }
     }
