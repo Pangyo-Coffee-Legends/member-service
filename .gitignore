@@ -39,5 +39,5 @@ build/
 /.idea/
 
 ### properties ###
-*.properties
+application-dev2.properties
 /logs

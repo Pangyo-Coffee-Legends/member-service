@@ -106,4 +106,13 @@ public interface MemberService {
     Page<MemberInfoResponse> getMemberInfoList(Pageable pageable);
 
     List<MemberNoResponse> getAllMemberIds();
+    /**
+     * 전체 회원 정보를 조회합니다.
+     * <p>
+     * 데이터베이스에 저장된 모든 회원 엔티티를 MemberResponse DTO 리스트로 변환하여 반환합니다.
+     * </p>
+     *
+     * @return 전체 회원 정보가 담긴 MemberResponse 객체의 리스트
+     */
+    List<MemberInfoResponse> getAllMembers();
 }
