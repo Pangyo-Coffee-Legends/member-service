@@ -83,6 +83,7 @@ public class MemberController {
                     yield ResponseEntity.ok(summary);
                 }
                 case DETAILED -> {
+                    log.trace("view detailed 들어옴");
                     MemberResponse detailed = memberService.getMemberByEmail(mbEmail);
                     yield ResponseEntity.ok(detailed);
                 }
@@ -103,6 +104,7 @@ public class MemberController {
         try {
             return MemberViewType.from(view);
         } catch (IllegalArgumentException e) {
+            log.trace("error : {}", e.getStackTrace());
             throw new IllegalArgumentException("view 파라미터 값이 올바르지 않습니다. 'summary' 또는 'detailed' 중 하나를 사용해 주세요.");
         }
     }

@@ -9,6 +9,7 @@ import com.nhnacademy.memberservice.role.domain.Role;
 import com.nhnacademy.memberservice.role.exception.RoleNotFoundException;
 import com.nhnacademy.memberservice.role.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,6 +26,7 @@ import java.util.List;
  * 예외 상황에 따른 도메인별 커스텀 예외 처리를 포함하고 있습니다.
  * </p>
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -100,9 +102,10 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional(readOnly = true)
     public MemberResponse getMemberByEmail(String mbEmail) {
+        log.trace("email: {}", mbEmail );
         Member member = memberRepository.findByMbEmail(mbEmail)
                 .orElseThrow(() -> new MemberEmailNotFoundException("회원을 찾을 수 없습니다."));
-
+        log.trace("member: {}", member);
         return getMemberResponse(member);
     }
 
