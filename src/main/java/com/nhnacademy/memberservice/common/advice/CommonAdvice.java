@@ -97,6 +97,7 @@ public class CommonAdvice {
      */
     @ExceptionHandler(MemberEmailNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleMemberEmailNotFoundException(MemberEmailNotFoundException ex) {
+
         ErrorResponse error = new ErrorResponse(ex.getErrorCode(), ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
@@ -175,9 +176,16 @@ public class CommonAdvice {
      */
     @ExceptionHandler(Throwable.class)
     public ResponseEntity<ErrorResponse> handleGeneralException(Exception ex) {
-        log.trace("message: {}", ex.getMessage());
+        log.error("[handleGeneralException] 예외 발생: {}", ex.toString(), ex);
 
-        ErrorResponse error = new ErrorResponse(ErrorCode.INTERNAL_ERROR, "서버 내부 오류가 발생하였습니다.");
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+        ErrorCode fallbackCode = ErrorCode.UNKNOWN_ERROR;
+
+        String message = (ex.getMessage() != null) ? ex.getMessage() : "서버 내부 오류입니다.";
+
+        ErrorResponse response = new ErrorResponse(fallbackCode, message);
+
+        log.debug("[handleGeneralException] 응답: code={}, message={}", response.getCode(), response.getMessage());
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
 }

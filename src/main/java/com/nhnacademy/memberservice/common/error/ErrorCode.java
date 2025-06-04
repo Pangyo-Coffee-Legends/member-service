@@ -52,5 +52,7 @@ public enum ErrorCode {
     /**
      * 새 비밀번호와 비밀번호 확인 값이 일치하지 않을 경우 사용됩니다.
      */
-    NEW_PASSWORD_NOT_MATCH
+    NEW_PASSWORD_NOT_MATCH,
+
+    UNKNOWN_ERROR
 }
