@@ -74,9 +74,10 @@ public class MemberController {
      */
     @GetMapping("/email/{mbEmail}")
     public ResponseEntity<?> getMemberByEmail(@PathVariable String mbEmail, @RequestParam(defaultValue = "detailed") String view) {
-
+        log.trace("조회 시작 : {}", view);
         MemberViewType viewType = parseViewType(view);
 
+        log.trace("viewType: {}, service: {}", viewType, memberService);
         return switch (viewType) {
                 case SUMMARY -> {
                     MemberInfoResponse summary = memberService.getMemberInfoByEmail(mbEmail);
