@@ -214,4 +214,20 @@ public class MemberController {
 
         return ResponseEntity.ok(isValid);
     }
+
+    /**
+     * 전체 회원 목록을 조회합니다.
+     * <p>
+     * 데이터베이스에 등록된 모든 회원의 정보를 리스트 형태로 반환합니다.
+     * 관리자가 회원 관리 화면 등에서 사용할 수 있습니다.
+     * </p>
+     *
+     * @return 전체 회원 정보 목록이 담긴 ResponseEntity (HTTP 200 OK)
+     *         - body: {@code List<MemberResponse>} 회원 정보 리스트
+     */
+    @GetMapping("/list")
+    public ResponseEntity<?> getAllMembers() {
+        List<MemberInfoResponse> memberList = memberService.getAllMembers();
+        return ResponseEntity.ok(memberList);
+    }
 }

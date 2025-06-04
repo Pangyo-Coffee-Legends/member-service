@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.ArrayList;
 
 /**
  * 회원(Member) 관련 비즈니스 로직을 구현한 서비스 클래스입니다.
@@ -244,6 +245,33 @@ public class MemberServiceImpl implements MemberService {
     }
 
     /**
+     * 데이터베이스에 저장된 모든 회원 정보를 조회하여 MemberResponse DTO 리스트로 반환합니다.
+     * <p>
+     * 각 회원 엔티티(Member)를 MemberResponse 객체로 변환하여 반환합니다.
+     * 주로 관리자 기능 등에서 전체 회원 목록이 필요할 때 사용됩니다.
+     * </p>
+     *
+     * @return 전체 회원 정보가 담긴 MemberResponse 리스트
+     *         - 각 MemberResponse에는 회원 번호, 역할, 이름, 이메일, 비밀번호, 전화번호가 포함됩니다.
+     */
+    public List<MemberInfoResponse> getAllMembers(){
+        List<Member> members = memberRepository.findAll();
+        List<MemberInfoResponse> memberListResDtos = new ArrayList<>();
+
+        for (Member m : members){
+            MemberInfoResponse memberListResDto = new MemberInfoResponse(
+                    m.getMbNo(),
+                    m.getMbName(),
+                    m.getMbEmail(),
+                    m.getRole().getRoleName(),
+                    m.getPhoneNumber()
+            );
+
+            memberListResDtos.add(memberListResDto);
+        }
+        return memberListResDtos;
+    }
+    /**
      * 전체 회원의 요약 정보를 조회합니다.
      *
      * @return 회원 요약 정보 리스트
@@ -251,7 +279,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional(readOnly = true)
     public Page<MemberInfoResponse> getMemberInfoList(Pageable pageable) {
-      return memberRepository.findAllMemberInfo(pageable);
+        return memberRepository.findAllMemberInfo(pageable);
     }
 
     /**
