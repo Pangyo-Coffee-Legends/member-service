@@ -1,6 +1,7 @@
 package com.nhnacademy.memberservice.common.error;
 
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
 
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
  * 예외 상황에 대한 정보를 구조화하여 클라이언트에 전달하기 위한 용도로 사용됩니다.
  * </p>
  */
+@Slf4j
 @Getter
 public class ErrorResponse {
     private final ErrorCode code;
@@ -27,5 +29,7 @@ public class ErrorResponse {
         this.code = code;
         this.message = message;
         this.timestamp = LocalDateTime.now();
+
+        log.trace("code : {}, message : {}, timestamp : {}", this.code, this.message, this.timestamp);
     }
 }

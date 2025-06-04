@@ -175,6 +175,8 @@ public class CommonAdvice {
      */
     @ExceptionHandler(Throwable.class)
     public ResponseEntity<ErrorResponse> handleGeneralException(Exception ex) {
+        log.trace("message: {}", ex.getMessage());
+
         ErrorResponse error = new ErrorResponse(ErrorCode.INTERNAL_ERROR, "서버 내부 오류가 발생하였습니다.");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
