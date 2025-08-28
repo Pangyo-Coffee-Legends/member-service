@@ -9,8 +9,10 @@ import com.nhnacademy.memberservice.role.domain.Role;
 import com.nhnacademy.memberservice.role.exception.RoleNotFoundException;
 import com.nhnacademy.memberservice.role.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +28,7 @@ import java.util.ArrayList;
  * 예외 상황에 따른 도메인별 커스텀 예외 처리를 포함하고 있습니다.
  * </p>
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -34,6 +37,9 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
+
+    private final RedisTemplate<String, String> redisTemplate;
+    private static final String REDIS_KEY = "member:";
 
     /**
      * 신규 회원을 등록합니다.
@@ -71,7 +77,7 @@ public class MemberServiceImpl implements MemberService {
         );
 
         Member savedMember = memberRepository.save(member);
-
+        setRedisTemplate(savedMember);
         return getMemberResponse(savedMember);
     }
 
@@ -101,9 +107,10 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional(readOnly = true)
     public MemberResponse getMemberByEmail(String mbEmail) {
+        log.debug("email: {}", mbEmail );
         Member member = memberRepository.findByMbEmail(mbEmail)
                 .orElseThrow(() -> new MemberEmailNotFoundException("회원을 찾을 수 없습니다."));
-
+        log.debug("member: {}", member);
         return getMemberResponse(member);
     }
 
@@ -171,6 +178,8 @@ public class MemberServiceImpl implements MemberService {
                 request.getName(),
                 request.getPhoneNumber()
         );
+
+        setRedisTemplate(member);
 
         return getMemberResponse(member);
     }
@@ -288,5 +297,11 @@ public class MemberServiceImpl implements MemberService {
     @Transactional(readOnly = true)
     public List<MemberNoResponse> getAllMemberIds() {
         return memberRepository.findAllMbNos();
+    }
+
+    private void setRedisTemplate(Member member){
+        String key = REDIS_KEY + member.getMbNo();
+        redisTemplate.opsForHash().put(key, "name", member.getMbName());
+        redisTemplate.opsForHash().put(key, "email", member.getMbEmail());
     }
 }
